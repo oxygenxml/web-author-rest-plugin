@@ -14,6 +14,8 @@
   <runtime>
     <librariesFolder name="lib" />
     <library name="target/classes" />
+    <!-- TODO: remove this -->
+    <librariesFolder name="D:\Maven Repository"/>
 
     <!--
     <librariesFolder name="MAVEN_LOCAL_REPOSITORY_LOCATION"/>
@@ -22,10 +24,20 @@
 
   <!-- Add extensions here-->
 
-  <!-- Example extensions: -->
-  <extension type="WebappServlet" class="com.oxygenxml.SampleWebappServletPluginExtension"/>
+  <!-- Login servlet -->
+  <extension type="WebappServlet" class="com.oxygenxml.rest.plugin.LoginServlet"/>
+  
+  <extension type="WebappServlet" class="com.oxygenxml.rest.server.MockRestServer"/>
+  <!-- URL info servlet -->
+  <extension type="WebappServlet" class="com.oxygenxml.rest.plugin.RestURLInfo"/>
+  
+  <extension type="URLHandler" 
+    class="com.oxygenxml.rest.plugin.RestURLHandlerPluginExtension"/>
+    
+  <extension type="LockHandlerFactory"
+    class="com.oxygenxml.rest.plugin.RestLockHandlerFactory"/>
+  
 
-  <!-- You can access static files at XML_WEB_AUTHOR/plugin-resources/PLUGIN_NAME_STATIC
-       (change PLUGIN_NAME_STATIC to whatever you need) -->
-  <extension type="WebappStaticResourcesFolder" path="web/static/" href="PLUGIN_NAME_STATIC"/>
+  <!-- You can access static files at XML_WEB_AUTHOR/plugin-resources/rest-resources/RESOURCE_FILE -->
+  <extension type="WebappStaticResourcesFolder" path="web/static/" href="rest-resources"/>
 </plugin>
