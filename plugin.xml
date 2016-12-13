@@ -13,16 +13,9 @@
 
   <runtime>
     <librariesFolder name="lib" />
+    <librariesFolder name="target/lib" />
     <library name="target/classes" />
-    <!-- TODO: remove this -->
-    <librariesFolder name="D:\Maven Repository"/>
-
-    <!--
-    <librariesFolder name="MAVEN_LOCAL_REPOSITORY_LOCATION"/>
-    -->
   </runtime>
-
-  <!-- Add extensions here-->
 
   <!-- Login servlet -->
   <extension type="WebappServlet" class="com.oxygenxml.rest.plugin.LoginServlet"/>
