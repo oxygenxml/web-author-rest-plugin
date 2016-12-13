@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Embedding the WebAuthor</title>
+    <!--importing  oXygen Web Author Library -->
+    <script src="oxygen-web-author-library.js"></script>
+    <link rel="stylesheet" href="embed-test.css">
+
+    <!-- Custom embedding code-->
+    <script src="embed-test.js"></script>
+    <style type="text/css">
+        #webapp {
+            position: absolute;
+            top: 100px;
+            left: 300px;
+            bottom: 0px;
+            right: 0px;
+            background-color: white;
+        }
+
+        body {
+            background-color: #0095DD;
+            margin: 0px;
+            width: 100%;
+            height: 100%;
+        }
+
+        #read-only {
+            display: inline-block;
+            background-color: white;
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            padding: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="webapp"></div>
+
+    <div id="read-only">ReadOnly</div>
+
+</body>
+</html>
