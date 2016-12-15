@@ -8,6 +8,8 @@ import java.net.URLConnection;
 
 import ro.sync.ecss.extensions.api.webapp.plugin.URLStreamHandlerWithContext;
 import ro.sync.exml.options.Options;
+import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
+import ro.sync.exml.workspace.api.options.WSOptionsStorage;
 import ro.sync.util.URLUtil;
 
 /**
@@ -44,8 +46,9 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
    * @return the server URL.
    */
   public static String getServerUrl() {
-    String serverUrl = Options.getInstance().getStringProperty(RestConfigExtension.REST_SERVER_URL);
-    if(serverUrl == null || serverUrl.isEmpty()) {
+    WSOptionsStorage optionsStorage = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage();
+    String serverUrl = optionsStorage.getOption(RestConfigExtension.REST_SERVER_URL, "");
+    if(serverUrl.isEmpty()) {
       // TODO: handle the case when the REST Server URL option is not set.
     }
     
