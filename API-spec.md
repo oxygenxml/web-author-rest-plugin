@@ -5,6 +5,7 @@ Assumptions
 -----------
 
 This plugin has several assumptions about the implementation of the API:
+
 1. The API is deployed on the same domain as Web Author (maybe on different ports).
 2. The API requests are authenticated using cookies.
 
