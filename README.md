@@ -8,10 +8,16 @@ To this end, this plugins defines a generic [REST API](API-spec.md) to be implem
 This plugin also contains a [library](embedding-library) that can be used to embed Web Author in your application's web page.
 
 
-Intallation and Configuration
------------------------------
+Intallation
+-----------
 
-This plugin can be installed and configured using the [normal procedure](https://www.oxygenxml.com/doc/versions/18.1.0/ug-webauthor/topics/webapp-configure-plugins.html).
+[Download](https://github.com/oxygenxml/web-author-rest-connector/releases) the plugin and 
+[install it](https://www.oxygenxml.com/doc/versions/18.1.0/ug-webauthor/topics/webapp-configure-plugins.html) in the Web Author Admin Page.
+
+Configuration
+-------------
+
+The plugn can be [cofigured](https://www.oxygenxml.com/doc/versions/18.1.0/ug-webauthor/topics/webapp-configure-plugins.html) in the Web Author Admin Page.
 
 It has the following configuration options:
 
