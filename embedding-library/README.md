@@ -15,7 +15,7 @@ Then instantiate the `WebAuthor` editor passing it the container element and som
 var editor = new WebAuthor(container, {
   // Web Author server URL.
   url: 'http://localhost:8080/oxygen-xml-web-author/app/oxygen.html',
-  // The URL of the document, stored on a read-only WebDAV server on oXygen's website.
-  documentUrl: 'webdav-https://www.oxygenxml.com/webapp-demo-aws/plugins-dispatcher/webdav-server/dita/flowers/topics/flowers/gardenia.dita'                   
+  // The URL of the document, stored on an embedded WebDAV found in the 'All Platforms' distribution.
+  documentUrl: 'webdav-http://localhost:8080/oxygen-xml-web-author/plugins-dispatcher/webdav-server/dita/flowers/topics/flowers/gardenia.dita'
 });
 ```
