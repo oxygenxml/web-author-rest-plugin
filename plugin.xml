@@ -6,7 +6,7 @@
     class="ro.sync.exml.plugin.Plugin"
 
     id="web-author-rest-connector"
-    name="web-author-rest-connector"
+    name="REST Connector"
     description="A plugin for oXygen XML Web Author."
     version="18.1.1-SNAPSHOT"
     vendor="com.oxygenxml">
@@ -20,17 +20,15 @@
   <!-- Login servlet -->
   <extension type="WebappServlet" class="com.oxygenxml.rest.plugin.LoginServlet"/>
   
-  <extension type="WebappServlet" class="com.oxygenxml.rest.server.MockRestServer"/>
   <!-- URL info servlet -->
   <extension type="WebappServlet" class="com.oxygenxml.rest.plugin.RestURLInfo"/>
   
   <extension type="URLHandler" 
     class="com.oxygenxml.rest.plugin.RestURLHandlerPluginExtension"/>
     
-  <extension type="LockHandlerFactory"
-    class="com.oxygenxml.rest.plugin.RestLockHandlerFactory"/>
+  <extension type="WebappServlet" role="config"
+    class="com.oxygenxml.rest.plugin.RestConfigExtension"/>
   
-
   <!-- You can access static files at XML_WEB_AUTHOR/plugin-resources/rest-resources/RESOURCE_FILE -->
   <extension type="WebappStaticResourcesFolder" path="web/static/" href="rest-resources"/>
 </plugin>

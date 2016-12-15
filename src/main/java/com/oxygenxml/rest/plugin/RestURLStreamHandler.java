@@ -7,6 +7,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import ro.sync.ecss.extensions.api.webapp.plugin.URLStreamHandlerWithContext;
+import ro.sync.exml.options.Options;
 import ro.sync.util.URLUtil;
 
 /**
@@ -15,16 +16,6 @@ import ro.sync.util.URLUtil;
  * @author mihai_coanda
  */
 public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
-
-  
-  private static final String VERSION = "1";
-  /**
-   * The base restURL at which to connect to open and save the document.
-   */
-//  public static final String REST_BASE_URL = "http://localhost:8081/oxygen-webapp/rest-plugin-base/v" + VERSION  + "/";
-  // TODO: delete this configuration
-  public static final String REST_BASE_URL = "http://localhost:8081/oxygen-webapp/plugins-dispatcher/rest-mock-server/v" + VERSION  + "/";
-  
 
   @Override
   protected URLConnection openConnectionInContext(String contextId, URL url, Proxy proxy) throws IOException {
@@ -42,8 +33,22 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
   private static URL computeRestUrl(URL url) throws MalformedURLException {
     // remove the "rest-" protocol prefix.
     URL httpUrl = new URL(url.toExternalForm().substring(RestURLConnection.REST_PROTOCOL_PREFIX.length()));
-    String encodedDocumentURL = URLUtil.encodeURIComponent(URLUtil.encodeURIComponent(httpUrl.toExternalForm()));
-    String restUrl = RestURLStreamHandler.REST_BASE_URL + "files/" + encodedDocumentURL;
+    String encodedDocumentURL = URLUtil.encodeURIComponent(httpUrl.toExternalForm());
+    String restUrl = getServerUrl() + "files/?url=" + encodedDocumentURL;
     return new URL(restUrl);
+  }
+  
+  /**
+   * Getter for the server's base rest url.
+   * 
+   * @return the server URL.
+   */
+  public static String getServerUrl() {
+    String serverUrl = Options.getInstance().getStringProperty(RestConfigExtension.REST_SERVER_URL);
+    if(serverUrl == null || serverUrl.isEmpty()) {
+      // TODO: handle the case when the REST Server URL option is not set.
+    }
+    
+    return serverUrl;
   }
 }

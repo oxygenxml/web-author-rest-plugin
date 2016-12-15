@@ -26,8 +26,8 @@ public class RestURLInfo  extends WebappServletPluginExtension {
     String url = req.getParameter("url");
     String sessionId = req.getSession().getId();
     
-    URL restURL = new URL(RestURLStreamHandler.REST_BASE_URL + "info/" +
-        URLUtil.encodeURIComponent(URLUtil.encodeURIComponent(url)));
+    URL restURL = new URL(RestURLStreamHandler.getServerUrl() + "info/"
+        + "?url=" + URLUtil.encodeURIComponent(URLUtil.encodeURIComponent(url)));
     
     // Add the headers to the connection for the authentication.
     URLConnection connection = restURL.openConnection();

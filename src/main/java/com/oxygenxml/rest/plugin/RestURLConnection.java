@@ -104,10 +104,6 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
 
   @Override
   public OutputStream getOutputStream() throws IOException {
-    // Before trying to save a resource, add the lock header if we have one.
-    // TODO: add lock header : this should be handled by the REST server, we do not hold the lock tokens.
-//    new WebdavLockHelper().addLockHeader(this.contextId, (HttpURLConnection) delegateConnection);
-    
     try {
       return new FilterOutputStream(super.getOutputStream()) {
         @Override
@@ -167,6 +163,8 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
         }
         if (shouldDisplayServerMessage(serverMessage)) {
           throw new IOException(serverMessage, e);
+        } else {
+          logger.debug("Server message too complex to display to the user");
         }
       }
       throw e;
