@@ -41,9 +41,11 @@ To implement this re-login flow you should do the following:
 
 1. When Web Author connects to the API using no cookies or expired cookies, return `401` status code. 
 2. Implement the following HTTP endpoint to show a login form to the user.
+
   ```
   $BASE_URL/oxygen-cms/v1/login
   ```
+
   **Hint**: you can redirect her to your existing login form.
 3. After the user logs in, your should redirect her to 
   ```
