@@ -20,19 +20,17 @@ You can use the Web Author [embedding library](embedding-library/) for this purp
 Connect it to the CMS
 ---------------------
 
-Now, you were only able to load sample files stored on the embedded WebDAV server. However, the goal is to load files stored on your CMS (or file server).
+The previous steps enabled you to load in Web Author sample files stored on an embedded WebDAV server. Let's now open files stored on your CMS (or file server).
 
-oXygen provides a plugin that let's you connect Web Author to your CMS just by implementing a simple REST API. 
-[Download](https://github.com/oxygenxml/web-author-rest-connector/releases) the plugin and 
-[install it](https://www.oxygenxml.com/doc/versions/18.1.0/ug-webauthor/topics/webapp-configure-plugins.html).
+1. Install the oXygen XML Web Author REST API connector plugin. 
 
-The plugin is configured by default to connect to a dummy implementation of the REST API that works with files on the server's file system. You can try to open the URL below:
+The plugin is configured by default to connect to a dummy implementation of the REST API that works with files on the server's file system. You can test your installation by opening the URL below:
 
 ```
-rest-http://localhost:8080/oxygen-xml-web-author/plugins-dispatcher/rest/dita/flowers/topics/flowers/gardenia.dita
+rest-http://rest/dita/flowers/topics/flowers/gardenia.dita
 ```
 
-Now, comes the REST API implementation step. The specification of the REST API can be found [here](API-spec.md). 
+2. To connect the plugin to your CMS you should implement the REST API [specified by this plugin](API-spec.md) and [configure](README.md#configuration) the plugin with the base URL of your REST API.
 
 
 Next steps
@@ -40,5 +38,5 @@ Next steps
 For more advanced use-cases here are some possible ways to further customize Web Author:
 - Implement an additional plugin. Our manual contains [some instructions](https://oxygenxml.com/doc/versions/18.1/ug-editor/tasks/webapp-plugin-prototyping.html#webapp-plugin-prototyping) to get you started.
 - Create a new XML framework or extend an existing one. You can use the ["Web Author Test Server Add-on"](https://oxygenxml.com/doc/versions/18.1/ug-editor/topics/customizing_frameworks.html) during development.
-- Create a self-contained application with all these components that you can deploy to others.
+- Create a self-contained web application (.war file) with all these components that you can deploy to others.
 
