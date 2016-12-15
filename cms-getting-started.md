@@ -24,11 +24,11 @@ The previous steps enabled you to load in Web Author sample files stored on an e
 
 1. Install the oXygen XML Web Author REST API connector plugin. 
 
-The plugin is configured by default to connect to a dummy implementation of the REST API that works with files on the server's file system. You can test your installation by opening the URL below:
+  The plugin is configured by default to connect to a dummy implementation of the REST API that works with files on the server's file system. You can test your installation by opening the URL below:
 
-```
-rest-http://rest/dita/flowers/topics/flowers/gardenia.dita
-```
+  ```
+  rest-http://rest/dita/flowers/topics/flowers/gardenia.dita
+  ```
 
 2. To connect the plugin to your CMS you should implement the REST API [specified by this plugin](API-spec.md) and [configure](README.md#configuration) the plugin with the base URL of your REST API.
 
