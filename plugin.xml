@@ -7,9 +7,9 @@
 
     id="web-author-rest-connector"
     name="REST Connector"
-    description="A plugin for oXygen XML Web Author."
-    version="18.1.1-SNAPSHOT"
-    vendor="com.oxygenxml">
+    description="oXygen XML Web Author connector for a generic REST API"
+    version="19.0-SNAPSHOT"
+    vendor="SyncRO Soft">
 
   <runtime>
     <librariesFolder name="lib" />
