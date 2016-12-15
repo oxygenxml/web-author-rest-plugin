@@ -6,8 +6,10 @@ Assumptions
 
 This plugin has several assumptions about the implementation of the API:
 
-1. The API is deployed on the same domain as Web Author (maybe on different ports).
+1. The API is deployed on the same domain as Web Author (maybe on different ports). Let's call its base URL `$BASE_URL`.
 2. The API requests are authenticated using cookies.
+
+These are not hard requirements but meeting them greatly simplifies the integration.
 
 Error responses
 ---------------
@@ -21,20 +23,24 @@ Each file is identified by an URL with a custom scheme. The file ID should be pe
 
 | Action   | Endpoint  |
 |----------|-----------|
-| *Open*   | GET oxygen-cms/v1/files?url=file_id  |
-| *Save*   | PUT oxygen-cms/v1/files?url=file_id  |
-| *Upload* | POST oxygen-cms/v1/files?url=file_id  |
-| *Delete* | DELETE oxygen-cms/v1/files?url=file_id  |
+| *Open*   | GET    `$BASE_URL`/oxygen-cms/v1/files?url=file_id  |
+| *Save*   | PUT    `$BASE_URL`oxygen-cms/v1/files?url=file_id  |
+| *Upload* | POST   `$BASE_URL`oxygen-cms/v1/files?url=file_id  |
+| *Delete* | DELETE `$BASE_URL`oxygen-cms/v1/files?url=file_id  |
 
 The file content encoding should be UTF-8 in both requests and responses of these endpoints.
 
-User login
-----------
+User Authentication
+-------------------
 
-When the plugin receives a `401` response from the API, meaning that the user is not authenticated, it will open the following URL for the user to login:
+One solution is to embed Web Author in a page of your application and make sure that the user is authenticated before opening the editor.
+
+However, if you choose to allow users to open Web Author independently of your application, or if you use expiring login sessions, the user may need to re-login during an editing session.
+
+To implement this re-login flow, when the plugin receives a `401` status code from the API, meaning that the user is not authenticated, it will open the following URL for the user to login:
 
 ```
-oxygen-cms/v1/login
+$BASE_URL/oxygen-cms/v1/login
 ```
 
 You should implement this URL to show a login form to the user.
@@ -43,17 +49,21 @@ You should implement this URL to show a login form to the user.
 After the user logs in, your should redirect the user to 
 
 ```
-oxygen-cms/v1/login-done
+$WEB_AUTHOR_URL/plugins-dispatcher/rest/login-done
 ```
 
-File browsing - folder based
-----------------------------
+File browsing
+-------------
+
+Some of the editing actions require the user to browse for a file in the CMS (inserting an image) or for an element inside an XML document (inserting a cross reference). To present a browsing widget to the user in these cases there are two options.   
+
+### Folder-based browsing widget
 
 If your file URLs have an hierarchical structure, you can use the default file browser by implementing the following REST endpoint:
 
 | Action   | Endpoint  |
 |----------|-----------|
-| *List Folder*     | GET oxygen-cms/v1/folders?url=folder_url  |
+| *List Folder*     | GET `$BASE_URL`/oxygen-cms/v1/folders?url=folder_url  |
 
 The response should be a JSON object with the following format:
 
@@ -61,16 +71,16 @@ The response should be a JSON object with the following format:
 [{name: "file1.dita"}, {name: "file2.dita"}]
 ```
 
-Custom file browser
--------------------
+### Custom file browsing widget
 
-If you do not have a hierarchical folder structure, you can register your own file browser.
+If your files do not have a hierarchical folder structure, you can register your own file browser.
 
-TBD: 
+When the user needs to choose an URL of a CMS resource, the folloing URL will be open for her:
 ```
-oxygen-cms/v1/browse
+$BASE_URL/oxygen-cms/v1/browse
 ```
-After the user chose a file or an element, redirect her to 
+
+After the user chose the resource URL, your job is to redirect her to 
 ```
-oxygen-cms/v1/browse-done?url=...
+$WEB_AUTHOR_URL/plugins-dispatcher/rest/browse-done?url=...
 ```
