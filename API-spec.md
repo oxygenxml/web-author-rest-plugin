@@ -1,5 +1,5 @@
-CMS REST API
-============ 
+REST API for CMS-es
+===================
 
 Assumptions
 -----------
@@ -19,16 +19,16 @@ When the requests are made without the required cookies or with expired ones, th
 Basic file operations
 ---------------------
 
-Each file is identified by an URL with a custom scheme. The file ID should be percent encoded in the following URLs.
+Each file is identified by an URL with the `rest://` scheme. The file URL should be percent encoded when used as a query parameter.
 
 | Action   | Endpoint  |
 |----------|-----------|
-| *Open*   | GET    `$BASE_URL`/oxygen-cms/v1/files?url=file_id  |
-| *Save*   | PUT    `$BASE_URL`oxygen-cms/v1/files?url=file_id  |
-| *Upload* | POST   `$BASE_URL`oxygen-cms/v1/files?url=file_id  |
-| *Delete* | DELETE `$BASE_URL`oxygen-cms/v1/files?url=file_id  |
+| *Open*   | GET    `$BASE_URL`/oxygen-cms/v1/files?url=file_url  |
+| *Save*   | PUT    `$BASE_URL`/oxygen-cms/v1/files?url=file_url  |
+| *Upload* | POST   `$BASE_URL`/oxygen-cms/v1/files?url=file_url  |
+| *Delete* | DELETE `$BASE_URL`/oxygen-cms/v1/files?url=file_url  |
 
-The file content encoding should be UTF-8 in both requests and responses of these endpoints.
+The file content encoding should be `UTF-8` in both requests and responses of these endpoints.
 
 User Authentication
 -------------------
@@ -37,29 +37,27 @@ One solution is to embed Web Author in a page of your application and make sure 
 
 However, if you choose to allow users to open Web Author independently of your application, or if you use expiring login sessions, the user may need to re-login during an editing session.
 
-To implement this re-login flow, when the plugin receives a `401` status code from the API, meaning that the user is not authenticated, it will open the following URL for the user to login:
+To implement this re-login flow you should do the following:
 
-```
-$BASE_URL/oxygen-cms/v1/login
-```
-
-You should implement this URL to show a login form to the user.
-**Hint**: you can redirect her to your existing login form.
-
-After the user logs in, your should redirect the user to 
-
-```
-$WEB_AUTHOR_URL/plugins-dispatcher/rest/login-done
-```
+1. When Web Author connects to the API using no cookies or expired cookies, return `401` status code. 
+2. Implement the following HTTP endpoint to show a login form to the user.
+  ```
+  $BASE_URL/oxygen-cms/v1/login
+  ```
+  **Hint**: you can redirect her to your existing login form.
+3. After the user logs in, your should redirect her to 
+  ```
+  $WEB_AUTHOR_URL/plugins-dispatcher/rest/login-done
+  ```
 
 File browsing
 -------------
 
-Some of the editing actions require the user to browse for a file in the CMS (inserting an image) or for an element inside an XML document (inserting a cross reference). To present a browsing widget to the user in these cases there are two options.   
+Some of the editing actions require the user to browse for a file in the CMS (e.g. when inserting an image) or for an element inside an XML document (inserting a cross reference). To present a browsing widget to the user in these cases there are two options.   
 
 ### Folder-based browsing widget
 
-If your file URLs have an hierarchical structure, you can use the default file browser by implementing the following REST endpoint:
+If your file URLs have an hierarchical structure, you can use the default file browsing widget by implementing the following REST endpoint:
 
 | Action   | Endpoint  |
 |----------|-----------|
@@ -73,7 +71,7 @@ The response should be a JSON object with the following format:
 
 ### Custom file browsing widget
 
-If your files do not have a hierarchical folder structure, you can register your own file browser.
+In some cases, the files do not have a hierarchical folder structure, and the user can rely on labels or full text search to find content. In this case, you can register a custom file browsing widget.
 
 When the user needs to choose an URL of a CMS resource, the folloing URL will be open for her:
 ```
@@ -82,5 +80,5 @@ $BASE_URL/oxygen-cms/v1/browse
 
 After the user chose the resource URL, your job is to redirect her to 
 ```
-$WEB_AUTHOR_URL/plugins-dispatcher/rest/browse-done?url=...
+$WEB_AUTHOR_URL/plugins-dispatcher/rest/browse-done?url=rest://chosen_url
 ```
