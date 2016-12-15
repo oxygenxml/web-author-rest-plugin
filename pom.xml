@@ -6,7 +6,7 @@
 
   <groupId>com.oxygenxml</groupId>
   <artifactId>web-author-rest-connector</artifactId>
-  <version>18.1-SNAPSHOT</version>
+  <version>18.1.0.0</version>
 
   <properties>
     <oxygen.sdk.version>${project.version}</oxygen.sdk.version>
