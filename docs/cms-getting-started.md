@@ -22,9 +22,9 @@ Connect it to the CMS
 
 The previous steps enabled you to load in Web Author sample files stored on an embedded WebDAV server. Let's now open files stored on your CMS (or file server).
 
-1. Install the oXygen XML Web Author REST API connector plugin. 
+1. [Install](../README.md#plugin-installation) the oXygen XML Web Author REST API connector plugin. 
 
-2. To connect the plugin to your CMS you should implement the REST API [specified by this plugin](API-spec.md) and [configure](../README.md#configuration) the plugin with the base URL of your REST API.
+2. To connect the plugin to your CMS you should implement the REST API [specified by this plugin](API-spec.md) and [configure](../README.md#plugin-configuration) the plugin with the base URL of your REST API.
 
 
 Next steps
