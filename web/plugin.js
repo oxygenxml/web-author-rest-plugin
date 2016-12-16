@@ -377,7 +377,7 @@
   /**
    * We do not registed the file browser if the base REST Server URL is not set.
    */
-  var restServerURL = sync.options.PluginsOptions.getClientOption('rest.server_url');
+  var restServerURL = sync.options.PluginsOptions.getClientOption('restServerUrl');
   if(!restServerURL) {
     return;
   }

@@ -7,7 +7,6 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import ro.sync.ecss.extensions.api.webapp.plugin.URLStreamHandlerWithContext;
-import ro.sync.exml.options.Options;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.options.WSOptionsStorage;
 import ro.sync.util.URLUtil;

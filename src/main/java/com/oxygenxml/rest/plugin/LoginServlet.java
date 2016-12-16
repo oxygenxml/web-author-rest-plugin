@@ -23,7 +23,6 @@ public class LoginServlet extends WebappServletPluginExtension{
       RestURLConnection.serversMap.invalidate(sessionId);
 
     } else {
-      @SuppressWarnings("unchecked")
       Enumeration<String> headers = req.getHeaderNames();
       Map<String, Map<String, String>> userCredentials = RestURLConnection.serversMap.getIfPresent(sessionId);
       if (userCredentials == null) {
