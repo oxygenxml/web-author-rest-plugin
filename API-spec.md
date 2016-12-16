@@ -6,7 +6,9 @@ Assumptions
 
 This plugin has several assumptions about the implementation of the API:
 
-1. The API is deployed on the same domain as Web Author (maybe on different ports). Let's call its base URL `$BASE_URL`.
+1. The REST API is deployed on the same domain as Web Author (maybe on different ports). Below we will denote:
+ - the base URL of the REST API as `$BASE_URL`. An example value would be: `http://example.com/oxygen-cms/v1/`
+ - the base URL of Web Author as `$WEB_AUTHOR_URL`. An example value would be `http://localhost:8080/oxygen-xml-web-author/app/oxygen.html`.
 2. The API requests are authenticated using cookies.
 
 These are not hard requirements but meeting them greatly simplifies the integration.
@@ -23,10 +25,10 @@ Each file is identified by an URL with the `rest://` scheme. The file URL should
 
 | Action   | Endpoint  |
 |----------|-----------|
-| *Open*   | GET    `$BASE_URL`/oxygen-cms/v1/files?url=file_url  |
-| *Save*   | PUT    `$BASE_URL`/oxygen-cms/v1/files?url=file_url  |
-| *Upload* | POST   `$BASE_URL`/oxygen-cms/v1/files?url=file_url  |
-| *Delete* | DELETE `$BASE_URL`/oxygen-cms/v1/files?url=file_url  |
+| *Open*   | GET    `$BASE_URL`/files?url=file_url  |
+| *Save*   | PUT    `$BASE_URL`/files?url=file_url  |
+| *Upload* | POST   `$BASE_URL`/files?url=file_url  |
+| *Delete* | DELETE `$BASE_URL`/files?url=file_url  |
 
 The file content encoding should be `UTF-8` in both requests and responses of these endpoints.
 
@@ -43,7 +45,7 @@ To implement this re-login flow you should do the following:
 2. Implement the following HTTP endpoint to show a login form to the user.
 
   ```
-  $BASE_URL/oxygen-cms/v1/login
+  $BASE_URL/login
   ```
 
   **Hint**: you can redirect her to your existing login form.
@@ -77,7 +79,7 @@ In some cases, the files do not have a hierarchical folder structure, and the us
 
 When the user needs to choose an URL of a CMS resource, the folloing URL will be open for her:
 ```
-$BASE_URL/oxygen-cms/v1/browse
+$BASE_URL/browse
 ```
 
 After the user chose the resource URL, your job is to redirect her to 
