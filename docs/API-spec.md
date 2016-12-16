@@ -11,6 +11,10 @@ This plugin has several assumptions about the implementation of the API:
  - the base URL of Web Author as `$WEB_AUTHOR_URL`. An example value would be `http://localhost:8080/oxygen-xml-web-author/app/oxygen.html`.
 2. The API requests are authenticated using cookies.
 
+The resulting architecture would look like in the image below:
+
+![Authentication architecture](cookie-auth-architecture.png)
+
 These are not hard requirements but meeting them greatly simplifies the integration.
 
 Error responses
