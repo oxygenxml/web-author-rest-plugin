@@ -30,7 +30,7 @@ The previous steps enabled you to load in Web Author sample files stored on an e
   rest-http://rest/dita/flowers/topics/flowers/gardenia.dita
   ```
 
-2. To connect the plugin to your CMS you should implement the REST API [specified by this plugin](API-spec.md) and [configure](README.md#configuration) the plugin with the base URL of your REST API.
+2. To connect the plugin to your CMS you should implement the REST API [specified by this plugin](API-spec.md) and [configure](../README.md#configuration) the plugin with the base URL of your REST API.
 
 
 Next steps
