@@ -22,6 +22,15 @@ Error responses
 
 When the requests are made without the required cookies or with expired ones, the `401` (Not Authenticated) HTTP status code must be returned.
 
+If an error occured while processing the request, the API can return an error status code: `4XX` or `5XX`. The body of the response whould be a JSON message with the following format:
+
+```Javascript
+{
+  "message": "Cannot process request due to ... "
+}
+```
+
+
 Basic file operations
 ---------------------
 
