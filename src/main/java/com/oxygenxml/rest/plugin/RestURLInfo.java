@@ -24,6 +24,10 @@ public class RestURLInfo  extends WebappServletPluginExtension {
   public void doGet(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
     String url = req.getParameter("url");
+    if(url.startsWith(RestURLConnection.REST_PROTOCOL_PREFIX)) {
+      url = url.substring(com.oxygenxml.rest.plugin.RestURLConnection.REST_PROTOCOL_PREFIX.length());
+    }
+    
     String sessionId = req.getSession().getId();
     
     URL restURL = new URL(RestURLStreamHandler.getServerUrl() + "info/"

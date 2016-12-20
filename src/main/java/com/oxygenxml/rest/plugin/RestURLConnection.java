@@ -16,13 +16,12 @@ import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.io.Closeables;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import ro.sync.ecss.extensions.api.webapp.WebappMessage;
 import ro.sync.ecss.extensions.api.webapp.plugin.FilterURLConnection;
@@ -252,12 +251,13 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     connection.connect();
     
     String jsonFilesString = IOUtils.toString(connection.getInputStream());
-    JsonArray jsonFiles = new JsonParser().parse(jsonFilesString).getAsJsonArray();
-    String docUrl = getDocumenURL();
+    ObjectMapper mapper = new ObjectMapper();
+    JsonNode[] array = mapper.readValue(jsonFilesString, mapper.getTypeFactory().constructArrayType(JsonNode.class));
+    
     List<FolderEntryDescriptor> files = new ArrayList<FolderEntryDescriptor>();
-    for(int i = 0 ; i < jsonFiles.size(); i++) {
-      JsonObject file = jsonFiles.get(i).getAsJsonObject();
-      String filePath = docUrl + file.get("name").getAsString() + (file.get("folder").getAsBoolean() ? "/" : "");
+    for(int i = 0; i < array.length; i++) {
+      JsonNode file = array[i];
+      String filePath = getDocumenURL() + file.get("name").asText() + (file.get("folder").asBoolean() ? "/" : "");
       files.add(new FolderEntryDescriptor(filePath));
     }
     return files;
