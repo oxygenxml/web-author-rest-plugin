@@ -210,14 +210,11 @@
     // if an url was provided we instantiate the file browsing dialog.
     if(url) {
       if(url.match('(rest-)?https?:\/\/')) {
-        if (false/*this.enforcedServers.length > 0*/) {
-          this.enforcedUrl = url;
-          this.openUrlInfo(url, {rootUrl: url});
-          localStorage.setItem('rest.latestEnforcedURL', this.enforcedUrl);
-        } else {
-          var processedUrl = this.processURL(url);
-          this.requestUrlInfo_(processedUrl);
+        var processedUrl = this.processURL(url);
+        if(!processedUrl.startsWith('rest-')) {
+          processedUrl = 'rest-' + processedUrl;
         }
+        this.requestUrlInfo_(processedUrl);
       } else {
         this.showErrorMessage('Invalid URL inserted.');
         // hide the error element on input refocus.
@@ -393,7 +390,7 @@
       var lastRootUrl = localStorage.getItem('rest.latestRootUrl');
       // If the latest root url is not a parent of the current document url, we need to compute the root url.
       if (!lastRootUrl || currDocUrl.indexOf(lastRootUrl) === -1) {
-        fileBrowser.requestUrlInfo_(currDocUrl,
+        fileBrowser.requestUrlInfo_('rest-' + currDocUrl,
           goog.bind(fileBrowser.setUrlInfo, fileBrowser));
       }
     }
