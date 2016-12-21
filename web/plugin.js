@@ -281,9 +281,8 @@
     if (!isFile && url.lastIndexOf('/') !== url.length - 1) {
       url = url + '/';
     }
-
     this.setUrlInfo(url, info);
-    this.openUrl(url, isFile, null);
+    this.openUrl(this.processURL(url), isFile, null);
   }
 
   /**
@@ -395,18 +394,13 @@
       }
     }
   });
-  // TODO: change icon
-  // the large icon url, hidpi enabled.
-  var iconUrl = sync.util.computeHdpiIcon('../plugin-resources/webdav/Webdav70.png');
 
   var webdavOpenAction = new sync.actions.OpenAction(fileBrowser);
-  webdavOpenAction.setLargeIcon(iconUrl);
   webdavOpenAction.setDescription('Open document from WebDAV server');
   webdavOpenAction.setActionId('rest-open-action');
   webdavOpenAction.setActionName('Rest');
 
   var webdavCreateAction = new sync.api.CreateDocumentAction(fileBrowser);
-  webdavCreateAction.setLargeIcon(iconUrl);
   webdavCreateAction.setDescription('Create a new document on a WebDAV server');
   webdavCreateAction.setActionId('rest-create-action');
   webdavCreateAction.setActionName('Rest');
