@@ -8,7 +8,7 @@
     id="web-author-rest-connector"
     name="REST Connector"
     description="oXygen XML Web Author connector for a generic REST API"
-    version="19.0-SNAPSHOT"
+    version="${project.nosnapshot.version}"
     vendor="SyncRO Soft">
 
   <runtime>
