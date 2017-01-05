@@ -7,6 +7,7 @@ public class RestConfigExtension  extends PluginConfigExtension {
   /**
    * The auto-save interval (in seconds).
    */
+  // TODO: check which name is used.
   final static String REST_SERVER_URL = "rest.server_url";
   
   /**

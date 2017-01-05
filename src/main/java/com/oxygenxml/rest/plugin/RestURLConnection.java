@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
   /**
    * Credentials store.
    */
-  public static final Cache<String, Map<String, Map<String, String>>> serversMap =
+  public static final Cache<String, Map<String, String>> credentialsMap =
       CacheBuilder.newBuilder()
         .concurrencyLevel(10)
         .maximumSize(10000)
@@ -57,7 +56,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    * 
    * We translate http to rest-http and https to rest-https.
    */
-  public static final String REST_PROTOCOL_PREFIX = "rest-";
+  public static final String REST_PROTOCOL = "rest";
 
   /**
    * The session ID.
@@ -197,49 +196,17 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    * Adds credentials associated with the given user context to this rest url connection. 
    */
   public static void addHeaders(URLConnection urlConnection, String contextId) {
-    Map<String, String> serverHeaders = null;
-
-    Map<String, Map<String, String>> userCredentialsMap = serversMap.getIfPresent(contextId);
-    String serverId;
-    try {
-      serverId = computeServerId(urlConnection.getURL().toExternalForm());
-      
-      if(userCredentialsMap != null) {
-        serverHeaders = userCredentialsMap.get(serverId);
+    Map<String, String> serverHeaders = credentialsMap.getIfPresent(contextId);
+    if(serverHeaders != null) {
+      // add all headers to the url connection
+      Set<String> keySet = serverHeaders.keySet();
+      Iterator<String> keysIterator = keySet.iterator();
+      while (keysIterator.hasNext()) {
+        String header = keysIterator.next();
+        String headerValue = serverHeaders.get(header);
+        urlConnection.addRequestProperty(header, headerValue);
       }
-      if(serverHeaders != null) {
-        // add all headers to the url connection
-        Set<String> keySet = serverHeaders.keySet();
-        Iterator<String> keysIterator = keySet.iterator();
-        while (keysIterator.hasNext()) {
-          String header = keysIterator.next();
-          String headerValue = serverHeaders.get(header);
-          urlConnection.addRequestProperty(header, headerValue);
-        }
-      }
-    } catch(MalformedURLException e) {
-      // the url is from the delegate connection so it is always well formed.
     }
-  }
-  
-  /**
-   * Computes a server identifier out of the requested URL.
-   * 
-   * @param serverUrl the URL string.
-   * 
-   * @return the server identifier.
-   * @throws MalformedURLException if the URL is malformed
-   */
-  public static String computeServerId(String serverUrl) throws MalformedURLException {
-    logger.debug("Server for which to compute the serverID :" + serverUrl);
-    URL url = new URL(serverUrl);
-    String serverId = url.getProtocol() + url.getHost() + url.getPort();
-
-    // remove the rest prefix from server id.
-    if(serverId.startsWith(REST_PROTOCOL_PREFIX)) {
-      serverId = serverId.substring(REST_PROTOCOL_PREFIX.length());
-    }
-    return serverId;
   }
   
   @Override

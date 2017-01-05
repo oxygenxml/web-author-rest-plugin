@@ -15,30 +15,25 @@ public class LoginServlet extends WebappServletPluginExtension{
   
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    String serverUrl = req.getParameter("server");
     String action = req.getParameter("action");
     String sessionId = req.getSession().getId();
 
     if("logout".equals(action)) {
-      RestURLConnection.serversMap.invalidate(sessionId);
+      RestURLConnection.credentialsMap.invalidate(sessionId);
 
     } else {
       Enumeration<String> headers = req.getHeaderNames();
-      Map<String, Map<String, String>> userCredentials = RestURLConnection.serversMap.getIfPresent(sessionId);
-      if (userCredentials == null) {
-        userCredentials = new HashMap<String, Map<String, String>>();
-        RestURLConnection.serversMap.put(sessionId, userCredentials);
+      Map<String, String> headersMap = RestURLConnection.credentialsMap.getIfPresent(sessionId);
+      if (headersMap == null) {
+        headersMap = new HashMap<String, String>();
+        RestURLConnection.credentialsMap.put(sessionId, headersMap);
       }
-      String serverId = RestURLConnection.computeServerId(serverUrl);
-
-      Map<String, String> serverHeadersMap = new HashMap<String, String>();
-      userCredentials.put(serverId, serverHeadersMap);
 
       while (headers.hasMoreElements()) {
         String headerName = headers.nextElement();
         String headerValue = req.getHeader(headerName);
 
-        serverHeadersMap.put(headerName, headerValue);
+        headersMap.put(headerName, headerValue);
       }
     }
     resp.setStatus(HttpServletResponse.SC_OK);

@@ -20,9 +20,6 @@
   <!-- Login servlet -->
   <extension type="WebappServlet" class="com.oxygenxml.rest.plugin.LoginServlet"/>
   
-  <!-- URL info servlet -->
-  <extension type="WebappServlet" class="com.oxygenxml.rest.plugin.RestURLInfo"/>
-  
   <extension type="URLHandler" 
     class="com.oxygenxml.rest.plugin.RestURLHandlerPluginExtension"/>
     

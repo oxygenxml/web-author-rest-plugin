@@ -18,7 +18,7 @@ public class RestURLHandlerPluginExtension implements URLStreamHandlerPluginExte
    */
   public URLStreamHandler getURLStreamHandler(String protocol) {
     boolean isWebapp = Platform.WEBAPP.equals(PluginWorkspaceProvider.getPluginWorkspace().getPlatform());
-    if (isWebapp && protocol.startsWith(RestURLConnection.REST_PROTOCOL_PREFIX)) {
+    if (isWebapp && RestURLConnection.REST_PROTOCOL.equals(protocol)) {
       return new RestURLStreamHandler();
     }
     return null;

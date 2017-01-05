@@ -5,8 +5,14 @@ import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.common.collect.ImmutableMap;
 
 import ro.sync.ecss.extensions.api.webapp.plugin.URLStreamHandlerWithContext;
+import ro.sync.ecss.extensions.api.webapp.plugin.UserContext;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.options.WSOptionsStorage;
 import ro.sync.util.URLUtil;
@@ -17,6 +23,19 @@ import ro.sync.util.URLUtil;
  * @author mihai_coanda
  */
 public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
+  
+  @Override
+  protected String getContextId(UserContext context) {
+    String contextId = super.getContextId(context);
+    
+    StringBuilder cookies = new StringBuilder();
+    for (Map.Entry<String, String> cookie: context.getCookies().entrySet()) {
+      cookies.append(cookie.getKey()).append('=').append(cookie.getValue()).append("; ");
+    }
+    Map<String, String> headersMap = Collections.singletonMap("Cookie", cookies.toString()); 
+    RestURLConnection.credentialsMap.put(contextId, headersMap);
+    return contextId;
+  }
 
   @Override
   protected URLConnection openConnectionInContext(String contextId, URL url, Proxy proxy) throws IOException {
@@ -33,8 +52,7 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
    */
   private static URL computeRestUrl(URL url) throws MalformedURLException {
     // remove the "rest-" protocol prefix.
-    URL httpUrl = new URL(url.toExternalForm().substring(RestURLConnection.REST_PROTOCOL_PREFIX.length()));
-    String encodedDocumentURL = URLUtil.encodeURIComponent(httpUrl.toExternalForm());
+    String encodedDocumentURL = URLUtil.encodeURIComponent(url.toExternalForm());
     String restUrl = getServerUrl() + "files/?url=" + encodedDocumentURL;
     return new URL(restUrl);
   }
@@ -48,8 +66,10 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
     WSOptionsStorage optionsStorage = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage();
     String serverUrl = optionsStorage.getOption(RestConfigExtension.REST_SERVER_URL, "");
     if(serverUrl.isEmpty()) {
+      serverUrl = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage().getOption(RestConfigExtension.REST_SERVER_URL, null);
       // TODO: handle the case when the REST Server URL option is not set.
     }
+    System.out.println("REST SERVER BASE URL :" + serverUrl);
     
     return serverUrl;
   }
