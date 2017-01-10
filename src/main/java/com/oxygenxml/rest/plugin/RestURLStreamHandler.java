@@ -65,10 +65,6 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
   public static String getServerUrl() {
     WSOptionsStorage optionsStorage = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage();
     String serverUrl = optionsStorage.getOption(RestConfigExtension.REST_SERVER_URL, "");
-    if(serverUrl.isEmpty()) {
-      serverUrl = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage().getOption(RestConfigExtension.REST_SERVER_URL, null);
-      // TODO: handle the case when the REST Server URL option is not set.
-    }
     System.out.println("REST SERVER BASE URL :" + serverUrl);
     
     return serverUrl;
