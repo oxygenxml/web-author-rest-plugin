@@ -6,10 +6,7 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
-
-import com.google.common.collect.ImmutableMap;
 
 import ro.sync.ecss.extensions.api.webapp.plugin.URLStreamHandlerWithContext;
 import ro.sync.ecss.extensions.api.webapp.plugin.UserContext;
@@ -65,8 +62,7 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
   public static String getServerUrl() {
     WSOptionsStorage optionsStorage = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage();
     String serverUrl = optionsStorage.getOption(RestConfigExtension.REST_SERVER_URL, "");
-    System.out.println("REST SERVER BASE URL :" + serverUrl);
-    
+    // TODO: throw a not-configured exception so that calling methods handle this case.
     return serverUrl;
   }
 }

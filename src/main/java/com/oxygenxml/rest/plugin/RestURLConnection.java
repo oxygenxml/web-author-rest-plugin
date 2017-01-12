@@ -27,6 +27,7 @@ import ro.sync.ecss.extensions.api.webapp.plugin.FilterURLConnection;
 import ro.sync.ecss.extensions.api.webapp.plugin.UserActionRequiredException;
 import ro.sync.exml.plugin.urlstreamhandler.CacheableUrlConnection;
 import ro.sync.net.protocol.FolderEntryDescriptor;
+import ro.sync.net.protocol.http.HttpExceptionWithDetails;
 import ro.sync.util.URLUtil;
 
 /**
@@ -211,15 +212,29 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
   
   @Override
   public List<FolderEntryDescriptor> listFolder() throws IOException {
-    // Take into consideration that we might send too much information.
-    // Consider a full rewrite of the URL.
     URL listFolderURL = new URL(url.toExternalForm().replaceFirst("/files/", "/folders/"));
-    URLConnection connection = listFolderURL.openConnection();
+    URLConnection connection;
+    connection = listFolderURL.openConnection();
+    // Adding headers to the folder listing connection.    
+    addHeaders(connection, this.contextId);
     connection.connect();
     
-    String jsonFilesString = IOUtils.toString(connection.getInputStream());
+    String jsonFilesString;
+    try {
+      jsonFilesString = IOUtils.toString(connection.getInputStream());
+    } catch(IOException e) {
+      if(401 == ((HttpExceptionWithDetails)e).getReasonCode()) {
+        throw new UserActionRequiredException(new WebappMessage(
+            WebappMessage.MESSAGE_TYPE_CUSTOM, "Authentication required",
+            "Authentication required", true));
+      } else {
+        throw e;
+      }
+    }
+    
     ObjectMapper mapper = new ObjectMapper();
-    JsonNode[] array = mapper.readValue(jsonFilesString, mapper.getTypeFactory().constructArrayType(JsonNode.class));
+    JsonNode[] array;
+    array = mapper.readValue(jsonFilesString, mapper.getTypeFactory().constructArrayType(JsonNode.class));
     
     List<FolderEntryDescriptor> files = new ArrayList<FolderEntryDescriptor>();
     for(int i = 0; i < array.length; i++) {

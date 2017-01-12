@@ -18,7 +18,7 @@
   </runtime>
 
   <!-- Login servlet -->
-  <extension type="WebappServlet" class="com.oxygenxml.rest.plugin.LoginServlet"/>
+  <extension type="WebappServlet" class="com.oxygenxml.rest.plugin.LoginCallbackServlet"/>
   
   <extension type="URLHandler" 
     class="com.oxygenxml.rest.plugin.RestURLHandlerPluginExtension"/>
@@ -27,5 +27,6 @@
     class="com.oxygenxml.rest.plugin.RestConfigExtension"/>
   
   <!-- You can access static files at XML_WEB_AUTHOR/plugin-resources/rest-resources/RESOURCE_FILE -->
-  <extension type="WebappStaticResourcesFolder" path="web/static/" href="rest-resources"/>
+  <extension type="WebappStaticResourcesFolder" path="web/resources/" href="rest-resources"/>
+  
 </plugin>
