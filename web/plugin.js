@@ -11,7 +11,26 @@
         var context = e.context;
         var url = e.message.message;
         // pop-up an authentication window,
-        this.loginUser();
+        fileBrowser.loginUser(function() {
+          // After the user was logged in, retry the operation that failed.
+          if (context == sync.api.Editor.WebappMessageReceived.Context.LOAD) {
+            // If the document was loading, we try to reload the whole webapp.
+            window.location.reload();
+          } else if (context == sync.api.Editor.WebappMessageReceived.Context.EDITING) {
+            // During editing, only references can trigger re-authentication. Refresh them.
+            editor.getActionsManager().invokeAction('Author/Refresh_references');
+          } else if (context == sync.api.Editor.WebappMessageReceived.Context.SAVE) {
+            // Currently there is no API to re-try saving, but it will be.
+            editor.getActionsManager().getActionById('Author/Save').actionPerformed(function() {
+            });
+          } else if (context == sync.api.Editor.WebappMessageReceived.Context.IMAGE) {
+            // The browser failed to retrieve an image - reload it.
+            var images = document.querySelectorAll('img[data-src]');
+            for (var i = 0; i < images.length; i ++) {
+              images[i].src = goog.dom.dataset.get(images[i], 'src');
+            }
+          }
+        });
       });
     }
   });
@@ -133,7 +152,9 @@
       var info = request.getResponseJson();
       callback(url, info);
     } else if (status == 401) {
-      this.loginUser();
+      this.loginUser(function() {
+        goog.bind(this.requestUrlInfo_, this, url, callback);
+      }.bind(this));
     } else {
       this.showErrorMessage('Cannot open this URL');
     }
@@ -192,11 +213,15 @@
 
   /**
    * The user needs to authenticate.
+   *
+   * @param {function} callback the callback method that should be called after login.
    */
-  RestFileBrowser.prototype.loginUser = function() {
+  RestFileBrowser.prototype.loginUser = function(callback) {
     if(!this.loginDialog) {
       this.loginDialog = this.createLoginDialog();
     }
+
+    this.latestCallback = callback;
     this.loginDialog.getElement().innerHTML =
       '<iframe id="rest-login-iframe" style="width:100%; height:100%;border:none;" src="' +
       sync.options.PluginsOptions.getClientOption('restServerUrl') + 'rest-login"></iframe>'
@@ -221,7 +246,7 @@
           this.loginDialog.hide();
           this.loginDialog.getElement().innerHTML = '';
 
-          this.refresh();
+          this.latestCallback && this.latestCallback();
         }
       }.bind(this));
 
@@ -246,7 +271,11 @@
     var eventTarget = fileBrowser.getEventTarget();
     goog.events.listen(eventTarget,
       sync.api.FileBrowsingDialog.EventTypes.USER_ACTION_REQUIRED,
-      fileBrowser.loginUser.bind(fileBrowser));
+      function() {
+        this.loginUser(function() {
+          this.refresh();
+        });
+      }.bind(fileBrowser));
   };
   /**
    * We do not registed the file browser if the base REST Server URL is not set.
