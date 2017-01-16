@@ -1,4 +1,6 @@
 (function() {
+  const REST_BASE_URL = 'rest://platform/'
+
   goog.events.listen(workspace, sync.api.Workspace.EventType.BEFORE_EDITOR_LOADED, function(e) {
     var url = e.options.url;
     // If the URL has 'rest' protocol we use the rest protocol handler.
@@ -128,11 +130,14 @@
    */
   RestFileBrowser.prototype.requestUrlInfo_ = function (url, opt_callback) {
     // TODO: demo only, we have to find a way to determine the true type of the URL.
+      // TODO: the root URL is the path after the taksId
     var type = url.endsWith('/') ? 'FOLDER' : 'FILE';
+    // DEV: the root url is set to the url folder.
+    var rootUrl = url.substring(0, url.lastIndexOf('/') + (url.endsWith('/') ? 0 : 1));
     this.openUrlInfo(
       url,
       {
-      rootUrl: url,
+      rootUrl: rootUrl,
       type: type
     });
   };
@@ -199,7 +204,7 @@
    * @return {string} the latest root url.
    */
   RestFileBrowser.prototype.getLatestRootUrl = function() {
-    return 'rest://platform/';
+    return REST_BASE_URL;
   };
 
   /**
@@ -208,7 +213,7 @@
    * @return {String} the last set url.
    */
   RestFileBrowser.prototype.getLatestUrl = function() {
-    return 'rest://platform/';
+    return REST_BASE_URL;
   };
 
   /**
@@ -288,15 +293,6 @@
   var fileBrowser = new RestFileBrowser();
   // register all the listeners on the file browser.
   registerFileBrowserListeners(fileBrowser);
-  goog.events.listen(workspace, sync.api.Workspace.EventType.EDITOR_LOADED, function(e) {
-    var currDocUrl = e.editor.getUrl();
-
-    // if the current root and url are not set we use the current document url.
-    if (currDocUrl && currDocUrl.match('rest:\/\/')) {
-      fileBrowser.requestUrlInfo_(currDocUrl,
-        goog.bind(fileBrowser.setUrlInfo, fileBrowser));
-    }
-  });
 
   var webdavOpenAction = new sync.actions.OpenAction(fileBrowser);
   webdavOpenAction.setDescription('Open document from WebDAV server');
