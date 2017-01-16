@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpStatus;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -153,12 +154,22 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     } else {
       if (delegateConnection instanceof HttpURLConnection) {
         String serverMessage = null;
-        InputStream errorStream = null;
-        try {
-          errorStream = ((HttpURLConnection) this.delegateConnection).getErrorStream();
-          serverMessage = IOUtils.toString(errorStream);
-        } catch (Exception ex) {
-          Closeables.closeQuietly(errorStream);
+        
+        if(e instanceof HttpExceptionWithDetails) {
+          HttpExceptionWithDetails detailed = (HttpExceptionWithDetails)e;
+          if(detailed.getReasonCode() == HttpStatus.SC_NOT_FOUND) {
+            serverMessage = "The document was not found.";
+          }
+        }
+        if(serverMessage == null) {
+          InputStream errorStream = null;
+          try {
+            errorStream = ((HttpURLConnection) this.delegateConnection)
+                .getErrorStream();
+            serverMessage = IOUtils.toString(errorStream);
+          } catch(Exception ex) {
+            Closeables.closeQuietly(errorStream);
+          }
         }
         if (shouldDisplayServerMessage(serverMessage)) {
           throw new IOException(serverMessage, e);
