@@ -17,6 +17,19 @@
   EmbeddedConnector = function() {
     // listen for post messages
     window.addEventListener('message', this.messageReceived.bind(this), false);
+
+    // handle track changes.
+    this.track = window.frameElement.getAttribute('data-track');
+    if(this.track == "true") {
+      this.forceTrackChanges();
+    }
+
+    goog.events.listen(workspace, sync.api.Workspace.EventType.EDITOR_LOADED, function(event) {
+
+
+      this.editorLoaded = true;
+      this.editor = event.editor;
+    }.bind(this));
   }
 
   /**
@@ -105,40 +118,65 @@
   /**
    * Removes the toggleChangeTracking toolbar action and
    * enables change tracking.
-   *
    */
   EmbeddedConnector.prototype.forceTrackChanges = function() {
     goog.events.listen(workspace, sync.api.Workspace.EventType.BEFORE_EDITOR_LOADED, function(event) {
+      // mark track changes ON serverside.
+      event.options.trackChanges = "true";
+
       // remove the ToggleChangeTracking action from the toolbar.
       goog.events.listen(event.editor, sync.api.Editor.EventTypes.ACTIONS_LOADED, function(e) {
-        var i;
-        var action;
         if (e.actionsConfiguration && e.actionsConfiguration.toolbars && e.actionsConfiguration.toolbars[0].name == "Review") {
           var actions = e.actionsConfiguration.toolbars[0].children;
+          let i;
+          let action;
           for (i = 0; i < actions.length; i ++) {
             action = actions[i];
             if (action.type == 'action' && action.id == 'Author/TrackChanges') {
               actions.splice(i, 1);
             }
           }
-          // enable track changes
-          var am = event.editor.getActionsManager();
-          var toggleAction = am.getActionById('Author/TrackChanges');
-          toggleAction.isSelected(function(isSelected) {
-            if ( !isSelected) {
-              toggleAction.actionPerformed();
-            }
-          }.bind(this));
-
-          // remove the action from actions manager.
-          am.unregisterAction('Author/TrackChanges');
+          // remove the Toggle track changes action.
+          event.editor.getActionsManager()
+            .unregisterAction('Author/TrackChanges');
         }
       });
     });
   };
 
-  // Initialize the connector.
-  var connector = new EmbeddedConnector();
+  /**
+   * Removes the ShowXML action from the toolbar and action manager.
+   */
+  EmbeddedConnector.prototype.removeShowXMLAction = function() {
+    goog.events.listen(workspace, sync.api.Workspace.EventType.BEFORE_EDITOR_LOADED, function(event) {
+      // remove the ToggleChangeTracking action from the toolbar.
+      goog.events.listen(event.editor, sync.api.Editor.EventTypes.ACTIONS_LOADED, function(e) {
+        if(e.actionsConfiguration && e.actionsConfiguration.toolbars && e.actionsConfiguration.toolbars[0].name == "Review") {
+          var children = e.actionsConfiguration.toolbars[0].children;
+          let i;
+          for(i = 0; i < children.length; i++) {
+            let child = children[i];
+            if(child.name == 'More...') {
+              let moreChildren = child.children;
+              let moreChild;
+              let j;
+              for(j = 0; j < moreChildren.length; j++) {
+                moreChild = moreChildren[j];
+                if(moreChild.id == 'Author/ShowXML') {
+                  // remove the ShoXML action.
+                  children.splice(j, 1);
+                  break;
+                }
+              }
+              break;
+            }
+          }
+        }
+      });
+    });
+  }
 
+  // Initialize the connector.
+  new EmbeddedConnector();
 
 })();
