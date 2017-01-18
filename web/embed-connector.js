@@ -19,8 +19,8 @@
     window.addEventListener('message', this.messageReceived.bind(this), false);
 
     // handle track changes.
-    this.track = window.frameElement.getAttribute('data-track');
-    if(this.track == "true") {
+    var frame = window.frameElement;
+    if(workspace.embedded && frame && frame.getAttribute('data-track') == "true") {
       this.forceTrackChanges();
     }
 
