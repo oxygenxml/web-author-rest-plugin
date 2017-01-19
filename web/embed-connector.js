@@ -25,12 +25,51 @@
     }
 
     goog.events.listen(workspace, sync.api.Workspace.EventType.EDITOR_LOADED, function(event) {
+      goog.events.listen(event.editor, sync.api.Editor.EventTypes.ACTIONS_LOADED, function(e) {
+        setTimeout(function() {
+          if(!this.replacedSave) {
+            this.replacedSave = true;
+            let editor = event.editor;
+            let saveAction = editor.getActionsManager().getActionById("Author/Save");
+            let oldActionPerformed = saveAction.actionPerformed.bind(saveAction);
 
-
-      this.editorLoaded = true;
-      this.editor = event.editor;
+            saveAction.actionPerformed = function(callback) {
+              oldActionPerformed(function() {
+                let i;
+                for(i = 0; i < this.saveCallbacks.length; i++) {
+                  this.saveCallbacks[i]();
+                }
+              }.bind(this));
+            }.bind(this);
+          }
+        }.bind(this), 0);
+      }.bind(this));
     }.bind(this));
+
+    this.saveCallbacks = [];
   }
+
+  /**
+   * Add a method that is called after the save action was invoked.
+   *
+   * @param {function} listener
+   */
+  EmbeddedConnector.prototype.addSaveListener = function(listener) {
+    this.saveCallbacks.push(listener);
+  };
+
+  /**
+   * Remove a save listener.
+   *
+   * @param {function} listener
+   */
+  EmbeddedConnector.prototype.removeSaveListener = function(listener) {
+    for(let i = 0; i < this.saveCallbacks.length; i++) {
+      if(this.saveCallbacks[i] == listener) {
+        this.saveCallbacks.splice(i, 1);
+      }
+    }
+  };
 
   /**
    * Function that handles all the messages received from the embeding library.
@@ -177,6 +216,6 @@
   }
 
   // Initialize the connector.
-  new EmbeddedConnector();
+  window.EmbeddedConnector = new EmbeddedConnector();
 
 })();
