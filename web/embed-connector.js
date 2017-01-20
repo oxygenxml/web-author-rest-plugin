@@ -39,6 +39,7 @@
                 for(i = 0; i < this.saveCallbacks.length; i++) {
                   this.saveCallbacks[i]();
                 }
+                callback();
               }.bind(this));
             }.bind(this);
           }
