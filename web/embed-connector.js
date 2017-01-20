@@ -26,6 +26,7 @@
 
     goog.events.listen(workspace, sync.api.Workspace.EventType.EDITOR_LOADED, function(event) {
       goog.events.listen(event.editor, sync.api.Editor.EventTypes.ACTIONS_LOADED, function(e) {
+        // Call this on a timeout so that other plugins can replace the SaveAction
         setTimeout(function() {
           if(!this.replacedSave) {
             this.replacedSave = true;
