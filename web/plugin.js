@@ -130,7 +130,6 @@
    */
   RestFileBrowser.prototype.requestUrlInfo_ = function (url, opt_callback) {
     // TODO: demo only, we have to find a way to determine the true type of the URL.
-      // TODO: the root URL is the path after the taksId
     var type = url.endsWith('/') ? 'FOLDER' : 'FILE';
     // DEV: the root url is set to the url folder.
     var rootUrl = url.substring(0, url.lastIndexOf('/') + (url.endsWith('/') ? 0 : 1));

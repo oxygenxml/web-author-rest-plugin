@@ -215,6 +215,9 @@
     });
   }
 
+  // Load the embedded custom CSS.
+  sync.util.loadCSSFile("../plugin-resources/rest-resources/embedded.css");
+
   // Initialize the connector.
   window.EmbeddedConnector = new EmbeddedConnector();
 
