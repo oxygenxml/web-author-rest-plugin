@@ -1,8 +1,10 @@
-.Undo24_light, .Save24_light,
+.Undo24_light, .Save24_light, .more,
 .Redo24_light, .Find24_light {
   background-position: 0% 0%;
   background-size: 100%;
 }
+
+
 
 #header-bar.text-mode {
   display: block !important;
@@ -25,6 +27,10 @@
   background-image: url('../rest-resources/images/Undo24.png');
 }
 
+.more {
+  background-image: url('../rest-resources/images/More24.png');
+}
+
 .Redo24_light {
   background-image: url('../rest-resources/images/Redo24.png');
 }
@@ -42,6 +48,10 @@
 (min-resolution: 130dppx) {
   .Undo24_light {
     background-image: url('../rest-resources/images/Undo24@2x.png');
+  }
+
+  .more {
+    background-image: url('../rest-resources/images/More24@2x.png');
   }
 
   .Redo24_light {
