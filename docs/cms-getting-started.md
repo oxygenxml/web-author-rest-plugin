@@ -10,7 +10,7 @@ Download the "All Platforms" version of Web Author from the [oXygen website](htt
 
 You will be asked for a license. You can request a trial license in the application for the time being which will work for 30 days. Meanwhile, you can contact support@oxygenxml.com to request a development license for an extended period of time.
 
-You can now open the same files presented on the Dashboard. These files are stored on an embedded WebDAV server.
+You can now open the sample files presented on the Dashboard. These files are stored on an embedded WebDAV server.
 
 Embed Web Author in your web page
 ---------------------------------
