@@ -5,9 +5,8 @@ import ro.sync.ecss.extensions.api.webapp.plugin.PluginConfigExtension;
 public class RestConfigExtension  extends PluginConfigExtension {
 
   /**
-   * The auto-save interval (in seconds).
+   * The rest server URL option.
    */
-  // TODO: check which name is used.
   final static String REST_SERVER_URL = "rest.server_url";
   
   /**
@@ -16,7 +15,6 @@ public class RestConfigExtension  extends PluginConfigExtension {
   @Override
   public String getOptionsForm() {
     String serverURL = getServerURL();
-    
     StringBuilder restServerOptions = new StringBuilder()
       .append("<div style='font-family:robotolight, Arial, Helvetica, sans-serif;font-size:0.85em;font-weight: lighter'>")
       .append("<label style='display: block; margin-top: 50px;' >")

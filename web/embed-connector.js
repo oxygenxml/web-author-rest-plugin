@@ -18,38 +18,81 @@
     // listen for post messages
     window.addEventListener('message', this.messageReceived.bind(this), false);
 
+
+
     // handle track changes.
     var frame = window.frameElement;
-    if(workspace.embedded && frame && frame.getAttribute('data-track') == "true") {
-      this.forceTrackChanges();
+    if(workspace.embedded && frame) {
+      if (frame.getAttribute('data-track') == "true") {
+        this.forceTrackChanges = true;
+      }
     }
 
-    goog.events.listen(workspace, sync.api.Workspace.EventType.EDITOR_LOADED, function(event) {
-      goog.events.listen(event.editor, sync.api.Editor.EventTypes.ACTIONS_LOADED, function(e) {
-        // Call this on a timeout so that other plugins can replace the SaveAction
-        setTimeout(function() {
-          if(!this.replacedSave) {
-            this.replacedSave = true;
-            let editor = event.editor;
-            let saveAction = editor.getActionsManager().getActionById("Author/Save");
-            let oldActionPerformed = saveAction.actionPerformed.bind(saveAction);
+    goog.events.listen(workspace, sync.api.Workspace.EventType.BEFORE_EDITOR_LOADED,
+      this.beforeEditorLoadedListener.bind(this));
 
-            saveAction.actionPerformed = function(callback) {
-              oldActionPerformed(function() {
-                let i;
-                for(i = 0; i < this.saveCallbacks.length; i++) {
-                  this.saveCallbacks[i]();
-                }
-                callback();
-              }.bind(this));
-            }.bind(this);
-          }
-        }.bind(this), 0);
+    goog.events.listen(workspace, sync.api.Workspace.EventType.EDITOR_LOADED,
+      function() {
+        this.editorLoaded = true;
       }.bind(this));
-    }.bind(this));
 
     this.saveCallbacks = [];
   }
+
+  /**
+   * Handler method for the BEFORE_EDITOR_LOADED event.
+   *
+   * @param event the event.
+   */
+  EmbeddedConnector.prototype.beforeEditorLoadedListener = function(event) {
+    this.editor = event.editor;
+
+    // mark track changes ON serverside.
+    event.options.trackChanges = this.forceTrackChanges;
+
+    // remove the ToggleChangeTracking action from the toolbar.
+    goog.events.listen(event.editor, sync.api.Editor.EventTypes.ACTIONS_LOADED,
+      this.actionsLoadedListener.bind(this, event.editor));
+  };
+
+  /**
+   * Handler method for the ACTIONS_LOADED event.
+   *
+   * @param e the event.
+   */
+  EmbeddedConnector.prototype.actionsLoadedListener = function(editor, e) {
+    if (e.actionsConfiguration && e.actionsConfiguration.toolbars && e.actionsConfiguration.toolbars[0].name == "Review") {
+      var actions = e.actionsConfiguration.toolbars[0].children;
+      var i;
+      var action;
+      for (i = 0; i < actions.length; i ++) {
+        action = actions[i];
+        if (action.type == 'action' && action.id == 'Author/TrackChanges') {
+          actions.splice(i, 1);
+        }
+      }
+      // remove the Toggle track changes action.
+      editor.getActionsManager().unregisterAction('Author/TrackChanges');
+    }
+    // replace the save action with one that offers hooks for before and after save.
+    setTimeout(function() {
+      if(!this.replacedSave) {
+        this.replacedSave = true;
+        let saveAction = editor.getActionsManager().getActionById("Author/Save");
+        let oldActionPerformed = saveAction.actionPerformed.bind(saveAction);
+
+        saveAction.actionPerformed = function(callback) {
+          oldActionPerformed(function() {
+            let i;
+            for(i = 0; i < this.saveCallbacks.length; i++) {
+              this.saveCallbacks[i]();
+            }
+            callback();
+          }.bind(this));
+        }.bind(this);
+      }
+    }.bind(this), 0);
+  };
 
   /**
    * Add a method that is called after the save action was invoked.
@@ -102,17 +145,22 @@
    * @param params the parameters object that determines the readonly status.
    */
   EmbeddedConnector.prototype.setReadOnlyStatus = function(params) {
-    var newValue = params.readOnly;
-    var reason = params.reason || '';
+    if(this.editorLoaded) {
+      var newValue = params.readOnly;
+      var reason = params.reason || '';
+      var op = new sync.ops.ServerOperation('ro.sync.ecss.extensions.commons.operations.SetReadOnlyStatusOperation',
+        workspace.currentEditor.controller);
 
-    var op = new sync.ops.ServerOperation('ro.sync.ecss.extensions.commons.operations.SetReadOnlyStatusOperation',
-      workspace.currentEditor.controller);
-    op.doOperation(function(e) {
-      },
-      {
-        "read-only": newValue,
-        reason: reason
-      }, null);
+      op.doOperation(function(e) {
+        },
+        {
+          "read-only": newValue,
+          reason: reason
+        }, null);
+    } else {
+      goog.events.listen(workspace, sync.api.Workspace.EventType.EDITOR_LOADED,
+        this.setReadOnlyStatus.bind(this, params));
+    }
   };
 
   /**
