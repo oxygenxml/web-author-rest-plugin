@@ -24,7 +24,7 @@
     var frame = window.frameElement;
     if(workspace.embedded && frame) {
       if (frame.getAttribute('data-track') == "true") {
-        this.forceTrackChanges = true;
+        this.forceChangeTracking = true;
       }
     }
 
@@ -48,7 +48,7 @@
     this.editor = event.editor;
 
     // mark track changes ON serverside.
-    event.options.trackChanges = this.forceTrackChanges;
+    event.options.trackChanges = this.forceChangeTracking;
 
     // remove the ToggleChangeTracking action from the toolbar.
     goog.events.listen(event.editor, sync.api.Editor.EventTypes.ACTIONS_LOADED,

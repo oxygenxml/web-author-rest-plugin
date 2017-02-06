@@ -1,6 +1,8 @@
 (function() {
   const REST_BASE_URL = 'rest://platform/'
 
+  const ROOT_REGEXP = /rest:\/\/platform\/[^\/]+\//;
+
   goog.events.listen(workspace, sync.api.Workspace.EventType.BEFORE_EDITOR_LOADED, function(e) {
     var url = e.options.url;
     // If the URL has 'rest' protocol we use the rest protocol handler.
@@ -45,6 +47,7 @@
   var RestFileBrowser = function() {
     var latestUrl = this.getLatestUrl();
     var latestRootUrl = this.getLatestRootUrl();
+
     sync.api.FileBrowsingDialog.call(this, {
       initialUrl: latestUrl,
       root: latestRootUrl
@@ -65,15 +68,8 @@
         new sync.util.Url(url).getDomain();
       // add an edit button only of there are no enforced servers
       // or there are more than one enforced server.
-      content += '<div class="rest-domain-edit"></div>';
       content += '</div>'
       element.innerHTML = content;
-      var button = element.querySelector('.rest-domain-edit');
-      if(button) {
-        button.title = "Edit server URL";
-        goog.events.listen(button, goog.events.EventType.CLICK,
-          goog.bind(this.switchToRepoConfig, this, element));
-      }
     }
     this.dialog.setPreferredSize(null, 700);
   };
@@ -85,9 +81,7 @@
     // if none was set we let it empty.
     var editUrl = latestUrl || url || '';
 
-    var button = element.querySelector('.rest-domain-edit');
     element.title = "";
-    goog.events.removeAll(button);
 
     element.style.paddingLeft = '5px';
     // the webdavServerPlugin additional content.
@@ -129,41 +123,18 @@
    * @private
    */
   RestFileBrowser.prototype.requestUrlInfo_ = function (url, opt_callback) {
-    // TODO: demo only, we have to find a way to determine the true type of the URL.
+    var callback = opt_callback || this.openUrlInfo;
+
     var type = url.endsWith('/') ? 'FOLDER' : 'FILE';
-    // DEV: the root url is set to the url folder.
-    var rootUrl = url.substring(0, url.lastIndexOf('/') + (url.endsWith('/') ? 0 : 1));
-    this.openUrlInfo(
+    var rootUrl = ROOT_REGEXP.exec(url)[0];
+
+    this.callback(
       url,
       {
       rootUrl: rootUrl,
       type: type
     });
   };
-
-  /**
-   * URL information received from the server, we can open that URL in the dialog.
-   *
-   * @param {string} url The URL about which we requested info.
-   * @param {function} callback the callback method.
-   *
-   * @param {goog.events.Event} e The XHR event.
-   */
-  RestFileBrowser.prototype.handleUrlInfoReceived = function (url, callback, e) {
-    var request = /** {@type goog.net.XhrIo} */ (e.target);
-    var status = request.getStatus();
-    if (status == 200) {
-      var info = request.getResponseJson();
-      callback(url, info);
-    } else if (status == 401) {
-      this.loginUser(function() {
-        goog.bind(this.requestUrlInfo_, this, url, callback);
-      }.bind(this));
-    } else {
-      this.showErrorMessage('Cannot open this URL');
-    }
-  };
-
 
   /**
    * Opens the url and sets it's url info.
@@ -203,7 +174,11 @@
    * @return {string} the latest root url.
    */
   RestFileBrowser.prototype.getLatestRootUrl = function() {
-    return REST_BASE_URL;
+    var urlParam = sync.util.getURLParameter('url');
+    if(urlParam) {
+      var newRoot = ROOT_REGEXP.exec(decodeURIComponent(urlParam))[0]
+      return newRoot;
+    }
   };
 
   /**
@@ -212,7 +187,10 @@
    * @return {String} the last set url.
    */
   RestFileBrowser.prototype.getLatestUrl = function() {
-    return REST_BASE_URL;
+    var urlParam = sync.util.getURLParameter('url');
+    if(urlParam) {
+      return decodeURIComponent(urlParam);
+    }
   };
 
   /**
