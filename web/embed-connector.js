@@ -65,14 +65,17 @@
       var actions = e.actionsConfiguration.toolbars[0].children;
       var i;
       var action;
-      for (i = 0; i < actions.length; i ++) {
-        action = actions[i];
-        if (action.type == 'action' && action.id == 'Author/TrackChanges') {
-          actions.splice(i, 1);
+
+      if(this.forceChangeTracking) {
+        for (i = 0; i < actions.length; i ++) {
+          action = actions[i];
+          if (action.type == 'action' && action.id == 'Author/TrackChanges') {
+            actions.splice(i, 1);
+          }
         }
+        // remove the Toggle track changes action.
+        editor.getActionsManager().unregisterAction('Author/TrackChanges');
       }
-      // remove the Toggle track changes action.
-      editor.getActionsManager().unregisterAction('Author/TrackChanges');
     }
     // replace the save action with one that offers hooks for before and after save.
     setTimeout(function() {
