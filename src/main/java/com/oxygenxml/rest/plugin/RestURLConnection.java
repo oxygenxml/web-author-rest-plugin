@@ -244,13 +244,14 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     }
     
     ObjectMapper mapper = new ObjectMapper();
-    JsonNode[] array;
-    array = mapper.readValue(jsonFilesString, mapper.getTypeFactory().constructArrayType(JsonNode.class));
+    JsonNode[] array = mapper.readValue(jsonFilesString, mapper.getTypeFactory().constructArrayType(JsonNode.class));
     
     List<FolderEntryDescriptor> files = new ArrayList<FolderEntryDescriptor>();
     for(int i = 0; i < array.length; i++) {
       JsonNode file = array[i];
-      String filePath = getDocumenURL() + file.get("name").asText() + (file.get("folder").asBoolean() ? "/" : "");
+      JsonNode folderProp = file.get("folder");
+      boolean isFolder = folderProp != null && folderProp.asBoolean();
+      String filePath = getDocumenURL() + file.get("name").asText() + (isFolder ? "/" : "");
       files.add(new FolderEntryDescriptor(filePath));
     }
     return files;
