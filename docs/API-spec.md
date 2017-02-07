@@ -80,10 +80,10 @@ If your file URLs have an hierarchical structure, you can use the default file b
 |----------|-----------|
 | *List Folder*     | GET `$BASE_URL`/oxygen-cms/v1/folders?url=folder_url  |
 
-The response should be a JSON object with the following format:
+The response should be a JSON array of objects with the following format:
 
 ```javascript
-[{name: "file1.dita"}, {name: "file2.dita"}]
+[{"name": "file.ditamap", "folder": false}, {"name": "topics/", folder: true}]
 ```
 
 ### Custom file browsing widget
