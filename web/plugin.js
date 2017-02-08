@@ -1,7 +1,7 @@
 (function() {
-  const REST_BASE_URL = 'rest://platform/'
 
-  const ROOT_REGEXP = /rest:\/\/platform\/[^\/]+\//;
+  var regExpOption = sync.options.PluginsOptions.getClientOption('restRootRegExp');
+  const ROOT_REGEXP = regExpOption ? new RegExp(regExpOption) : null;
 
   goog.events.listen(workspace, sync.api.Workspace.EventType.BEFORE_EDITOR_LOADED, function(e) {
     var url = e.options.url;
@@ -126,9 +126,10 @@
     var callback = opt_callback || this.openUrlInfo;
 
     var type = url.endsWith('/') ? 'FOLDER' : 'FILE';
-    var rootUrl = ROOT_REGEXP.exec(url)[0];
+    var matches = ROOT_REGEXP && ROOT_REGEXP.exec(url);
+    var rootUrl = matches ? matches[0] : null;
 
-    this.callback(
+    callback.bind(this)(
       url,
       {
       rootUrl: rootUrl,
@@ -174,11 +175,13 @@
    * @return {string} the latest root url.
    */
   RestFileBrowser.prototype.getLatestRootUrl = function() {
+    var newRoot = null;
     var urlParam = sync.util.getURLParameter('url');
-    if(urlParam) {
-      var newRoot = ROOT_REGEXP.exec(decodeURIComponent(urlParam))[0]
-      return newRoot;
+    if(urlParam && urlParam.match('rest:\/\/')) {
+      var matches = ROOT_REGEXP && ROOT_REGEXP.exec(decodeURIComponent(urlParam));
+      newRoot = matches ? matches[0] : null;
     }
+    return newRoot;
   };
 
   /**
