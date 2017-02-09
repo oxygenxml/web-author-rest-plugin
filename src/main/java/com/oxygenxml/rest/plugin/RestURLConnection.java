@@ -233,7 +233,9 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     String jsonFilesString;
     try {
       jsonFilesString = IOUtils.toString(connection.getInputStream());
+      logger.debug("Received folder listing from REST server :" + jsonFilesString);
     } catch(IOException e) {
+      logger.debug("Failed to read folder listing from REST server :" + e.getMessage());
       if(401 == ((HttpExceptionWithDetails)e).getReasonCode()) {
         throw new UserActionRequiredException(new WebappMessage(
             WebappMessage.MESSAGE_TYPE_CUSTOM, "Authentication required",
@@ -252,6 +254,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       JsonNode folderProp = file.get("folder");
       boolean isFolder = folderProp != null && folderProp.asBoolean();
       String filePath = getDocumenURL() + file.get("name").asText() + (isFolder ? "/" : "");
+      logger.debug("Add parsed file path :" + filePath);
       files.add(new FolderEntryDescriptor(filePath));
     }
     return files;
