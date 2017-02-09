@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.ws.rs.core.MediaType;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.apache.log4j.Logger;
@@ -226,6 +228,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     URL listFolderURL = new URL(url.toExternalForm().replaceFirst("/files/", "/folders/"));
     URLConnection connection;
     connection = listFolderURL.openConnection();
+    connection.addRequestProperty("Accept", MediaType.APPLICATION_JSON);
     // Adding headers to the folder listing connection.    
     addHeaders(connection, this.contextId);
     connection.connect();
