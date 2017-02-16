@@ -64,7 +64,7 @@ To implement this re-login flow you should do the following:
   **Hint**: you can redirect her to your existing login form.
 3. After the user logs in, your should redirect her to 
   ```
-  $WEB_AUTHOR_URL/plugins-dispatcher/rest/login-done
+  $WEB_AUTHOR_URL/plugins-dispatcher/rest-login-callback
   ```
 
 File browsing
@@ -97,5 +97,5 @@ $BASE_URL/browse
 
 After the user chose the resource URL, your job is to redirect her to 
 ```
-$WEB_AUTHOR_URL/plugins-dispatcher/rest/browse-done?url=rest://chosen_url
+$WEB_AUTHOR_URL/plugins-dispatcher/rest-browse-callback?url=rest://chosen_url
 ```
