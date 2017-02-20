@@ -124,7 +124,6 @@
    */
   RestFileBrowser.prototype.requestUrlInfo_ = function (url, opt_callback) {
     var callback = opt_callback || this.openUrlInfo;
-
     var type = url.endsWith('/') ? 'FOLDER' : 'FILE';
     var matches = ROOT_REGEXP && ROOT_REGEXP.exec(url);
     var rootUrl = matches ? matches[0] : null;
@@ -176,7 +175,7 @@
    */
   RestFileBrowser.prototype.getLatestRootUrl = function() {
     var newRoot = null;
-    var urlParam = sync.util.getURLParameter('url');
+    var urlParam = decodeURIComponent(sync.util.getURLParameter('url'));
     if(urlParam && urlParam.match('rest:\/\/')) {
       var matches = ROOT_REGEXP && ROOT_REGEXP.exec(decodeURIComponent(urlParam));
       newRoot = matches ? matches[0] : null;
