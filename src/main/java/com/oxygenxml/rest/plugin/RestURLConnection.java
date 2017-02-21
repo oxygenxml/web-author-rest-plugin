@@ -256,7 +256,8 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       JsonNode file = array[i];
       JsonNode folderProp = file.get("folder");
       boolean isFolder = folderProp != null && folderProp.asBoolean();
-      String filePath = getDocumenURL() + file.get("name").asText() + (isFolder ? "/" : "");
+      String encodedFileName = URLUtil.encodeURIComponent(file.get("name").asText());
+      String filePath = getDocumenURL() + encodedFileName + (isFolder ? "/" : "");
       logger.debug("Add parsed file path :" + filePath);
       files.add(new FolderEntryDescriptor(filePath));
     }
