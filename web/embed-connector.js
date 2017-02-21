@@ -229,8 +229,12 @@
             }
           }
           // remove the Toggle track changes action.
-          event.editor.getActionsManager()
-            .unregisterAction('Author/TrackChanges');
+          var actionsManager = event.editor.getActionsManager();
+          actionsManager.unregisterAction('Author/TrackChanges');
+
+          // disabled the AcceptChange and RejectChange actions.
+          actionsManager.getActionById('Author/AcceptChange').isEnabled = function() {return false;};
+          actionsManager.getActionById('Author/RejectChange').isEnabled = function() {return false;};
         }
       });
     });
