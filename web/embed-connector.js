@@ -81,12 +81,12 @@
     setTimeout(function() {
       if(!this.replacedSave) {
         this.replacedSave = true;
-        let saveAction = editor.getActionsManager().getActionById("Author/Save");
-        let oldActionPerformed = saveAction.actionPerformed.bind(saveAction);
+        var saveAction = editor.getActionsManager().getActionById("Author/Save");
+        var oldActionPerformed = saveAction.actionPerformed.bind(saveAction);
 
         saveAction.actionPerformed = function(callback) {
           oldActionPerformed(function() {
-            let i;
+            var i;
             for(i = 0; i < this.saveCallbacks.length; i++) {
               this.saveCallbacks[i]();
             }
@@ -112,7 +112,7 @@
    * @param {function} listener
    */
   EmbeddedConnector.prototype.removeSaveListener = function(listener) {
-    for(let i = 0; i < this.saveCallbacks.length; i++) {
+    for(var i = 0; i < this.saveCallbacks.length; i++) {
       if(this.saveCallbacks[i] == listener) {
         this.saveCallbacks.splice(i, 1);
       }
@@ -220,8 +220,8 @@
       goog.events.listen(event.editor, sync.api.Editor.EventTypes.ACTIONS_LOADED, function(e) {
         if (e.actionsConfiguration && e.actionsConfiguration.toolbars && e.actionsConfiguration.toolbars[0].name == "Review") {
           var actions = e.actionsConfiguration.toolbars[0].children;
-          let i;
-          let action;
+          var i;
+          var action;
           for (i = 0; i < actions.length; i ++) {
             action = actions[i];
             if (action.type == 'action' && action.id == 'Author/TrackChanges') {
@@ -245,13 +245,13 @@
       goog.events.listen(event.editor, sync.api.Editor.EventTypes.ACTIONS_LOADED, function(e) {
         if(e.actionsConfiguration && e.actionsConfiguration.toolbars && e.actionsConfiguration.toolbars[0].name == "Review") {
           var children = e.actionsConfiguration.toolbars[0].children;
-          let i;
+          var i;
           for(i = 0; i < children.length; i++) {
-            let child = children[i];
+            var child = children[i];
             if(child.name == 'More...') {
-              let moreChildren = child.children;
-              let moreChild;
-              let j;
+              var moreChildren = child.children;
+              var moreChild;
+              var j;
               for(j = 0; j < moreChildren.length; j++) {
                 moreChild = moreChildren[j];
                 if(moreChild.id == 'Author/ShowXML') {
