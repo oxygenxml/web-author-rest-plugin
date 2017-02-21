@@ -10,8 +10,16 @@ import org.apache.commons.io.IOUtils;
 
 import ro.sync.ecss.extensions.api.webapp.plugin.WebappServletPluginExtension;
 
+/**
+ * Servlet that represents a servlet to which the REST server will redirect to when the login process was completed.
+ *  
+ * @author mihai_coanda
+ */
 public class LoginCallbackServlet extends WebappServletPluginExtension{
   
+  /**
+   * Returns a HTML page that posts a message to the WebAuthor frame to close the login dialog. 
+   */
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     StringBuilder callbackContent = new StringBuilder();

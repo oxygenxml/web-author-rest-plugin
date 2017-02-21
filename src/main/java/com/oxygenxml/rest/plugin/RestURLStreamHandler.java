@@ -42,9 +42,12 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
   }
   
   /**
-   * Computes the new connection from the 
-   * @param urlConnection
-   * @return
+   * Computes the new URL to the REST server from the current connection.
+   *  
+   * @param url the current URL.
+   * 
+   * @return the URL to the REST server that represents the current URL.
+   * 
    * @throws MalformedURLException whether something fails.
    */
   private static URL computeRestUrl(URL url) throws MalformedURLException {
