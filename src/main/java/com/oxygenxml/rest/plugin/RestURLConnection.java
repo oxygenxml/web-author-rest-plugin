@@ -21,8 +21,10 @@ import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.google.common.base.Charsets;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
 
 import ro.sync.ecss.extensions.api.webapp.WebappMessage;
@@ -233,10 +235,11 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     addHeaders(connection, this.contextId);
     connection.connect();
     
-    String jsonFilesString;
+    // Read the server response in a buffer in order to be able to print it for debugging purposes.
+    byte[] jsonBytes;
+    InputStream inputStream = connection.getInputStream();
     try {
-      jsonFilesString = IOUtils.toString(connection.getInputStream());
-      logger.debug("Received folder listing from REST server :" + jsonFilesString);
+      jsonBytes = ByteStreams.toByteArray(inputStream);
     } catch(IOException e) {
       logger.debug("Failed to read folder listing from REST server :" + e.getMessage());
       if(401 == ((HttpExceptionWithDetails)e).getReasonCode()) {
@@ -246,10 +249,17 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       } else {
         throw e;
       }
+    } finally {
+      inputStream.close();
+    }
+    
+    if (logger.isDebugEnabled()) {
+      String jsonFilesString = new String(jsonBytes, Charsets.UTF_8);
+      logger.debug("Received folder listing from REST server :" + jsonFilesString);
     }
     
     ObjectMapper mapper = new ObjectMapper();
-    JsonNode[] array = mapper.readValue(jsonFilesString, mapper.getTypeFactory().constructArrayType(JsonNode.class));
+    JsonNode[] array = mapper.readValue(jsonBytes, mapper.getTypeFactory().constructArrayType(JsonNode.class));
     
     List<FolderEntryDescriptor> files = new ArrayList<FolderEntryDescriptor>();
     for(int i = 0; i < array.length; i++) {
