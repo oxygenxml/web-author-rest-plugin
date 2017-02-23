@@ -213,30 +213,8 @@
    */
   EmbeddedConnector.prototype.forceTrackChanges = function() {
     goog.events.listen(workspace, sync.api.Workspace.EventType.BEFORE_EDITOR_LOADED, function(event) {
-      // mark track changes ON serverside.
-      event.options.trackChanges = "true";
 
-      // remove the ToggleChangeTracking action from the toolbar.
-      goog.events.listen(event.editor, sync.api.Editor.EventTypes.ACTIONS_LOADED, function(e) {
-        if (e.actionsConfiguration && e.actionsConfiguration.toolbars && e.actionsConfiguration.toolbars[0].name == "Review") {
-          var actions = e.actionsConfiguration.toolbars[0].children;
-          var i;
-          var action;
-          for (i = 0; i < actions.length; i ++) {
-            action = actions[i];
-            if (action.type == 'action' && action.id == 'Author/TrackChanges') {
-              actions.splice(i, 1);
-            }
-          }
-          // remove the Toggle track changes action.
-          var actionsManager = event.editor.getActionsManager();
-          actionsManager.unregisterAction('Author/TrackChanges');
-
-          // disabled the AcceptChange and RejectChange actions.
-          actionsManager.getActionById('Author/AcceptChange').isEnabled = function() {return false;};
-          actionsManager.getActionById('Author/RejectChange').isEnabled = function() {return false;};
-        }
-      });
+      event.options.trackChanges = 'forced';
     });
   };
 
