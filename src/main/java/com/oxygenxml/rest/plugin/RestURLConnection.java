@@ -250,7 +250,11 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
         throw e;
       }
     } finally {
-      inputStream.close();
+      try {
+        inputStream.close();
+      } catch (IOException e) {
+        // Ignore the exception - we already read the server response.
+      }
     }
     
     if (logger.isDebugEnabled()) {
