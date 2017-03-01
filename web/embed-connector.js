@@ -23,9 +23,7 @@
     // handle track changes.
     var frame = window.frameElement;
     if(workspace.embedded && frame) {
-      if (frame.getAttribute('data-track') == "true") {
-        this.forceChangeTracking = true;
-      }
+      this.trackChangesOption = frame.getAttribute('data-track');
     }
 
     goog.events.listen(workspace, sync.api.Workspace.EventType.BEFORE_EDITOR_LOADED,
@@ -48,7 +46,7 @@
     this.editor = event.editor;
 
     // mark track changes ON serverside.
-    event.options.trackChanges = this.forceChangeTracking ? 'forced' : event.options.trackChanges;
+    event.options.trackChanges = this.trackChangesOption;
 
     // remove the ToggleChangeTracking action from the toolbar.
     goog.events.listen(event.editor, sync.api.Editor.EventTypes.ACTIONS_LOADED,
@@ -66,7 +64,7 @@
       var i;
       var action;
 
-      if(this.forceChangeTracking) {
+      if(this.trackChangesOption == 'forced') {
         for (i = 0; i < actions.length; i ++) {
           action = actions[i];
           if (action.type == 'action' && action.id == 'Author/TrackChanges') {
@@ -210,11 +208,15 @@
   /**
    * Removes the toggleChangeTracking toolbar action and
    * enables change tracking.
+   *
+   * @param {string} the editor load 'trackChanges' option value. Can take 3 values :
+   * 'defaul', 'forced' or 'enabled'.
+   *
    */
-  EmbeddedConnector.prototype.forceTrackChanges = function() {
+  EmbeddedConnector.prototype.setTrackChanges = function(trackChanges) {
     goog.events.listen(workspace, sync.api.Workspace.EventType.BEFORE_EDITOR_LOADED, function(event) {
 
-      event.options.trackChanges = 'forced';
+      event.options.trackChanges = trackChanges;
     });
   };
 
