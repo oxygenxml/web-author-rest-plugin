@@ -151,7 +151,7 @@
     }
     this.setUrlInfo(url, info);
     this.openUrl(url, isFile, null);
-  }
+  };
 
   /**
    * Sets the information received about the url.
@@ -274,12 +274,12 @@
   registerFileBrowserListeners(fileBrowser);
 
   var webdavOpenAction = new sync.actions.OpenAction(fileBrowser);
-  webdavOpenAction.setDescription('Open document from WebDAV server');
+  webdavOpenAction.setDescription('Open document from REST server');
   webdavOpenAction.setActionId('rest-open-action');
   webdavOpenAction.setActionName('Rest');
 
   var webdavCreateAction = new sync.api.CreateDocumentAction(fileBrowser);
-  webdavCreateAction.setDescription('Create a new document on a WebDAV server');
+  webdavCreateAction.setDescription('Create a new document on a REST server');
   webdavCreateAction.setActionId('rest-create-action');
   webdavCreateAction.setActionName('Rest');
 

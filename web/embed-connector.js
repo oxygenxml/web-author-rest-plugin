@@ -35,7 +35,7 @@
       }.bind(this));
 
     this.saveCallbacks = [];
-  }
+  };
 
   /**
    * Handler method for the BEFORE_EDITOR_LOADED event.
@@ -56,6 +56,7 @@
   /**
    * Handler method for the ACTIONS_LOADED event.
    *
+   * @param editor the editor.
    * @param e the event.
    */
   EmbeddedConnector.prototype.actionsLoadedListener = function(editor, e) {
@@ -190,8 +191,7 @@
    * @param message the message to post to the iframe.
    */
   EmbeddedConnector.prototype.postToCallbackFrame = function(message) {
-    var siblingFrames = window.top.frames
-    var i;
+    var siblingFrames = window.top.frames, i;
     for (i = 0; i < siblingFrames.length; i ++) {
       // do not post messages to self.
       var frameName = null;
@@ -209,8 +209,8 @@
    * Removes the toggleChangeTracking toolbar action and
    * enables change tracking.
    *
-   * @param {string} the editor load 'trackChanges' option value. Can take 3 values :
-   * 'defaul', 'forced' or 'enabled'.
+   * @param {string} trackChanges the editor load 'trackChanges' option value. Can take 3 values :
+   * 'default', 'forced' or 'enabled'.
    *
    */
   EmbeddedConnector.prototype.setTrackChanges = function(trackChanges) {
@@ -250,7 +250,7 @@
         }
       });
     });
-  }
+  };
 
   // Load the embedded custom CSS.
   sync.util.loadCSSFile("../plugin-resources/rest-resources/embedded.css");
