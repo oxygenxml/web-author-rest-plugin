@@ -8,7 +8,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 
+import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.WebappServletPluginExtension;
+import ro.sync.exml.workspace.api.PluginResourceBundle;
+import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 
 /**
  * Servlet that represents a servlet to which the REST server will redirect to when the login process was completed.
@@ -23,12 +26,13 @@ public class LoginCallbackServlet extends WebappServletPluginExtension{
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     StringBuilder callbackContent = new StringBuilder();
+    PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
     callbackContent
       .append("<html><head><script>")
 
       .append("parent.postMessage("
           // the object passed to the parent window.
-          + "{\"action\" : \"login\", \"message\": \"Rest server succeeded in logging in the user\"},"
+          + "{\"action\" : \"login\", \"message\": \"" + rb.getMessage("REST_login_success") + "\"},"
           // the parent window URL regexp 
           + "'*');")
       .append("</script></head></html>");

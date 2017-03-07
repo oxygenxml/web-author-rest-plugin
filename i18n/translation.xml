@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<translation>
+    <languageList>
+        <language description="English" lang="en_US"/>
+        <language description="German" lang="de_DE"/>
+        <language description="French" lang="fr_FR"/>
+        <language description="Japanese" lang="ja_JP"/>
+        <language description="Dutch" lang="nl_NL"/>
+    </languageList>
+    <key value="REST_login_success">
+        <comment>Informs the user that the login was successful.</comment>
+        <val lang="en_US">Rest server succeeded in logging in the user</val>
+        <val lang="de_DE">Rest server succeeded in logging in the user</val>
+        <val lang="fr_FR">Rest server succeeded in logging in the user</val>
+        <val lang="ja_JP">Rest server succeeded in logging in the user</val>
+        <val lang="nl_NL">Rest server succeeded in logging in the user</val>
+    </key>
+    <key value="Root_regexp_description">
+        <comment>Tooltip explaining that the input value required is a regular expression which will determine the root directory</comment>
+        <val lang="en_US">Regular expression applied over the URL to determine the RootURL.</val>
+        <val lang="de_DE">Regular expression applied over the URL to determine the RootURL.</val>
+        <val lang="fr_FR">Regular expression applied over the URL to determine the RootURL.</val>
+        <val lang="ja_JP">Regular expression applied over the URL to determine the RootURL.</val>
+        <val lang="nl_NL">Regular expression applied over the URL to determine the RootURL.</val>
+    </key>
+    <key value="Root_regexp">
+        <comment>Label for text input for setting the regular expression that determines the root directory</comment>
+        <val lang="en_US">Root RegExp</val>
+        <val lang="de_DE">Root RegExp</val>
+        <val lang="fr_FR">Root RegExp</val>
+        <val lang="ja_JP">Root RegExp</val>
+        <val lang="nl_NL">Root RegExp</val>
+    </key>
+    <key value="Authentication_required" distribution="webauthor">
+        <comment>Title of login dialog.</comment>
+        <val lang="en_US">Authentication required</val>
+        <val lang="de_DE">Authentication required</val>
+        <val lang="fr_FR">Authentication required</val>
+        <val lang="ja_JP">Authentication required</val>
+        <val lang="nl_NL">Authentication required</val>
+    </key>
+    <key value="Server_URL">
+        <comment>Open URL dialog. Input for the server URL.</comment>
+        <val lang="en_US">Server URL</val>
+        <val lang="de_DE">Server-URL</val>
+        <val lang="fr_FR">URL du serveur</val>
+        <val lang="ja_JP">サーバー URL</val>
+        <val lang="nl_NL">Server URL</val>
+    </key>
+    <key value="File_not_found">
+        <comment/>
+        <val lang="en_US">File not found</val>
+        <val lang="de_DE">Datei nicht gefunden</val>
+        <val lang="fr_FR">Fichier non trouvé</val>
+        <val lang="ja_JP">ファイルは見つかりません</val>
+        <val lang="nl_NL">Bestand niet gevonden</val>
+    </key>
+</translation>

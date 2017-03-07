@@ -28,9 +28,12 @@ import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
 
 import ro.sync.ecss.extensions.api.webapp.WebappMessage;
+import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.FilterURLConnection;
 import ro.sync.ecss.extensions.api.webapp.plugin.UserActionRequiredException;
 import ro.sync.exml.plugin.urlstreamhandler.CacheableUrlConnection;
+import ro.sync.exml.workspace.api.PluginResourceBundle;
+import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.net.protocol.FolderEntryDescriptor;
 import ro.sync.net.protocol.http.HttpExceptionWithDetails;
 import ro.sync.util.URLUtil;
@@ -151,8 +154,9 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
           logger.warn("Failed login attempt for " + URLUtil.getDescription(url));
         }
       }
+      PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
       throw new UserActionRequiredException(
-          new WebappMessage(WebappMessage.MESSAGE_TYPE_CUSTOM, "Authentication required",
+          new WebappMessage(WebappMessage.MESSAGE_TYPE_CUSTOM, rb.getMessage("Authentication_required"),
               // send back the URL for which to authenticate.
               this.delegateConnection.getURL().toExternalForm(), true));
     } else {
@@ -162,7 +166,8 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
         if(e instanceof HttpExceptionWithDetails) {
           HttpExceptionWithDetails detailed = (HttpExceptionWithDetails)e;
           if(detailed.getReasonCode() == HttpStatus.SC_NOT_FOUND) {
-            serverMessage = "The document was not found.";
+            PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
+            serverMessage = rb.getMessage("File_not_found");
           }
         }
         if(serverMessage == null) {
@@ -243,9 +248,10 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     } catch(IOException e) {
       logger.debug("Failed to read folder listing from REST server :" + e.getMessage());
       if(401 == ((HttpExceptionWithDetails)e).getReasonCode()) {
+        PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
         throw new UserActionRequiredException(new WebappMessage(
-            WebappMessage.MESSAGE_TYPE_CUSTOM, "Authentication required",
-            "Authentication required", true));
+            WebappMessage.MESSAGE_TYPE_CUSTOM, rb.getMessage("Authentication_required"),
+            rb.getMessage("Authentication_required"), true));
       } else {
         throw e;
       }

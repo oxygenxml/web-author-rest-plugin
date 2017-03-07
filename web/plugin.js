@@ -60,7 +60,7 @@
     var url = this.getCurrentFolderUrl();
     if (url) {
       element.style.paddingLeft = '5px';
-      element.title = "Server URL";
+      element.title = tr(msgs.SERVER_URL_);
       var content = '<div class="rest-repo-preview">' +
         '<div class="domain-icon" style="' +
         'background-image: url(' + sync.util.getImageUrl('/images/SharePointWeb16.png', sync.util.getHdpiFactor()) +
@@ -85,11 +85,32 @@
 
     element.style.paddingLeft = '5px';
     // the webdavServerPlugin additional content.
-    element.innerHTML =
-      '<div class="rest-config-dialog">' +
-      '<label>Server URL: <input id="rest-browse-url" type="text" autocorrect="off" autocapitalize="none" autofocus/></label>' +
-      '</div>';
-    element.querySelector('#rest-browse-url').value = editUrl;
+    element.innerHTML = '';
+
+    var inputElement = goog.dom.createDom(
+      'input',
+      {
+        'id': 'rest-browse-url',
+        'type': 'text',
+        'autocapitalize': 'none'
+      }
+    );
+    // google closure does not add everything as it should
+    inputElement.setAttribute('autocorrect', 'off');
+    inputElement.setAttribute('autofocus', '');
+
+    goog.dom.appendChild(
+      element,
+      goog.dom.createDom(
+        'div', 'rest-config-dialog',
+        goog.dom.createDom(
+          'label', '',
+          tr(msgs.SERVER_URL_) + ': ',
+          inputElement
+        )
+      )
+    );
+    inputElement.value = editUrl;
 
     var prefferedHeight = 190;
     this.dialog.setPreferredSize(null, prefferedHeight);
@@ -105,7 +126,7 @@
       if(url.match('rest:\/\/')) {
         this.requestUrlInfo_(url);
       } else {
-        this.showErrorMessage('Invalid URL inserted.');
+        this.showErrorMessage(tr(msgs.INVALID_URL_));
         // hide the error element on input refocus.
         goog.events.listenOnce(input, goog.events.EventType.FOCUS,
           goog.bind(function(e) {this.hideErrorElement();}, this));
