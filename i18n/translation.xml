@@ -7,6 +7,15 @@
         <language description="Japanese" lang="ja_JP"/>
         <language description="Dutch" lang="nl_NL"/>
     </languageList>
+    
+    <key value="Unconfigured_REST_server_url">
+        <comment>Error message informing the user that the REST Server url option is not set</comment>
+        <val lang="en_US">The REST server URL option is not set.</val>
+        <val lang="de_DE">The REST server URL option is not set.</val>
+        <val lang="fr_FR">The REST server URL option is not set.</val>
+        <val lang="ja_JP">The REST server URL option is not set.</val>
+        <val lang="nl_NL">The REST server URL option is not set.</val>
+    </key>   
     <key value="REST_login_success">
         <comment>Informs the user that the login was successful.</comment>
         <val lang="en_US">Rest server succeeded in logging in the user</val>

@@ -8,8 +8,10 @@ import java.net.URLConnection;
 import java.util.Collections;
 import java.util.Map;
 
+import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.URLStreamHandlerWithContext;
 import ro.sync.ecss.extensions.api.webapp.plugin.UserContext;
+import ro.sync.exml.workspace.api.PluginResourceBundle;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.options.WSOptionsStorage;
 import ro.sync.util.URLUtil;
@@ -53,8 +55,13 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
   private static URL computeRestUrl(URL url) throws MalformedURLException {
     // remove the "rest-" protocol prefix.
     String encodedDocumentURL = URLUtil.encodeURIComponent(url.toExternalForm());
-    String restUrl = getServerUrl() + "files/?url=" + encodedDocumentURL;
-    return new URL(restUrl);
+    String serverUrl = getServerUrl();
+    if(serverUrl != null && !serverUrl.isEmpty()) {
+      String restUrl = serverUrl + "files/?url=" + encodedDocumentURL;
+      return new URL(restUrl);
+    }
+    PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
+    throw new MalformedURLException(rb.getMessage("Unconfigured_REST_server_url"));
   }
   
   /**
@@ -65,7 +72,6 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
   public static String getServerUrl() {
     WSOptionsStorage optionsStorage = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage();
     String serverUrl = optionsStorage.getOption(RestConfigExtension.REST_SERVER_URL, "");
-    // TODO: throw a not-configured exception so that calling methods handle this case.
     return serverUrl;
   }
 }
