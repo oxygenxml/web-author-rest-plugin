@@ -156,7 +156,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       }
       PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
       throw new UserActionRequiredException(
-          new WebappMessage(WebappMessage.MESSAGE_TYPE_CUSTOM, rb.getMessage("Authentication_required"),
+          new WebappMessage(WebappMessage.MESSAGE_TYPE_CUSTOM, rb.getMessage(TranslationTags.AUTHENTICATION_REQUIRED),
               // send back the URL for which to authenticate.
               this.delegateConnection.getURL().toExternalForm(), true));
     } else {
@@ -167,7 +167,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
           HttpExceptionWithDetails detailed = (HttpExceptionWithDetails)e;
           if(detailed.getReasonCode() == HttpStatus.SC_NOT_FOUND) {
             PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
-            serverMessage = rb.getMessage("File_not_found");
+            serverMessage = rb.getMessage(TranslationTags.FILE_NOT_FOUND);
           }
         }
         if(serverMessage == null) {

@@ -29,12 +29,12 @@ public class RestConfigExtension  extends PluginConfigExtension {
       .append("<div style='font-family:robotolight, Arial, Helvetica, sans-serif;font-size:0.85em;font-weight: lighter'>")
       
       .append("<label style='display: block; margin-top: 50px;' >")
-      .append("REST " + rb.getMessage("Server_URL") + ": <input  name = '").append(REST_SERVER_URL).append("' value='").append(serverURL).append("' ")
+      .append("REST " + rb.getMessage(TranslationTags.SERVER_URL) + ": <input  name = '").append(REST_SERVER_URL).append("' value='").append(serverURL).append("' ")
       .append("style='width: 350px; line-height: 20px; border: 1px solid #777C7F; background-color: #f7f7f7; border-radius: 5px; padding-left: 7px;' ")
       .append("></input></label>")
       // The RegExp used to determine root url
-      .append("<label style='display: block; margin-top: 20px;' title='" + rb.getMessage("Root_regexp_description") + "' >")
-      .append(rb.getMessage("Root_regexp") + ": <input  name = '")
+      .append("<label style='display: block; margin-top: 20px;' title='" + rb.getMessage(TranslationTags.ROOT_REGEXP_DESCRIPTION) + "' >")
+      .append(rb.getMessage(TranslationTags.ROOT_REGEXP) + ": <input  name = '")
       .append(REST_ROOT_REGEXP).append("' value='").append(getOption(REST_ROOT_REGEXP, "")).append("' ")
       .append("style='width: 350px; float:right; line-height: 20px; border: 1px solid #777C7F; background-color: #f7f7f7; border-radius: 5px; padding-left: 7px;' ")
       .append("></input></label>")

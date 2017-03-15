@@ -61,7 +61,7 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
       return new URL(restUrl);
     }
     PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
-    throw new MalformedURLException(rb.getMessage("Unconfigured_REST_server_url"));
+    throw new MalformedURLException(rb.getMessage(TranslationTags.UNCONFIGURED_REST_SERVER_URL));
   }
   
   /**
