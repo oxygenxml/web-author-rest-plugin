@@ -18,14 +18,6 @@
     // listen for post messages
     window.addEventListener('message', this.messageReceived.bind(this), false);
 
-
-
-    // handle track changes.
-    var frame = window.frameElement;
-    if(workspace.embedded && frame) {
-      this.trackChangesOption = frame.getAttribute('data-track');
-    }
-
     goog.events.listen(workspace, sync.api.Workspace.EventType.BEFORE_EDITOR_LOADED,
       this.beforeEditorLoadedListener.bind(this));
 
@@ -42,15 +34,11 @@
    *
    * @param event the event.
    */
-  EmbeddedConnector.prototype.beforeEditorLoadedListener = function(event) {
-    this.editor = event.editor;
-
-    // mark track changes ON serverside.
-    event.options.trackChanges = this.trackChangesOption;
-
+  EmbeddedConnector.prototype.beforeEditorLoadedListener = function(e) {
+    var editor = e.editor;
     // remove the ToggleChangeTracking action from the toolbar.
-    goog.events.listen(event.editor, sync.api.Editor.EventTypes.ACTIONS_LOADED,
-      this.actionsLoadedListener.bind(this, event.editor));
+    goog.events.listen(editor, sync.api.Editor.EventTypes.ACTIONS_LOADED,
+      this.actionsLoadedListener.bind(this, editor));
   };
 
   /**
@@ -60,22 +48,6 @@
    * @param e the event.
    */
   EmbeddedConnector.prototype.actionsLoadedListener = function(editor, e) {
-    if (e.actionsConfiguration && e.actionsConfiguration.toolbars && e.actionsConfiguration.toolbars[0].name == "Review") {
-      var actions = e.actionsConfiguration.toolbars[0].children;
-      var i;
-      var action;
-
-      if(this.trackChangesOption == 'forced') {
-        for (i = 0; i < actions.length; i ++) {
-          action = actions[i];
-          if (action.type == 'action' && action.id == 'Author/TrackChanges') {
-            actions.splice(i, 1);
-          }
-        }
-        // remove the Toggle track changes action.
-        editor.getActionsManager().unregisterAction('Author/TrackChanges');
-      }
-    }
     // replace the save action with one that offers hooks for before and after save.
     setTimeout(function() {
       if(!this.replacedSave) {
@@ -203,21 +175,6 @@
         siblingFrames[i].postMessage(message, '*');
       }
     }
-  };
-
-  /**
-   * Removes the toggleChangeTracking toolbar action and
-   * enables change tracking.
-   *
-   * @param {string} trackChanges the editor load 'trackChanges' option value. Can take 3 values :
-   * 'default', 'forced' or 'enabled'.
-   *
-   */
-  EmbeddedConnector.prototype.setTrackChanges = function(trackChanges) {
-    goog.events.listen(workspace, sync.api.Workspace.EventType.BEFORE_EDITOR_LOADED, function(event) {
-
-      event.options.trackChanges = trackChanges;
-    });
   };
 
   /**
