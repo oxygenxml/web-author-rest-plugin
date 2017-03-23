@@ -37,6 +37,24 @@
         });
       });
     }
+
+    var translations = {
+      SERVER_URL_: {
+        "en_US":"Server URL",
+        "de_DE":"Server-URL",
+        "fr_FR":"URL du serveur",
+        "ja_JP":"サーバー URL",
+        "nl_NL":"Server URL"
+      },
+      INVALID_URL_:{
+        "en_US":"Invalid URL",
+        "de_DE":"Ungültige URL",
+        "fr_FR":"URL invalide",
+        "ja_JP":"不正なURL",
+        "nl_NL":"Ongeldige URL"
+      }
+    };
+    sync.Translation.addTranslations(translations);
   });
 
   /**

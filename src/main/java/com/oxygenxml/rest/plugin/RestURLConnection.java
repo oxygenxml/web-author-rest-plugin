@@ -250,8 +250,8 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       if(401 == ((HttpExceptionWithDetails)e).getReasonCode()) {
         PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
         throw new UserActionRequiredException(new WebappMessage(
-            WebappMessage.MESSAGE_TYPE_CUSTOM, rb.getMessage("Authentication_required"),
-            rb.getMessage("Authentication_required"), true));
+            WebappMessage.MESSAGE_TYPE_CUSTOM, rb.getMessage(TranslationTags.AUTHENTICATION_REQUIRED),
+            rb.getMessage(TranslationTags.AUTHENTICATION_REQUIRED), true));
       } else {
         throw e;
       }

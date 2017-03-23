@@ -16,37 +16,37 @@
         <val lang="ja_JP">The REST server URL option is not set.</val>
         <val lang="nl_NL">The REST server URL option is not set.</val>
     </key>   
-    <key value="REST_login_success">
+    <key value="REST_login_success" distribution="webauthor">
         <comment>Informs the user that the login was successful.</comment>
         <val lang="en_US">Rest server succeeded in logging in the user</val>
-        <val lang="de_DE">Rest server succeeded in logging in the user</val>
-        <val lang="fr_FR">Rest server succeeded in logging in the user</val>
-        <val lang="ja_JP">Rest server succeeded in logging in the user</val>
-        <val lang="nl_NL">Rest server succeeded in logging in the user</val>
+        <val lang="de_DE">Benutzer erfolgreich am Rest-Server angemeldet</val>
+        <val lang="fr_FR">Le serveur rest a réussi à ouvrir une session utilisateur</val>
+        <val lang="ja_JP">ユーザーにおいて、残りのサーバーのロギングに成功しました</val>
+        <val lang="nl_NL">Rest-server heeft de gebruiker ingelogd</val>
     </key>
-    <key value="Root_regexp_description">
+    <key value="Root_regexp_description" distribution="webauthor">
         <comment>Tooltip explaining that the input value required is a regular expression which will determine the root directory</comment>
         <val lang="en_US">Regular expression applied over the URL to determine the RootURL.</val>
-        <val lang="de_DE">Regular expression applied over the URL to determine the RootURL.</val>
-        <val lang="fr_FR">Regular expression applied over the URL to determine the RootURL.</val>
-        <val lang="ja_JP">Regular expression applied over the URL to determine the RootURL.</val>
-        <val lang="nl_NL">Regular expression applied over the URL to determine the RootURL.</val>
+        <val lang="de_DE">Auf die URL anzuwendender regulärer Ausdruck zur Ermittlung der Root-URL.</val>
+        <val lang="fr_FR">Expression régulière appliquée sur l'URL pour déterminer RootURL.</val>
+        <val lang="ja_JP">RootURLを決定するために正規表現がURLに適用されました</val>
+        <val lang="nl_NL">Reguliere expressie toegepast op de URL om de basis-URL te bepalen.</val>
     </key>
-    <key value="Root_regexp">
+    <key value="Root_regexp" distribution="webauthor">
         <comment>Label for text input for setting the regular expression that determines the root directory</comment>
         <val lang="en_US">Root RegExp</val>
         <val lang="de_DE">Root RegExp</val>
-        <val lang="fr_FR">Root RegExp</val>
-        <val lang="ja_JP">Root RegExp</val>
-        <val lang="nl_NL">Root RegExp</val>
+        <val lang="fr_FR">RegExp racine</val>
+        <val lang="ja_JP">ルートRegExp</val>
+        <val lang="nl_NL">Root-RegExp</val>
     </key>
     <key value="Authentication_required" distribution="webauthor">
         <comment>Title of login dialog.</comment>
         <val lang="en_US">Authentication required</val>
-        <val lang="de_DE">Authentication required</val>
-        <val lang="fr_FR">Authentication required</val>
-        <val lang="ja_JP">Authentication required</val>
-        <val lang="nl_NL">Authentication required</val>
+        <val lang="de_DE">Authentifikation erforderlich</val>
+        <val lang="fr_FR">Authentification requise</val>
+        <val lang="ja_JP">認証が必要です</val>
+        <val lang="nl_NL">Verificatie vereist</val>
     </key>
     <key value="Server_URL">
         <comment>Open URL dialog. Input for the server URL.</comment>
