@@ -1,7 +1,7 @@
 (function() {
 
   var regExpOption = sync.options.PluginsOptions.getClientOption('restRootRegExp');
-  const ROOT_REGEXP = regExpOption ? new RegExp(regExpOption) : null;
+  var ROOT_REGEXP = regExpOption ? new RegExp(regExpOption) : null;
 
   goog.events.listen(workspace, sync.api.Workspace.EventType.BEFORE_EDITOR_LOADED, function(e) {
     var url = e.options.url;
