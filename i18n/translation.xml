@@ -18,11 +18,11 @@
     </key>   
     <key value="REST_login_success" distribution="webauthor">
         <comment>Informs the user that the login was successful.</comment>
-        <val lang="en_US">Rest server succeeded in logging in the user</val>
-        <val lang="de_DE">Benutzer erfolgreich am Rest-Server angemeldet</val>
-        <val lang="fr_FR">Le serveur rest a réussi à ouvrir une session utilisateur</val>
-        <val lang="ja_JP">ユーザーにおいて、残りのサーバーのロギングに成功しました</val>
-        <val lang="nl_NL">Rest-server heeft de gebruiker ingelogd</val>
+        <val lang="en_US">REST server succeeded in logging in the user</val>
+        <val lang="de_DE">Benutzer erfolgreich am REST-Server angemeldet</val>
+        <val lang="fr_FR">Le serveur REST a réussi à ouvrir une session utilisateur</val>
+        <val lang="ja_JP">ユーザーにおいて、RESTのサーバーのロギングに成功しました</val>
+        <val lang="nl_NL">REST-server heeft de gebruiker ingelogd</val>
     </key>
     <key value="Root_regexp_description" distribution="webauthor">
         <comment>Tooltip explaining that the input value required is a regular expression which will determine the root directory</comment>
