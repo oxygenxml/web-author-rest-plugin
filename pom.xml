@@ -7,10 +7,10 @@
   <groupId>com.oxygenxml</groupId>
   <artifactId>web-author-rest-connector</artifactId>
   <!-- IMPORTANT: This should be the latest public version. -->
-  <version>18.1.0.1</version>
+  <version>19.0</version>
 
   <properties>
-    <oxygen.sdk.version>${project.version}</oxygen.sdk.version>
+    <oxygen.sdk.version>18.1.0.1</oxygen.sdk.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
