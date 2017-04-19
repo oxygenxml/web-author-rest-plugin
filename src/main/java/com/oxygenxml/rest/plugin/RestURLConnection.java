@@ -168,6 +168,17 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
           if(detailed.getReasonCode() == HttpStatus.SC_NOT_FOUND) {
             PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
             serverMessage = rb.getMessage(TranslationTags.FILE_NOT_FOUND);
+            URL baseURL = detailed.getBaseURL();
+            String fileURL = baseURL.getQuery();
+            if(fileURL != null && !fileURL.isEmpty()) {
+              int urlParamIndex = fileURL.indexOf("url=");
+              fileURL = URLUtil.decodeURIComponent(
+                  fileURL.substring(urlParamIndex + "url=".length()));
+            } else {
+              fileURL = baseURL.toString();
+            }
+            
+            serverMessage += " " + fileURL;
           }
         }
         if(serverMessage == null) {
