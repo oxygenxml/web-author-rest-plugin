@@ -4,7 +4,7 @@
     return;
   }
 
-  Actions = {
+  var Actions = {
     SET_READ_ONLY_STATUS: 'setReadOnly',
     INITIALIZE: 'initialize'
   };
@@ -14,7 +14,15 @@
    *
    * @constructor
    */
-  EmbeddedConnector = function() {
+  var EmbeddedConnector = function() {
+
+    /**
+     * A list of listeners which should be called when the link opened event is fired.
+     * @type {Array<function>}
+     * @private
+     */
+    this.linkOpenedListeners_ = [];
+
     // listen for post messages
     window.addEventListener('message', this.messageReceived.bind(this), false);
 
@@ -32,13 +40,19 @@
   /**
    * Handler method for the BEFORE_EDITOR_LOADED event.
    *
-   * @param event the event.
+   * @param {sync.api.Workspace.BeforeEditorOpenedEvent} e the event.
    */
   EmbeddedConnector.prototype.beforeEditorLoadedListener = function(e) {
     var editor = e.editor;
     // remove the ToggleChangeTracking action from the toolbar.
     goog.events.listen(editor, sync.api.Editor.EventTypes.ACTIONS_LOADED,
       this.actionsLoadedListener.bind(this, editor));
+
+    goog.events.listen(editor, sync.api.Editor.EventTypes.LINK_OPENED, goog.bind(function(e) {
+      for (var i = 0; i < this.linkOpenedListeners_.length; ++i) {
+        this.linkOpenedListeners_[i](e);
+      }
+    }, this));
   };
 
   /**
@@ -69,6 +83,26 @@
   };
 
   /**
+   * Adds a listener for the link opened event.
+   * @param {function} listener The listener to add.
+   */
+  EmbeddedConnector.prototype.addLinkOpenedListener = function (listener) {
+    this.linkOpenedListeners_.push(listener);
+  };
+
+  /**
+   * Removes a listener for the link opened event.
+   * @param {function} listener The listener to remove.
+   */
+  EmbeddedConnector.prototype.removeLinkOpenedListener = function (listener) {
+    for (var i = 0; i < this.linkOpenedListeners_.length; ++i) {
+      if (this.linkOpenedListeners_[i] === listener) {
+        this.linkOpenedListeners_.splice(i, 1);
+      }
+    }
+  };
+
+  /**
    * Add a method that is called after the save action was invoked.
    *
    * @param {function} listener
@@ -84,7 +118,7 @@
    */
   EmbeddedConnector.prototype.removeSaveListener = function(listener) {
     for(var i = 0; i < this.saveCallbacks.length; i++) {
-      if(this.saveCallbacks[i] == listener) {
+      if(this.saveCallbacks[i] === listener) {
         this.saveCallbacks.splice(i, 1);
       }
     }
