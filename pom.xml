@@ -7,7 +7,7 @@
   <groupId>com.oxygenxml</groupId>
   <artifactId>web-author-rest-connector</artifactId>
   <!-- IMPORTANT: This should be the latest public version. -->
-  <version>19.0</version>
+  <version>19.1-SNAPSHOT</version>
 
   <properties>
     <oxygen.sdk.version>19.0.0.0</oxygen.sdk.version>
