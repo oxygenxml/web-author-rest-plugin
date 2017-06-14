@@ -35,6 +35,7 @@
       }.bind(this));
 
     this.saveCallbacks = [];
+    this.dirtyStatusListeners_ = [];
   };
 
   /**
@@ -51,6 +52,12 @@
     goog.events.listen(editor, sync.api.Editor.EventTypes.LINK_OPENED, goog.bind(function(e) {
       for (var i = 0; i < this.linkOpenedListeners_.length; ++i) {
         this.linkOpenedListeners_[i](e);
+      }
+    }, this));
+
+    goog.events.listen(editor, sync.api.Editor.EventTypes.DIRTY_STATUS_CHANGED, goog.bind(function(e) {
+      for (var i = 0; i < this.dirtyStatusListeners_.length; ++i) {
+        this.dirtyStatusListeners_[i](e);
       }
     }, this));
   };
@@ -95,11 +102,7 @@
    * @param {function} listener The listener to remove.
    */
   EmbeddedConnector.prototype.removeLinkOpenedListener = function (listener) {
-    for (var i = 0; i < this.linkOpenedListeners_.length; ++i) {
-      if (this.linkOpenedListeners_[i] === listener) {
-        this.linkOpenedListeners_.splice(i, 1);
-      }
-    }
+    goog.array.remove(this.linkOpenedListeners_, listener);
   };
 
   /**
@@ -117,11 +120,25 @@
    * @param {function} listener
    */
   EmbeddedConnector.prototype.removeSaveListener = function(listener) {
-    for(var i = 0; i < this.saveCallbacks.length; i++) {
-      if(this.saveCallbacks[i] === listener) {
-        this.saveCallbacks.splice(i, 1);
-      }
-    }
+    goog.array.remove(this.saveCallbacks, listener);
+  };
+
+  /**
+   * Add a method that is whenever the dirty status of the editor was changed.
+   *
+   * @param {function} listener
+   */
+  EmbeddedConnector.prototype.addDirtyStatusListener = function(listener) {
+    this.dirtyStatusListeners_.push(listener);
+  };
+
+  /**
+   * Remove a dirty status listener.
+   *
+   * @param {function} listener
+   */
+  EmbeddedConnector.prototype.removeSaveListener = function(listener) {
+    goog.array.remove(this.dirtyStatusListeners_, listener);
   };
 
   /**
