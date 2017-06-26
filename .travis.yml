@@ -6,6 +6,6 @@ deploy:
   skip_cleanup: true
   api_key:
     secure: SlBu0pLIrweP4AWTfT1GktON34m8vb6kPyo+7CpenkHrjs5Jy7vvK1/Fl+UQOIIxiQ1KPtYOZRMEtzvRn33ENeJ48tAlNz1TsnKG8wRa6wgjidLD8JBpO5KwKvm9Jgp++D2BWmKoS6ZPeFecLiAlqdq6gZ68+/iUJpZ5UZNuBP6Ab3MeTyp/LQYfiif9SdLN1cZKcj+I2LuZmGwOQ01N4eQOgZY3eDqpjDRfUdQQa02StdMQd+pGyx/yrOnvd6rcl66lBOv3jjJXDOhUCBhFm675EHFBoFin20oyCUi8mpd3WRFp9w8HFXaJ1yK9UViD3toFmkGU2J1Ljmi8SluVHUT13LA9S2Adn0UaOOyS9gjJV4Tm67S+3Exot5l17GtblolMBackH78tnHuXEJFLxaW4XHTg6JHCMdd9JKOIm7QlXxe+V41Jpbm0wEIWvHl0jaG9WTxqRh+nV5LQ5aZ3nUSh8Pn1vUfiamqsKZ1rCrN8DaUmpkfgs7MpCRGnfJt7jV295ALXMWRNCfEcpqIr9GMO25gDqpPzZOoUBl622/d2JC7WwhEOum/ouJCGrEo+Vt559M28PuaIe1z6Pa4eJe8EvRaVGmBrJU86esqVudcr4HIaJ2Db/b3MbLA1sToz1xjMpjO6I5jJTk1IAPtd61MgdfbjIZ4cXDnUtPFa9vU=
-  file: target/web-author-rest-connector-19.0-plugin.jar
+  file: target/web-author-rest-connector-19.1-plugin.jar
   on:
     tags: true
