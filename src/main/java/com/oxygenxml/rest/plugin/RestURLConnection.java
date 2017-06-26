@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -145,20 +146,21 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     if (e.getMessage().indexOf("401") != -1) {
       // log failed login attempts.
       URL url = this.delegateConnection.getURL();
+      URL fileUrl = getFileUrl(url);
       String userInfo = url.getUserInfo();
       if (userInfo != null && !userInfo.isEmpty()) {
         String user = URLUtil.extractUser(url.toExternalForm());
         if (user != null && !user.trim().isEmpty()) {
-          logger.warn("Failed login attempt of user " + user + " for " + URLUtil.getDescription(url));
+          logger.warn("Failed login attempt of user " + user + " for " + URLUtil.getDescription(fileUrl));
         } else {
-          logger.warn("Failed login attempt for " + URLUtil.getDescription(url));
+          logger.warn("Failed login attempt for " + URLUtil.getDescription(fileUrl));
         }
       }
       PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
       throw new UserActionRequiredException(
           new WebappMessage(WebappMessage.MESSAGE_TYPE_CUSTOM, rb.getMessage(TranslationTags.AUTHENTICATION_REQUIRED),
               // send back the URL for which to authenticate.
-              this.delegateConnection.getURL().toExternalForm(), true));
+              fileUrl.toExternalForm(), true));
     } else {
       if (delegateConnection instanceof HttpURLConnection) {
         String serverMessage = null;
@@ -169,15 +171,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
             PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
             serverMessage = rb.getMessage(TranslationTags.FILE_NOT_FOUND);
             URL baseURL = detailed.getBaseURL();
-            String fileURL = baseURL.getQuery();
-            if(fileURL != null && !fileURL.isEmpty()) {
-              int urlParamIndex = fileURL.indexOf("url=");
-              fileURL = URLUtil.decodeURIComponent(
-                  fileURL.substring(urlParamIndex + "url=".length()));
-            } else {
-              fileURL = baseURL.toString();
-            }
-            
+            String fileURL = getFileUrl(baseURL).toExternalForm();
             serverMessage += " " + fileURL;
           }
         }
@@ -309,5 +303,30 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       fullURL.delete(slashIndex, fullURL.length());
     }
     return URLUtil.decodeURIComponent(URLUtil.decodeURIComponent(fullURL.toString()));
+  }
+  
+  @Override
+  public URL getURL() {
+    URL requestURL = super.getURL();
+    return getFileUrl(requestURL);
+  }
+
+  /**
+   * Return the file URL referred to by the given request URL. It is a query parameter with name "url". 
+   * 
+   * @param requestURL The request URL.
+   * 
+   * @return The file URL.
+   */
+  private static URL getFileUrl(URL requestURL) {
+    String urlParameterValue = URLUtil.getURLParameterValue(requestURL, "url");
+    if (urlParameterValue != null) {
+      try {
+        requestURL = new URL(URLUtil.decodeURIComponent(urlParameterValue));
+      } catch (MalformedURLException e) {
+        // Nothing to do.
+      }
+    }
+    return requestURL;
   }
 }
