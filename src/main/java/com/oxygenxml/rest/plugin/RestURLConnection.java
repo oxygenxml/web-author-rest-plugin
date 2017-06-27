@@ -18,10 +18,13 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -72,6 +75,11 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    * The session ID.
    */
   private String contextId;
+  
+  /**
+   * The URL of the connection if different from that of the underlying connection.
+   */
+  private URL urlOverride;
 
   /**
    * Constructor method for the URLConnection wrapper.
@@ -118,6 +126,9 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
         public void close() throws IOException {
           try {
             super.close();
+            // WA-1358: The server overridden the location.
+            String actualLocation = RestURLConnection.this.getHeaderField("Location");
+            RestURLConnection.this.urlOverride = new URL(actualLocation);
           } catch (IOException e) {
             handleException(e);
           }
@@ -146,7 +157,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     if (e.getMessage().indexOf("401") != -1) {
       // log failed login attempts.
       URL url = this.delegateConnection.getURL();
-      URL fileUrl = getFileUrl(url);
+      String fileUrl = getFileUrl(url);
       String userInfo = url.getUserInfo();
       if (userInfo != null && !userInfo.isEmpty()) {
         String user = URLUtil.extractUser(url.toExternalForm());
@@ -160,7 +171,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       throw new UserActionRequiredException(
           new WebappMessage(WebappMessage.MESSAGE_TYPE_CUSTOM, rb.getMessage(TranslationTags.AUTHENTICATION_REQUIRED),
               // send back the URL for which to authenticate.
-              fileUrl.toExternalForm(), true));
+              fileUrl, true));
     } else {
       if (delegateConnection instanceof HttpURLConnection) {
         String serverMessage = null;
@@ -171,7 +182,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
             PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
             serverMessage = rb.getMessage(TranslationTags.FILE_NOT_FOUND);
             URL baseURL = detailed.getBaseURL();
-            String fileURL = getFileUrl(baseURL).toExternalForm();
+            String fileURL = getFileUrl(baseURL);
             serverMessage += " " + fileURL;
           }
         }
@@ -307,8 +318,17 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
   
   @Override
   public URL getURL() {
-    URL requestURL = super.getURL();
-    return getFileUrl(requestURL);
+    if (this.urlOverride != null) {
+      return this.urlOverride;
+    } else {
+      URL requestURL = super.getURL();
+      String fileUrl = getFileUrl(requestURL);
+      try {
+        return new URL(fileUrl);
+      } catch (MalformedURLException e) {
+        return requestURL;
+      }
+    }
   }
 
   /**
@@ -318,15 +338,19 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    * 
    * @return The file URL.
    */
-  private static URL getFileUrl(URL requestURL) {
-    String urlParameterValue = URLUtil.getURLParameterValue(requestURL, "url");
-    if (urlParameterValue != null) {
-      try {
-        requestURL = new URL(URLUtil.decodeURIComponent(urlParameterValue));
-      } catch (MalformedURLException e) {
-        // Nothing to do.
+  @VisibleForTesting
+  static String getFileUrl(URL requestURL) {
+    List<NameValuePair> params = URLEncodedUtils.parse(requestURL.getQuery(), Charsets.UTF_8);
+    String encodedFileUrl = null;
+    for (NameValuePair pair : params) {
+      if (pair.getName().equals("url")) {
+        encodedFileUrl = pair.getValue();
       }
     }
-    return requestURL;
+    String fileUrl = requestURL.toExternalForm();
+    if (encodedFileUrl != null) {
+      fileUrl = URLUtil.decodeURIComponent(encodedFileUrl);
+    }
+    return fileUrl;
   }
 }
