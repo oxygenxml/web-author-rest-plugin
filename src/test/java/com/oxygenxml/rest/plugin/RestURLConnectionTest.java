@@ -9,8 +9,8 @@ import org.junit.Test;
 public class RestURLConnectionTest {
   
   /**
-   * <p><b>Description:</b> DESCRIBE THE TEST HERE!</p>
-   * <p><b>Bug ID:</b> EXM-1358</p>
+   * <p><b>Description:</b> Test that we retrieve the rest:// URL correctly from the request URL.</p>
+   * <p><b>Bug ID:</b> WA-1358</p>
    *
    * @author cristi_talau
    *
