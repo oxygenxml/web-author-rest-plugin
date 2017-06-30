@@ -128,7 +128,9 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
             super.close();
             // WA-1358: The server overridden the location.
             String actualLocation = RestURLConnection.this.getHeaderField("Location");
-            RestURLConnection.this.urlOverride = new URL(actualLocation);
+            if (actualLocation != null) {
+              RestURLConnection.this.urlOverride = new URL(actualLocation);
+            }
           } catch (IOException e) {
             handleException(e);
           }
