@@ -1,11 +1,14 @@
 package com.oxygenxml.rest.plugin;
 
+import java.io.FileNotFoundException;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -184,7 +187,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
             PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
             serverMessage = rb.getMessage(TranslationTags.FILE_NOT_FOUND);
             URL baseURL = detailed.getBaseURL();
-            String fileURL = getFileUrl(baseURL);
+            String fileURL = getFilePath(baseURL);
             serverMessage += " " + fileURL;
           }
         }
@@ -201,7 +204,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
         if (shouldDisplayServerMessage(serverMessage)) {
           throw new IOException(serverMessage, e);
         } else {
-          logger.debug("Server message too complex to display to the user");
+          logger.debug("Server message too complex to display to the user: " + serverMessage);
         }
       }
       throw e;
@@ -221,12 +224,13 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     
     if (serverMessage == null) {
       shouldDisplay = false;
-    }
-    if (serverMessage.contains("<body") || serverMessage.contains("</body")) {
-      shouldDisplay = false;
-    }
-    if (serverMessage.contains("<?xml")) {
-      shouldDisplay = false;
+    } else {
+      if (serverMessage.contains("<body") || serverMessage.contains("</body")) {
+        shouldDisplay = false;
+      }
+      if (serverMessage.contains("<?xml")) {
+        shouldDisplay = false;
+      }
     }
     return shouldDisplay;
   }
@@ -260,27 +264,21 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     
     // Read the server response in a buffer in order to be able to print it for debugging purposes.
     byte[] jsonBytes;
-    InputStream inputStream = connection.getInputStream();
     try {
-      jsonBytes = ByteStreams.toByteArray(inputStream);
-    } catch(IOException e) {
+      jsonBytes = readConnectionBytes(connection);
+    } catch (HttpExceptionWithDetails e) {
       logger.debug("Failed to read folder listing from REST server :" + e.getMessage());
-      if(401 == ((HttpExceptionWithDetails)e).getReasonCode()) {
+      if(HttpStatus.SC_UNAUTHORIZED == e.getReasonCode()) {
         PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
         throw new UserActionRequiredException(new WebappMessage(
             WebappMessage.MESSAGE_TYPE_CUSTOM, rb.getMessage(TranslationTags.AUTHENTICATION_REQUIRED),
             rb.getMessage(TranslationTags.AUTHENTICATION_REQUIRED), true));
-      } else {
-        throw e;
+      } else if (HttpStatus.SC_NOT_FOUND == e.getReasonCode()) {
+        String folderPath = getFilePath(e.getBaseURL());
+        throw new FileNotFoundException(folderPath);
       }
-    } finally {
-      try {
-        inputStream.close();
-      } catch (IOException e) {
-        // Ignore the exception - we already read the server response.
-      }
-    }
-    
+      throw e;
+    }    
     if (logger.isDebugEnabled()) {
       String jsonFilesString = new String(jsonBytes, Charsets.UTF_8);
       logger.debug("Received folder listing from REST server :" + jsonFilesString);
@@ -300,6 +298,29 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       files.add(new FolderEntryDescriptor(filePath));
     }
     return files;
+  }
+
+  /**
+   * Read the bytes from the given connection.
+   * 
+   * @param connection The URL connection.
+   * @return The bytes read.
+   * 
+   * @throws IOException Any exception caught when reading from the URL.
+   */
+  private byte[] readConnectionBytes(URLConnection connection) throws IOException {
+    byte[] jsonBytes;
+    InputStream inputStream = connection.getInputStream();
+    try {
+      jsonBytes = ByteStreams.toByteArray(inputStream);
+    } finally {
+      try {
+        inputStream.close();
+      } catch (IOException e) {
+        // Ignore the exception - we already read the server response.
+      }
+    }
+    return jsonBytes;
   }
   
   /**
@@ -331,6 +352,24 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
         return requestURL;
       }
     }
+  }
+  
+  /**
+   * Return the path of the file referred to by the given request URL. 
+   * 
+   * @param requestURL The request URL.
+   * 
+   * @return The file URL.
+   */
+  private static String getFilePath(URL requestURL) {
+    String fileUrl = getFileUrl(requestURL);
+    String filePath = fileUrl;
+    try {
+      filePath = new URI(fileUrl).getPath();
+    } catch (URISyntaxException se) {
+      // use the full URL if it cannot be parsed
+    }
+    return filePath;
   }
 
   /**
