@@ -260,9 +260,9 @@
     });
   };
 
-  // Load the embedded custom CSS.
-  sync.util.loadCSSFile("../plugin-resources/rest-resources/embedded.css");
-
+  // When embedded, hide the App-bar.
+  workspace.getViewManager().hideAppBar();
+  
   // Initialize the connector.
   window.EmbeddedConnector = new EmbeddedConnector();
 
