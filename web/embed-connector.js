@@ -1,6 +1,6 @@
 (function() {
   // run this code only when embeded.
-  if(true != workspace.embedded) {
+  if(sync.util.getURLParameter('embedded') === 'true') {
     return;
   }
 
