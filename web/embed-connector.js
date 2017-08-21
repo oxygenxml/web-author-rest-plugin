@@ -1,6 +1,6 @@
 (function() {
   // run this code only when embeded.
-  if(sync.util.getURLParameter('embedded') === 'true') {
+  if(sync.util.getURLParameter('embedded') !== 'true') {
     return;
   }
 
