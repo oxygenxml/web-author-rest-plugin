@@ -34,7 +34,7 @@ If an error occured while processing the request, the API can return an error st
 Basic file operations
 ---------------------
 
-Each file is identified by an URL with the `rest://` scheme. The file URL should be percent encoded when used as a query parameter.
+Each file is identified by an [OXY-URL](https://www.oxygenxml.com/doc/versions/19.0.0/ug-waCustom/topics/oxy-url.html) with the `rest://` scheme. The file URL should be percent encoded when used as a query parameter.
 
 | Action   | Endpoint  |
 |----------|-----------|
