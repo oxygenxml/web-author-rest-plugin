@@ -1,5 +1,5 @@
-Embed Web Author in your web page
----------------------------------
+Embed Web Author in your web page (deprecated)
+----------------------------------------------
 
 This library allows you to embed the Web Author in a web page of your application. You just have to add the following script in the head of your web page: 
 
