@@ -12,11 +12,6 @@ You will be asked for a license. You can request a trial license in the applicat
 
 You can now open the sample files presented on the Dashboard. These files are stored on an embedded WebDAV server.
 
-Embed Web Author in your web page
----------------------------------
-
-You can use the Web Author [embedding library](embedding-library/) for this purpose. 
-
 Connect it to the CMS
 ---------------------
 
