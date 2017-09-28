@@ -8,7 +8,6 @@ It project contains the following parts:
 1. A [tutorial](docs/cms-getting-started.md) to help you get started with your CMS integration.
 1. A [REST API specification](docs/API-spec.md) that needs to be implemented by the CMS.
 1. A [plugin](https://github.com/oxygenxml/web-author-rest-connector/releases) that connects Web Author to CMS-es that implement this REST API.
-1. A JavaScript [library](embedding-library) that can be used to embed Web Author in your application's web page.
 
 Plugin installation
 -------------------
