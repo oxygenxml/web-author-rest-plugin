@@ -24,8 +24,4 @@ The previous steps enabled you to load in Web Author sample files stored on an e
 
 Next steps
 ----------
-For more advanced use-cases here are some possible ways to further customize Web Author:
-- Implement an additional plugin. Our manual contains [some instructions](https://oxygenxml.com/doc/versions/18.1/ug-editor/tasks/webapp-plugin-prototyping.html#webapp-plugin-prototyping) to get you started.
-- Create a new XML framework or extend an existing one. You can use the ["Web Author Test Server Add-on"](https://oxygenxml.com/doc/versions/18.1/ug-editor/topics/customizing_frameworks.html) during development.
-- Create a self-contained web application (.war file) with all these components that you can deploy to others.
-
+For a more detailed documentation, please see our [Integration and Customization Guide](https://www.oxygenxml.com/doc/versions/19.0.0/ug-waCustom/index.html).
