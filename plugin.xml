@@ -22,7 +22,9 @@
   
   <extension type="URLHandler" 
     class="com.oxygenxml.rest.plugin.RestURLHandlerPluginExtension"/>
-    
+  <extension type="WorkspaceAccess" 
+    class="com.oxygenxml.rest.plugin.AuthHeadersApi"/>
+  
   <extension type="WebappServlet" role="config"
     class="com.oxygenxml.rest.plugin.RestConfigExtension"/>
   
