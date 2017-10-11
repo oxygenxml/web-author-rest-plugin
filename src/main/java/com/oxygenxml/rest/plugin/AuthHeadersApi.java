@@ -50,6 +50,10 @@ public class AuthHeadersApi implements WorkspaceAccessPluginExtension {
    */
   private void registerHeaders(AuthorDocumentModel documentModel) {
     String systemID = documentModel.getAuthorDocumentController().getAuthorDocumentNode().getSystemID();
+    if (!systemID.startsWith(RestURLConnection.REST_PROTOCOL + "://")) {
+      // Not a document opened over REST, do not register the header.
+      return;
+    }
     String contextId = URLUtil.getUserInfo(systemID);
     
     EditingSessionContext editingContext = documentModel.getAuthorAccess().getEditorAccess().getEditingContext();
