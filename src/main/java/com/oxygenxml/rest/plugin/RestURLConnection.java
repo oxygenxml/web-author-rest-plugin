@@ -239,6 +239,10 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    * Adds credentials associated with the given user context to this rest url connection. 
    */
   public static void addHeaders(URLConnection urlConnection, String contextId) {
+    if (contextId == null) {
+      // The current request did not match any session - no headers to add.
+      return;
+    }
     Map<String, String> serverHeaders = credentialsMap.getIfPresent(contextId);
     if(serverHeaders != null) {
       // add all headers to the url connection
