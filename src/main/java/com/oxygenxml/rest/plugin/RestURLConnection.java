@@ -159,10 +159,14 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    *             the param exception if it does not contain a 401 status.
    */
   private void handleException(IOException e) throws UserActionRequiredException, IOException {
+    URL url = this.delegateConnection.getURL();
+    String fileUrl = getFileUrl(url);
+    logger.debug("Exception thrown when accessing " + fileUrl);
+    if(logger.isDebugEnabled()) {
+      e.printStackTrace();
+    }
     if (e.getMessage().indexOf("401") != -1) {
       // log failed login attempts.
-      URL url = this.delegateConnection.getURL();
-      String fileUrl = getFileUrl(url);
       String userInfo = url.getUserInfo();
       if (userInfo != null && !userInfo.isEmpty()) {
         String user = URLUtil.extractUser(url.toExternalForm());
@@ -239,6 +243,10 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    * Adds credentials associated with the given user context to this rest url connection. 
    */
   public static void addHeaders(URLConnection urlConnection, String contextId) {
+    if(contextId == null) {
+      // The current request did not match any session - no headers to add.
+      return;
+    }
     Map<String, String> serverHeaders = credentialsMap.getIfPresent(contextId);
     if(serverHeaders != null) {
       // add all headers to the url connection
