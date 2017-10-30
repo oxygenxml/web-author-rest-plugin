@@ -262,7 +262,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
   
   @Override
   public List<FolderEntryDescriptor> listFolder() throws IOException {
-    URL listFolderURL = new URL(url.toExternalForm().replaceFirst("/files/", "/folders/"));
+    URL listFolderURL = new URL(url.toExternalForm().replaceFirst("/files", "/folders"));
     URLConnection connection;
     connection = listFolderURL.openConnection();
     connection.addRequestProperty("Accept", MediaType.APPLICATION_JSON);
@@ -335,7 +335,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    * @return the document url string from the delegate connection.
    */
   private String getDocumenURL() {
-    String restEndpoint = "/files/";
+    String restEndpoint = "/files";
     StringBuilder fullURL = new StringBuilder(url.toExternalForm());
     int endpointIndex = fullURL.indexOf(restEndpoint);
     fullURL.delete(0, endpointIndex + restEndpoint.length());
