@@ -17,7 +17,7 @@ import ro.sync.exml.workspace.api.options.WSOptionsStorage;
 import ro.sync.util.URLUtil;
 
 /**
- * URL stream handler for a webdav server.
+ * URL stream handler for a rest server.
  * 
  * @author mihai_coanda
  */
@@ -57,7 +57,7 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
     String encodedDocumentURL = URLUtil.encodeURIComponent(url.toExternalForm());
     String serverUrl = getServerUrl();
     if(serverUrl != null && !serverUrl.isEmpty()) {
-      String restUrl = serverUrl + "files/?url=" + encodedDocumentURL;
+      String restUrl = serverUrl + "files?url=" + encodedDocumentURL;
       return new URL(restUrl);
     }
     PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
@@ -72,6 +72,11 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
   public static String getServerUrl() {
     WSOptionsStorage optionsStorage = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage();
     String serverUrl = optionsStorage.getOption(RestConfigExtension.REST_SERVER_URL, "");
+    // if the server URL does not end in '/' we add the '/'
+    if(serverUrl != null && !serverUrl.isEmpty() && serverUrl.lastIndexOf("/") != serverUrl.length() - 1) {
+      serverUrl = serverUrl + "/";
+    }
+    
     return serverUrl;
   }
 }
