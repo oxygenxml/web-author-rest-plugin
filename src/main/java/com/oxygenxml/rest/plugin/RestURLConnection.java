@@ -293,7 +293,13 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     }
     
     ObjectMapper mapper = new ObjectMapper();
-    JsonNode[] array = mapper.readValue(jsonBytes, mapper.getTypeFactory().constructArrayType(JsonNode.class));
+    JsonNode[] array;
+    try {
+      array = mapper.readValue(jsonBytes, mapper.getTypeFactory().constructArrayType(JsonNode.class));
+    } catch (IOException e) {
+      // The original error message is not user-friendly at all - replace it.
+      throw new IOException("Invalid server response", e);
+    }
     
     List<FolderEntryDescriptor> files = new ArrayList<FolderEntryDescriptor>();
     for(int i = 0; i < array.length; i++) {
