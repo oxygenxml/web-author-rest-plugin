@@ -4,6 +4,8 @@ addons:
     organization: "oxygenxml-github"
     token:
       secure: "${SONAR_CLOUD_TOKEN}"
+     branches:
+      - BRANCH_OXYGEN_RELEASE_19_1  
 jdk:
   - oraclejdk8
 script:
