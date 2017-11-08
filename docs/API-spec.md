@@ -44,6 +44,7 @@ Each file is identified by an URL with the `rest://` scheme. The file URL should
 | *Delete* | DELETE `$BASE_URL`/files?url=file_url  | - | - |
 
 The file content encoding should be `UTF-8` in both requests and responses of these endpoints.
+An example implementation for ASP.NET can be found ![here](examples/asp.net.md).
 
 User Authentication
 -------------------
