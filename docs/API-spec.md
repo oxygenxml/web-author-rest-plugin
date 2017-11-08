@@ -36,14 +36,15 @@ Basic file operations
 
 Each file is identified by an URL with the `rest://` scheme. The file URL should be percent encoded when used as a query parameter.
 
-| Action   | Endpoint  |
-|----------|-----------|
-| *Open*   | GET    `$BASE_URL`/files?url=file_url  |
-| *Save*   | PUT    `$BASE_URL`/files?url=file_url  |
-| *Upload* | POST   `$BASE_URL`/files?url=file_url  |
-| *Delete* | DELETE `$BASE_URL`/files?url=file_url  |
+| Action   | Endpoint  | Request Body | Expected Response |
+|----------|-----------|---------------------------|--------------------------------|
+| *Open*   | GET    `$BASE_URL`/files?url=file_url  | - | octet-stream |
+| *Save*   | PUT    `$BASE_URL`/files?url=file_url  | octet-stream | - |
+| *Upload* | POST   `$BASE_URL`/files?url=file_url  | octet-stream | - |
+| *Delete* | DELETE `$BASE_URL`/files?url=file_url  | - | - |
 
 The file content encoding should be `UTF-8` in both requests and responses of these endpoints.
+An example implementation for ASP.NET can be found ![here](examples/asp.net.md).
 
 User Authentication
 -------------------
