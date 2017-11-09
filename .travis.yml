@@ -5,7 +5,7 @@ addons:
     token:
       secure: "${SONAR_CLOUD_TOKEN}"
     branches:
-      - ${TRAVIS_PULL_REQUEST_BRANCH}  
+      - BRANCH_OXYGEN_RELEASE_19_1  
 jdk:
   - oraclejdk8
 script:
