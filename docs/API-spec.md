@@ -84,7 +84,7 @@ If your file URLs have an hierarchical structure, you can use the default file b
 The response should be a JSON array of objects with the following format:
 
 ```javascript
-[{"name": "file.ditamap", "folder": false}, {"name": "topics/", folder: true}]
+[{"name": "file.ditamap","folder":false},{"name":"topics","folder":true}]
 ```
 
 ### Custom file browsing widget
