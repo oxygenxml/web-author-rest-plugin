@@ -77,23 +77,28 @@
   RestFileBrowser.prototype.renderRepoPreview = function(element) {
     var url = this.getCurrentFolderUrl();
     if (url) {
+      var cD = goog.dom.createDom;
+
       element.style.paddingLeft = '5px';
       element.title = tr(msgs.SERVER_URL_);
-      var content = '<div class="rest-repo-preview">' +
-        '<div class="domain-icon" style="' +
-        'background-image: url(' + sync.util.getImageUrl('/images/SharePointWeb16.png', sync.util.getHdpiFactor()) +
-        ');vertical-align: middle"></div>' +
-        new sync.util.Url(url).getDomain();
+
       // add an edit button only of there are no enforced servers
       // or there are more than one enforced server.
-      content += '</div>'
-      element.innerHTML = content;
+      var bgImageUrl = sync.util.getImageUrl('/images/SharePointWeb16.png', sync.util.getHdpiFactor());
+      elem.innerHTML = '';
+      goog.dom.appendChild(element,
+        cD('div', 'rest-repo-preview',
+          cD('div', {className: 'domain-icon', style: 'background-image: url(' + bgImageUrl + '); vertical-align: middle;'}),
+          new sync.util.Url(url).getDomain()
+        )
+      );
     }
     this.dialog.setPreferredSize(null, 700);
   };
 
   /** @override */
   RestFileBrowser.prototype.renderRepoEditing = function(element) {
+    var cD = goog.dom.createDom;
     var url = this.getCurrentFolderUrl();
     var latestUrl = this.getLatestUrl();
     // if none was set we let it empty.
@@ -105,11 +110,9 @@
     // the webdavServerPlugin additional content.
     element.innerHTML = '';
 
-    var inputElement = goog.dom.createDom(
-      'input',
-      {
-        'id': 'rest-browse-url',
-        'type': 'text',
+    var inputElement = cD('input', {
+        id: 'rest-browse-url',
+        type: 'text',
         'autocapitalize': 'none'
       }
     );
@@ -119,10 +122,8 @@
 
     goog.dom.appendChild(
       element,
-      goog.dom.createDom(
-        'div', 'rest-config-dialog',
-        goog.dom.createDom(
-          'label', '',
+      cD('div', 'rest-config-dialog',
+        cD('label', '',
           tr(msgs.SERVER_URL_) + ': ',
           inputElement
         )
