@@ -5,7 +5,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.oxygenxml</groupId>
-  <artifactId>web-author-rest-connector</artifactId>
+  <artifactId>web-author-rest-plugin</artifactId>
+  <name>Web Author REST plugin</name>
+  <description>oXygen XML Web Author connector for a generic REST API</description>
+  
   <!-- IMPORTANT: This should be the latest public version. -->
   <version>20.0-SNAPSHOT</version>
 
