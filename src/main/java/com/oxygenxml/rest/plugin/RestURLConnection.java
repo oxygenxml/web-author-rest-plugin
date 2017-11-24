@@ -57,11 +57,6 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    * Logger for logging.
    */
   private static final Logger logger = Logger.getLogger(RestURLConnection.class.getName());
-   
-  /**
-   * Header set for all requests in order to allow CMS's to prevent CSRF requests.
-   */
-  private static final String CSRF_HEADER = "X-Requested-With";
   
   /**
    * Credentials store.
@@ -248,11 +243,6 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    * Adds credentials associated with the given user context to this rest url connection. 
    */
   public static void addHeaders(URLConnection urlConnection, String contextId) {
-    // This header is set in order to allow CMS's to prevent CSRF attacks.
-    // An attacker can create a form to send a post requests to a rest end-point but 
-    // won't be able to set this header.
-    urlConnection.addRequestProperty(CSRF_HEADER, "RC");
-    
     if(contextId == null) {
       // The current request did not match any session - no headers to add.
       return;
