@@ -30,6 +30,16 @@ If an error occured while processing the request, the API can return an error st
 }
 ```
 
+Headers
+-------
+
+Each request made by Web Author will include the following headers:
+
+| Header Name |  Value      | Comment                         |
+|-------------|-------------|---------------------------------|
+| *User-Agent*| Oxygen/VV.V | VV.V is the Web Author version  |
+| *X-Requested-With* | RC   | Can be used for CSRF protection |
+| *Cookie* | name1=value1;name2=value2 | The cookies used by the CMS |
 
 Basic file operations
 ---------------------
