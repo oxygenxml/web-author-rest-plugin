@@ -10,7 +10,7 @@ import ro.sync.ecss.extensions.api.webapp.access.WebappEditingSessionLifecycleLi
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
-import ro.sync.util.URLUtil;
+import ro.sync.basic.util.URLUtil;
 
 /**
  * Class that provides access to the REST headers to cooperating plugins.

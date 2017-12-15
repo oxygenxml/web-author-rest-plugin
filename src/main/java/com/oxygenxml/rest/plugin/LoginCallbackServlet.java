@@ -6,8 +6,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
-
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.WebappServletPluginExtension;
 import ro.sync.exml.workspace.api.PluginResourceBundle;
@@ -37,7 +35,7 @@ public class LoginCallbackServlet extends WebappServletPluginExtension{
           + "'*');")
       .append("</script></head></html>");
     // respond to a page that posts a message to the web author page to close. 
-    IOUtils.write(callbackContent.toString(), resp.getOutputStream(), "UTF-8");
+    resp.getWriter().print(callbackContent);
   }
 
   @Override

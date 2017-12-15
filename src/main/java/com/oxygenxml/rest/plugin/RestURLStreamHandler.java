@@ -14,7 +14,7 @@ import ro.sync.ecss.extensions.api.webapp.plugin.UserContext;
 import ro.sync.exml.workspace.api.PluginResourceBundle;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.options.WSOptionsStorage;
-import ro.sync.util.URLUtil;
+import ro.sync.basic.util.URLUtil;
 
 /**
  * URL stream handler for a rest server.

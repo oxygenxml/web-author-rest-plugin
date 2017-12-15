@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
@@ -33,6 +32,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
+import com.google.common.net.MediaType;
 
 import ro.sync.ecss.extensions.api.webapp.WebappMessage;
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
@@ -43,7 +43,7 @@ import ro.sync.exml.workspace.api.PluginResourceBundle;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.net.protocol.FolderEntryDescriptor;
 import ro.sync.net.protocol.http.HttpExceptionWithDetails;
-import ro.sync.util.URLUtil;
+import ro.sync.basic.util.URLUtil;
 
 /**
  * Wrapper over an URLConnection that reports 401 exceptions as 
@@ -275,7 +275,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     URL listFolderURL = new URL(url.toExternalForm().replaceFirst("/files", "/folders"));
     URLConnection connection;
     connection = listFolderURL.openConnection();
-    connection.addRequestProperty("Accept", MediaType.APPLICATION_JSON);
+    connection.addRequestProperty("Accept", MediaType.JSON_UTF_8.toString());
     // Adding headers to the folder listing connection.    
     addHeaders(connection, this.contextId);
     connection.connect();
