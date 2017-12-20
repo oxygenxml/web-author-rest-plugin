@@ -85,7 +85,7 @@
       // add an edit button only of there are no enforced servers
       // or there are more than one enforced server.
       var bgImageUrl = sync.util.getImageUrl('/images/SharePointWeb16.png', sync.util.getHdpiFactor());
-      elem.innerHTML = '';
+      element.innerHTML = '';
       goog.dom.appendChild(element,
         cD('div', 'rest-repo-preview',
           cD('div', {className: 'domain-icon', style: 'background-image: url(' + bgImageUrl + '); vertical-align: middle;'}),
