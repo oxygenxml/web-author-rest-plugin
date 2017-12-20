@@ -59,7 +59,7 @@ To implement this re-login flow you should do the following:
 2. Implement the following HTTP endpoint to show a login form to the user.
 
   ```
-  $BASE_URL/login
+  $BASE_URL/rest-login
   ```
 
   **Hint**: you can redirect her to your existing login form.
