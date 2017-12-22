@@ -30,6 +30,8 @@ public class RestConfigExtension  extends PluginConfigExtension {
     Map<String, String> defaultOptions = new HashMap<String, String>();
 
     defaultOptions.put(USE_INVISIBLE_LOGIN_FORM, "off");
+    defaultOptions.put(REST_ROOT_REGEXP, "");
+    defaultOptions.put(REST_SERVER_URL, "");
 
     this.setDefaultOptions(defaultOptions);
   }
