@@ -50,5 +50,12 @@ public interface TranslationTags {
    * en: File not found
    */
   String FILE_NOT_FOUND = "File_not_found";
+  
+  /**
+   * The label of the checkbox that configures whether the plugin users the invisible login mechanism.
+   * 
+   * en: Use invisible login form.
+   */
+  String INVISIBLE_LOGIN_LABEL = "use_invisible_login";
 
 }

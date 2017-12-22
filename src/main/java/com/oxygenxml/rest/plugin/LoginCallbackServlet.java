@@ -16,7 +16,7 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
  *  
  * @author mihai_coanda
  */
-public class LoginCallbackServlet extends WebappServletPluginExtension{
+public class LoginCallbackServlet extends WebappServletPluginExtension {
   
   /**
    * Returns a HTML page that posts a message to the WebAuthor frame to close the login dialog. 
@@ -27,14 +27,13 @@ public class LoginCallbackServlet extends WebappServletPluginExtension{
     PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
     callbackContent
       .append("<html><head><script>")
-
       .append("parent.postMessage("
           // the object passed to the parent window.
-          + "{\"action\" : \"login\", \"message\": \"" + rb.getMessage(TranslationTags.LOGIN_SUCCESS) + "\"},"
+          + "{\"action\" : \"login-finished\", \"message\": \"" + rb.getMessage(TranslationTags.LOGIN_SUCCESS) + "\"},"
           // the parent window URL regexp 
           + "'*');")
       .append("</script></head></html>");
-    // respond to a page that posts a message to the web author page to close. 
+    // respond to a page that posts a message to the web author page to close.
     resp.getWriter().print(callbackContent);
   }
 

@@ -8,6 +8,14 @@
         <language description="Dutch" lang="nl_NL"/>
     </languageList>
     
+    <key value="use_invisible_login">
+        <comment>The label of the checkbox that configures whether the plugin users the invisible login mechanism.</comment>
+        <val lang="en_US">Use invisible login form.</val>
+        <val lang="de_DE">Use invisible login form.</val>
+        <val lang="fr_FR">Use invisible login form.</val>
+        <val lang="ja_JP">Use invisible login form.</val>
+        <val lang="nl_NL">Use invisible login form.</val>
+    </key>   
     <key value="Unconfigured_REST_server_url">
         <comment>Error message informing the user that the REST Server url option is not set</comment>
         <val lang="en_US">The REST server URL option is not set.</val>

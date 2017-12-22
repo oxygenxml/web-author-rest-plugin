@@ -70,6 +70,19 @@
       initialUrl: latestUrl,
       root: latestRootUrl
     });
+
+    // Listen for messages from the login-finished iframe
+    window.addEventListener('message',
+      function(msg) {
+        if(msg.data.action == 'login-finished') {
+          this.loginDialog && this.loginDialog.hide();
+
+          var iframe = document.getElementById('rest-login-iframe');
+          iframe.parentNode.removeChild(iframe);
+
+          this.latestCallback && this.latestCallback();
+        }
+      }.bind(this));
   };
   goog.inherits(RestFileBrowser, sync.api.FileBrowsingDialog);
 
@@ -241,21 +254,49 @@
    * @param {function} callback the callback method that should be called after login.
    */
   RestFileBrowser.prototype.loginUser = function(callback) {
+    this.latestCallback = callback;
+    var useDialogLogin = "false" === sync.options.PluginsOptions.getClientOption('restUseInvisibleLoginForm');
+    if(useDialogLogin) {
+      this.dialogUserLogin(callback);
+    } else {
+      this.invisibleUserLogin(callback);
+    }
+  };
+
+  /**
+   * Login the user using a dialog with and iframe inside.
+   *
+   * @param callback a method to call when the login process has finished.
+   */
+  RestFileBrowser.prototype.dialogUserLogin = function(callback) {
     if(!this.loginDialog) {
       this.loginDialog = this.createLoginDialog();
     }
 
-    this.latestCallback = callback;
     this.loginDialog.getElement().innerHTML =
       '<iframe id="rest-login-iframe" style="width:100%; height:100%;border:none;" src="' +
       sync.options.PluginsOptions.getClientOption('restServerUrl') + 'rest-login"></iframe>'
 
     this.loginDialog.show();
     this.loginDialog.onSelect(function(e) {
-      this.dialog.hide();
+      this.loginDialog.hide();
     }.bind(this));
-  };
+  }
 
+  /**
+   * Creates and ivisible iframe that loads the login code.
+   *
+   * @param callback a method to call when the login process has finished.
+   */
+  RestFileBrowser.prototype.invisibleUserLogin = function(callback) {
+    var iframe = goog.dom.createDom('iframe', {
+      src: sync.options.PluginsOptions.getClientOption('restServerUrl') + 'rest-login',
+      id: 'rest-login-iframe',
+      style: 'display=none;'
+    });
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+  }
 
   /**
    * Creates the rest connector login dialog.
@@ -263,17 +304,6 @@
    * @return {*}
    */
   RestFileBrowser.prototype.createLoginDialog = function() {
-    // Listen for messages from the login iframe
-    window.addEventListener('message',
-      function(msg) {
-        if(msg.data.action == 'login') {
-          this.loginDialog.hide();
-          this.loginDialog.getElement().innerHTML = '';
-
-          this.latestCallback && this.latestCallback();
-        }
-      }.bind(this));
-
     var loginDialog = workspace.createDialog();
     loginDialog.setButtonConfiguration(sync.api.Dialog.ButtonConfiguration.CANCEL);
     var dialogElem = loginDialog.getElement();
@@ -313,10 +343,10 @@
   // register all the listeners on the file browser.
   registerFileBrowserListeners(fileBrowser);
 
-  var webdavOpenAction = new sync.actions.OpenAction(fileBrowser);
-  webdavOpenAction.setDescription('Open document from REST server');
-  webdavOpenAction.setActionId('rest-open-action');
-  webdavOpenAction.setActionName('Rest');
+  var restOpenAction = new sync.actions.OpenAction(fileBrowser);
+  restOpenAction.setDescription('Open document from REST server');
+  restOpenAction.setActionId('rest-open-action');
+  restOpenAction.setActionName('Rest');
 
   var webdavCreateAction = new sync.api.CreateDocumentAction(fileBrowser);
   webdavCreateAction.setDescription('Create a new document on a REST server');
@@ -324,7 +354,7 @@
   webdavCreateAction.setActionName('Rest');
 
   var actionsManager = workspace.getActionsManager();
-  actionsManager.registerOpenAction(webdavOpenAction);
+  actionsManager.registerOpenAction(restOpenAction);
   actionsManager.registerCreateAction(webdavCreateAction);
 
   sync.util.loadCSSFile("../plugin-resources/rest-resources/rest.css");
