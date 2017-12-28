@@ -69,14 +69,17 @@ To implement this re-login flow you should do the following:
 2. Implement the following HTTP endpoint to show a login form to the user.
 
   ```
-  $BASE_URL/login
+  $BASE_URL/rest-login
   ```
-
-  **Hint**: you can redirect her to your existing login form.
-3. After the user logs in, your should redirect her to 
+If need only to run JS code in the loaded iframe, withouth displaying it to the user (your login mechanish does not require user interaction), you can toggle the _Use invisible login form_ plugin option. This will load the page in an invisible iframe.
+ 
+ **Hint**: you can redirect him to your existing login form.
+  
+3. After the user logs in, your should redirect to 
   ```
   $WEB_AUTHOR_URL/plugins-dispatcher/rest-login-callback
   ```
+(this notifies the WebAuthor that the login process completed and it should retry the action that failed)
 
 File browsing
 -------------
