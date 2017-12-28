@@ -25,3 +25,5 @@ It has the following configuration options:
 | Option   | Description  |
 |----------|-----------|
 | *REST Server URL*   | The base URL for the REST endpoints. E.g. `http://example.com/oxygen-cms/v1/` |
+| *Root RegExp*   | A regulat expression used to determine the UrlChooser's root URL |
+| *Use invisible login form*  | Whether the `$BASE_URL/rest-login` page should be in an invisible iframe rather than a dialog. |
