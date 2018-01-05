@@ -285,10 +285,8 @@
 
   /**
    * Creates and ivisible iframe that loads the login code.
-   *
-   * @param callback a method to call when the login process has finished.
    */
-  RestFileBrowser.prototype.invisibleUserLogin = function(callback) {
+  RestFileBrowser.prototype.invisibleUserLogin = function() {
     var iframe = goog.dom.createDom('iframe', {
       src: sync.options.PluginsOptions.getClientOption('restServerUrl') + 'rest-login',
       id: 'rest-login-iframe',

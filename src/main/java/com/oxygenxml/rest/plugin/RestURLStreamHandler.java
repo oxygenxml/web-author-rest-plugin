@@ -32,6 +32,7 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
       cookies.append(cookie.getKey()).append('=').append(cookie.getValue()).append("; ");
     }
     Map<String, String> headersMap = Collections.singletonMap("Cookie", cookies.toString()); 
+    
     RestURLConnection.credentialsMap.put(contextId, headersMap);
     return contextId;
   }
