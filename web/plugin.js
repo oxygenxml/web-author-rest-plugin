@@ -72,8 +72,7 @@
     });
 
     // Listen for messages from the login-finished iframe
-    window.addEventListener('message',
-      function(msg) {
+    window.addEventListener('message', function(msg) {
         if(msg.data.action == 'login-finished') {
           this.loginDialog && this.loginDialog.hide();
 
@@ -280,6 +279,7 @@
     this.loginDialog.show();
     this.loginDialog.onSelect(function(e) {
       this.loginDialog.hide();
+      callback();
     }.bind(this));
   }
 
@@ -290,9 +290,8 @@
     var iframe = goog.dom.createDom('iframe', {
       src: sync.options.PluginsOptions.getClientOption('restServerUrl') + 'rest-login',
       id: 'rest-login-iframe',
-      style: 'display=none;'
+      style: 'display:none;'
     });
-    iframe.style.display = 'none';
     document.body.appendChild(iframe);
   }
 
