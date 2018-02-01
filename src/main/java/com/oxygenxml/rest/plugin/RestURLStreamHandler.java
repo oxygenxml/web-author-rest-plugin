@@ -8,6 +8,8 @@ import java.net.URLConnection;
 import java.util.Collections;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.URLStreamHandlerWithContext;
 import ro.sync.ecss.extensions.api.webapp.plugin.UserContext;
@@ -22,7 +24,32 @@ import ro.sync.basic.util.URLUtil;
  * @author mihai_coanda
  */
 public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
-  
+    /**
+   * Logger.
+   */
+  private static final Logger logger = Logger.getLogger(RestURLStreamHandler.class.getName());
+
+  /**
+   * The environment variable used by the REST plugin to determine the server URL.
+   */
+  private static final String REST_SERVER_URL_ENV_VAR = "REST_SERVER_URL";
+
+
+  /**
+   * Constructor.
+   */
+  public RestURLStreamHandler() {
+    String restServerUrlEnvVar = System.getenv(REST_SERVER_URL_ENV_VAR);
+    if (restServerUrlEnvVar != null) {
+      WSOptionsStorage optionsStorage = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage();
+      String serverUrl = optionsStorage.getOption(RestConfigExtension.REST_SERVER_URL, null);
+      if (serverUrl != null && !restServerUrlEnvVar.equals(serverUrl)) {
+        logger.warn("The \"REST Server URL\" option is overriden by the "
+            + "\"" + RestConfigExtension.REST_SERVER_URL + "\" environment variable.");
+      }
+    }
+  }
+
   @Override
   protected String getContextId(UserContext context) {
     String contextId = super.getContextId(context);
@@ -71,10 +98,17 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
    * @return the server URL.
    */
   public static String getServerUrl() {
-    WSOptionsStorage optionsStorage = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage();
-    String serverUrl = optionsStorage.getOption(RestConfigExtension.REST_SERVER_URL, "");
+    String restServerUrlEnvVar = System.getenv(REST_SERVER_URL_ENV_VAR);
+    String serverUrl;
+    if (restServerUrlEnvVar != null) {
+      serverUrl = restServerUrlEnvVar;
+    } else {
+      WSOptionsStorage optionsStorage = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage();
+      serverUrl = optionsStorage.getOption(RestConfigExtension.REST_SERVER_URL, "");
+    }
+    
     // if the server URL does not end in '/' we add the '/'
-    if(serverUrl != null && !serverUrl.isEmpty() && serverUrl.lastIndexOf("/") != serverUrl.length() - 1) {
+    if(serverUrl != null && !serverUrl.isEmpty() && serverUrl.lastIndexOf('/') != serverUrl.length() - 1) {
       serverUrl = serverUrl + "/";
     }
     
