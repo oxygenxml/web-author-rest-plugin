@@ -71,11 +71,11 @@ To implement this re-login flow you should do the following:
   ```
   $BASE_URL/rest-login
   ```
-If need only to run JS code in the loaded iframe, withouth displaying it to the user (your login mechanish does not require user interaction), you can toggle the _Use invisible login form_ plugin option. This will load the page in an invisible iframe.
+If need only to run JS code in the loaded iframe, without displaying it to the user (your login mechanism does not require user interaction), you can toggle the _Use invisible login form_ plugin option. This will load the page in an invisible iframe.
  
  **Hint**: you can redirect him to your existing login form.
   
-3. After the user logs in, your should redirect to 
+3. After the user logs in, you should redirect to 
   ```
   $WEB_AUTHOR_URL/plugins-dispatcher/rest-login-callback
   ```
