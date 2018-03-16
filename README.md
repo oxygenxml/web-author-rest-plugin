@@ -18,12 +18,12 @@ Plugin installation
 Plugin configuration
 --------------------
 
-The plugn can be [cofigured](https://www.oxygenxml.com/doc/versions/18.1.0/ug-webauthor/topics/webapp-configure-plugins.html) in the Web Author Admin Page.
+The plugin can be [configured](https://www.oxygenxml.com/doc/versions/18.1.0/ug-webauthor/topics/webapp-configure-plugins.html) in the Web Author Admin Page.
 
 It has the following configuration options:
 
 | Option   | Description  |
 |----------|-----------|
 | *REST Server URL*   | The base URL for the REST endpoints. E.g. `http://example.com/oxygen-cms/v1/` |
-| *Root RegExp*   | Sometimes you want to use files URLs like: `rest://cms/project1/file.dita`, but in the File Browser you do not want to let the user navigate between projects. In this case *Root RegExp* would be `rest://cms/[^/]+/`. |
+| *Root RegExp*   | Sometimes you want to use file URLs like: `rest://cms/project1/file.dita`, but in the File Browser you do not want to let the user navigate between projects. In this case *Root RegExp* would be `rest://cms/[^/]+/`. |
 | *Use invisible login form*  | Whether the `$BASE_URL/rest-login` page should be in an invisible iframe rather than a dialog. |
