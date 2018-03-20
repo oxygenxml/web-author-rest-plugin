@@ -1,0 +1,26 @@
+{
+  "name": "web-author-rest-connector",
+  "version": "1.0.0",
+  "description": "oXygen XML Web Author REST API",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oxygenxml/web-author-rest-connector.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oxygenxml/web-author-rest-connector/issues"
+  },
+  "homepage": "https://github.com/oxygenxml/web-author-rest-connector#readme",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "sync-i18n": "0.0.1"
+  }
+}

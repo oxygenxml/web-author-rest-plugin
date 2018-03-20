@@ -81,7 +81,6 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
    * @throws MalformedURLException whether something fails.
    */
   private static URL computeRestUrl(URL url) throws MalformedURLException {
-    // remove the "rest-" protocol prefix.
     String encodedDocumentURL = URLUtil.encodeURIComponent(url.toExternalForm());
     String serverUrl = getServerUrl();
     if(serverUrl != null && !serverUrl.isEmpty()) {

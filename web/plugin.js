@@ -37,23 +37,6 @@
         });
       });
     }
-
-    var translations = {
-      SERVER_URL_: {
-        "en_US":"Server URL",
-        "de_DE":"Server-URL",
-        "fr_FR":"URL du serveur",
-        "ja_JP":"サーバー URL",
-        "nl_NL":"Server URL"
-      },
-      INVALID_URL_:{
-        "en_US":"Invalid URL",
-        "de_DE":"Ungültige URL",
-        "fr_FR":"URL invalide",
-        "ja_JP":"不正なURL",
-        "nl_NL":"Ongeldige URL"
-      }
-    };
     sync.Translation.addTranslations(translations);
   });
 
@@ -92,7 +75,7 @@
       var cD = goog.dom.createDom;
 
       element.style.paddingLeft = '5px';
-      element.title = tr(msgs.SERVER_URL_);
+      element.title = tr(msgs.Server_URL);
 
       // add an edit button only of there are no enforced servers
       // or there are more than one enforced server.
@@ -131,37 +114,64 @@
     // google closure does not add everything as it should
     inputElement.setAttribute('autocorrect', 'off');
     inputElement.setAttribute('autofocus', '');
-
-    goog.dom.appendChild(
-      element,
-      cD('div', 'rest-config-dialog',
-        cD('label', '',
-          tr(msgs.SERVER_URL_) + ': ',
-          inputElement
-        )
+    var dialogConfig = cD('div', 'rest-config-dialog',
+      cD('label', '',
+        tr(msgs.File_repository_id) + ': ',
+        inputElement
       )
     );
-    inputElement.value = editUrl;
+    dialogConfig.style.margin = 'auto';
+    dialogConfig.style.right = '0';
+    dialogConfig.style.left = '0';
+    dialogConfig.style.maxWidth = '350px';
+    dialogConfig.style.paddingTop = '25px';
+    goog.dom.appendChild(
+      element,
+      dialogConfig
+    );
 
-    var prefferedHeight = 190;
-    this.dialog.setPreferredSize(null, prefferedHeight);
+    inputElement.value = this.getRepoIdFromURL(editUrl);
+
+    this.dialog.setPreferredSize(400, 200);
   };
+
+  /**
+   * Conmpute the file repository id from the edit URL.
+   *
+   * @param editUrl the edit URL.
+   */
+  RestFileBrowser.prototype.getRepoIdFromURL = function(editUrl) {
+    var repoId = 'cms';
+    if(editUrl) {
+      editUrl = editUrl.substring('rest://'.length);
+      repoId = editUrl.substring(0, editUrl.indexOf('/'));
+    }
+    return repoId;
+  }
 
   /** @override */
   RestFileBrowser.prototype.handleOpenRepo = function(element, e) {
     var input = document.getElementById('rest-browse-url');
-    var url = input.value.trim();
+    var repoId = input.value.trim();
 
-    // if an url was provided we instantiate the file browsing dialog.
-    if(url) {
-      if(url.match('rest:\/\/')) {
-        this.requestUrlInfo_(url);
-      } else {
-        this.showErrorMessage(tr(msgs.INVALID_URL_));
-        // hide the error element on input refocus.
-        goog.events.listenOnce(input, goog.events.EventType.FOCUS,
-          goog.bind(function(e) {this.hideErrorElement();}, this));
+    if(repoId && new RegExp('^[a-zA-Z0-9_-]*$').test(repoId)) {
+      var url = repoId;
+      // add the protocol.
+      if(url.indexOf('rest://') !== 0) {
+        url = 'rest://' + url;
       }
+      // add trailing slash
+      if(url.substring(url.length -1) !== '/') {
+        url += '/';
+      }
+
+      // if an url was provided we instantiate the file browsing dialog.
+        this.requestUrlInfo_(url);
+    } else {
+      this.showErrorMessage(tr(msgs.Invalid_repository_id));
+      // hide the error element on input refocus.
+      goog.events.listenOnce(input, goog.events.EventType.FOCUS,
+        goog.bind(function(e) {this.hideErrorElement();}, this));
     }
     e.preventDefault();
   };
