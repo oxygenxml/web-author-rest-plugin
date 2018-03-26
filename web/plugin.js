@@ -37,7 +37,6 @@
         });
       });
     }
-    sync.Translation.addTranslations(translations);
   });
 
   /**
