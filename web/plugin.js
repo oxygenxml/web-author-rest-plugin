@@ -92,61 +92,11 @@
 
   /** @override */
   RestFileBrowser.prototype.renderRepoEditing = function(element) {
-    var cD = goog.dom.createDom;
-    var url = this.getCurrentFolderUrl();
-    var latestUrl = this.getLatestUrl();
-    // if none was set we let it empty.
-    var editUrl = latestUrl || url || '';
-
-    element.title = "";
-
-    element.style.paddingLeft = '5px';
-    // the webdavServerPlugin additional content.
-    element.innerHTML = '';
-
-    var inputElement = cD('input', {
-        id: 'rest-browse-url',
-        type: 'text',
-        'autocapitalize': 'none'
-      }
-    );
-    // google closure does not add everything as it should
-    inputElement.setAttribute('autocorrect', 'off');
-    inputElement.setAttribute('autofocus', '');
-    var dialogConfig = cD('div', 'rest-config-dialog',
-      cD('label', '',
-        tr(msgs.File_repository_id) + ': ',
-        inputElement
-      )
-    );
-    dialogConfig.style.margin = 'auto';
-    dialogConfig.style.right = '0';
-    dialogConfig.style.left = '0';
-    dialogConfig.style.maxWidth = '350px';
-    dialogConfig.style.paddingTop = '25px';
-    goog.dom.appendChild(
-      element,
-      dialogConfig
-    );
-
-    inputElement.value = this.getRepoIdFromURL(editUrl);
-
-    this.dialog.setPreferredSize(400, 200);
+    // We force the 'rest://cms/' URL if no other is provided.
+    // only happens on Dashboard which is used in development
+    this.requestUrlInfo_('rest://cms/');
   };
 
-  /**
-   * Conmpute the file repository id from the edit URL.
-   *
-   * @param editUrl the edit URL.
-   */
-  RestFileBrowser.prototype.getRepoIdFromURL = function(editUrl) {
-    var repoId = 'cms';
-    if(editUrl) {
-      editUrl = editUrl.substring('rest://'.length);
-      repoId = editUrl.substring(0, editUrl.indexOf('/'));
-    }
-    return repoId;
-  }
 
   /** @override */
   RestFileBrowser.prototype.handleOpenRepo = function(element, e) {
