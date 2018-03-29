@@ -15,7 +15,6 @@
   <description>oXygen XML Web Author connector for a generic REST API</description>
   
   <properties>
-    <oxygen.sdk.version>19.0.0.0</oxygen.sdk.version>
     <sonar.skip.check>true</sonar.skip.check>
     <sonar.sources>src/main/java,web</sonar.sources>
   </properties>
@@ -33,8 +32,14 @@
     <dependency>
       <groupId>com.oxygenxml</groupId>
       <artifactId>oxygen-webapp</artifactId>
-      <version>${oxygen.sdk.version}</version>
+      <version>${project.version}</version>
       <classifier>classes</classifier>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.oxygenxml</groupId>
+      <artifactId>oxygen-sdk</artifactId>
+      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
