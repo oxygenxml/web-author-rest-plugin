@@ -72,21 +72,4 @@
         <val lang="ja_JP">不正なURL</val>
         <val lang="nl_NL">Ongeldige URL</val>
     </key>
-    <key value="Invalid_repository_id">
-        <comment>Error message displayed when the user provides an invalid file repository ID</comment>
-        <val lang="en_US">Invalid file repository ID</val>
-        <val lang="de_DE">Invalid file repository ID</val>
-        <val lang="fr_FR">Invalid file repository ID</val>
-        <val lang="ja_JP">Invalid file repository ID</val>
-        <val lang="nl_NL">Invalid file repository ID</val>
-    </key>
-    <key value="File_repository_id">
-        <comment>Label of the file repository id input.</comment>
-        <val lang="en_US">File Repository ID</val>
-        <val lang="de_DE">File Repository ID</val>
-        <val lang="fr_FR">File Repository ID</val>
-        <val lang="ja_JP">File Repository ID</val>
-        <val lang="nl_NL">File Repository ID</val>
-    </key>
-
 </translation>
