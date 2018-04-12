@@ -21,6 +21,7 @@ The previous steps enabled you to load in Web Author sample files stored on an e
 
 2. To connect the plugin to your CMS you should implement the REST API [specified by this plugin](API-spec.md) and [configure](../README.md#plugin-configuration) the plugin with the base URL of your REST API.
 
+3. On the Dashboard, switch to the "REST" tab and click "Open". Now the file browser is opened and it tries to list the root folder which is represented in this case by the URL: `rest://cms/`.
 
 Next steps
 ----------
