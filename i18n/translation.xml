@@ -72,12 +72,4 @@
         <val lang="ja_JP">不正なURL</val>
         <val lang="nl_NL">Ongeldige URL</val>
     </key>
-    <key value="Folder_not_found">
-        <comment/>
-        <val lang="en_US">Folder not found: {0}</val>
-        <val lang="de_DE">Verzeichnis nicht gefunden: {0}</val>
-        <val lang="fr_FR">Dossier introuvable: {0}</val>
-        <val lang="ja_JP">フォルダーが見つかりません：{0}</val>
-        <val lang="nl_NL">Map niet gevonden: {0}</val>
-    </key>
 </translation>
