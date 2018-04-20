@@ -61,7 +61,7 @@ public class RestConfigExtension  extends PluginConfigExtension {
       // Use invisible login form
       .append("<label style='display:block;margin-top:20px;overflow:hidden'>")
       .append("<input name='" + USE_INVISIBLE_LOGIN_FORM + "' type='checkbox' value='on'")
-      .append((useInvisibleLoginForm ? " checked" : "") + "> " + rb.getMessage(TranslationTags.INVISIBLE_LOGIN_LABEL))
+      .append((useInvisibleLoginForm ? " checked" : "") + "> " + rb.getMessage(TranslationTags.USE_INVISIBLE_LOGIN))
       .append("</label>")
 
       .append("</div>");

@@ -56,6 +56,6 @@ public interface TranslationTags {
    * 
    * en: Use invisible login form.
    */
-  String INVISIBLE_LOGIN_LABEL = "use_invisible_login";
+  String USE_INVISIBLE_LOGIN = "use_invisible_login";
 
 }
