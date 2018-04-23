@@ -8,7 +8,7 @@ This plugin has several assumptions about the implementation of the API:
 
 1. The REST API is deployed on the same domain as Web Author (maybe on different ports). Below we will denote:
  - the base URL of the REST API as `$BASE_URL`. An example value would be: `http://example.com/oxygen-cms/v1/`
- - the base URL of Web Author as `$WEB_AUTHOR_URL`. An example value would be `http://localhost:8080/oxygen-xml-web-author/app/oxygen.html`.
+ - the base URL of Web Author as `$WEB_AUTHOR_URL`. An example value would be `http://example.com/oxygen-xml-web-author/app/oxygen.html`.
 2. The API requests are authenticated using cookies.
 
 The resulting architecture would look like in the image below:
