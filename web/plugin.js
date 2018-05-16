@@ -13,21 +13,21 @@
       // Listen for messages sent from the server-side code.
       goog.events.listen(e.editor, sync.api.Editor.EventTypes.CUSTOM_MESSAGE_RECEIVED, function(e) {
         var context = e.context;
-        var url = e.message.message;
         // pop-up an authentication window,
         fileBrowser.loginUser(function() {
+          var webappMessageReceivedContext = sync.api.Editor.WebappMessageReceived.Context;
           // After the user was logged in, retry the operation that failed.
-          if (context == sync.api.Editor.WebappMessageReceived.Context.LOAD) {
+          if (context === webappMessageReceivedContext.LOAD) {
             // If the document was loading, we try to reload the whole webapp.
             window.location.reload();
-          } else if (context == sync.api.Editor.WebappMessageReceived.Context.EDITING) {
+          } else if (context === webappMessageReceivedContext.EDITING) {
             // During editing, only references can trigger re-authentication. Refresh them.
             editor.getActionsManager().invokeAction('Author/Refresh_references');
-          } else if (context == sync.api.Editor.WebappMessageReceived.Context.SAVE) {
+          } else if (context === webappMessageReceivedContext.SAVE) {
             // Currently there is no API to re-try saving, but it will be.
             editor.getActionsManager().getActionById('Author/Save').actionPerformed(function() {
             });
-          } else if (context == sync.api.Editor.WebappMessageReceived.Context.IMAGE) {
+          } else if (context === webappMessageReceivedContext.IMAGE) {
             // The browser failed to retrieve an image - reload it.
             var images = document.querySelectorAll('img[data-src]');
             for (var i = 0; i < images.length; i ++) {
@@ -55,7 +55,7 @@
 
     // Listen for messages from the login-finished iframe
     window.addEventListener('message', function(msg) {
-        if(msg.data.action == 'login-finished') {
+        if(msg.data.action === 'login-finished') {
           this.loginDialog && this.loginDialog.hide();
 
           var iframe = document.getElementById('rest-login-iframe');
@@ -176,7 +176,6 @@
       var rootUrl = info.rootUrl;
       this.setRootUrl(rootUrl);
     }
-    var urlObj = new sync.util.Url(url);
     this.setInitialUrl_(url);
   };
 
@@ -240,7 +239,7 @@
       this.loginDialog.hide();
       callback();
     }.bind(this));
-  }
+  };
 
   /**
    * Creates and ivisible iframe that loads the login code.
@@ -252,7 +251,7 @@
       style: 'display:none;'
     });
     document.body.appendChild(iframe);
-  }
+  };
 
   /**
    * Creates the rest connector login dialog.

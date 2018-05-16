@@ -19,7 +19,7 @@
     "url": "https://github.com/oxygenxml/web-author-rest-connector/issues"
   },
   "homepage": "https://github.com/oxygenxml/web-author-rest-connector#readme",
-  "dependencies": {
+  "devDependencies": {
     "gulp": "^3.9.1",
     "sync-i18n": "0.0.1"
   }
