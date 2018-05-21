@@ -8,7 +8,7 @@
         <language description="Dutch" lang="nl_NL"/>
     </languageList>
     
-    <key value="use_invisible_login">
+    <key value="use_invisible_login" distribution="webauthor">
         <comment>The label of the checkbox that configures whether the plugin users the invisible login mechanism.</comment>
         <val lang="en_US">Use invisible login form.</val>
         <val lang="de_DE">Use invisible login form.</val>
@@ -16,14 +16,14 @@
         <val lang="ja_JP">Use invisible login form.</val>
         <val lang="nl_NL">Use invisible login form.</val>
     </key>   
-    <key value="Unconfigured_REST_server_url">
+    <key value="Unconfigured_REST_server_url" distribution="webauthor">
         <comment>Error message informing the user that the REST Server url option is not set</comment>
         <val lang="en_US">The REST server URL option is not set.</val>
-        <val lang="de_DE">The REST server URL option is not set.</val>
-        <val lang="fr_FR">The REST server URL option is not set.</val>
-        <val lang="ja_JP">The REST server URL option is not set.</val>
-        <val lang="nl_NL">The REST server URL option is not set.</val>
-    </key>   
+        <val lang="de_DE">Die Option REST-Server-URL ist nicht gesetzt.</val>
+        <val lang="fr_FR">L'option URL du serveur REST n'est pas définie.</val>
+        <val lang="ja_JP">残りのサーバーのURLオプションが設定されていません。</val>
+        <val lang="nl_NL">De URL-optie voor de REST-server is niet ingesteld.</val>
+    </key>
     <key value="REST_login_success" distribution="webauthor">
         <comment>Informs the user that the login was successful.</comment>
         <val lang="en_US">REST server succeeded in logging in the user</val>
