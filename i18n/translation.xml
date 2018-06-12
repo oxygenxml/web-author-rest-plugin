@@ -7,12 +7,12 @@
         <language description="Japanese" lang="ja_JP"/>
         <language description="Dutch" lang="nl_NL"/>
     </languageList>
-    
+
     <key value="use_invisible_login" distribution="webauthor">
         <comment>The label of the checkbox that configures whether the plugin users the invisible login mechanism.</comment>
         <val lang="en_US">Use invisible login form.</val>
-        <val lang="de_DE">Use invisible login form.</val>
-        <val lang="fr_FR">Use invisible login form.</val>
+        <val lang="de_DE">Verwende unsichtbares Anmeldeformular.</val>
+        <val lang="fr_FR">Utilisez le formulaire de connexion invisible.</val>
         <val lang="ja_JP">Use invisible login form.</val>
         <val lang="nl_NL">Use invisible login form.</val>
     </key>   
