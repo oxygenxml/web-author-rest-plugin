@@ -1,16 +1,20 @@
 var gulp = require('gulp');
-var syncI18N = require('sync-i18n');
+var Synci18n = require('sync-i18n');
+var concat = require('gulp-concat');
+var uglify = require('gulp-uglify');
 
+var webLocation = 'web';
+var targetLocation = "target";
 
-gulp.task('default', function () {
-  var sourceFile = './i18n/translation.xml';
-  var destinationFolder = __dirname + '/web';
-
-  var synci18n = new syncI18N({
-    sourceFile,
-    destinationFolder
-  });
-
-  synci18n.makeTranslationJsons();
-  synci18n.makeMsgs();
+gulp.task('prepare-package', ['i18n'], function() {
+  return gulp.src(webLocation + '/*.js')
+    .pipe(concat('plugin.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest(targetLocation));
 });
+
+gulp.task('i18n', function () {
+  Synci18n().generateTranslations();
+});
+
+gulp.task('default', ['prepare-package']);

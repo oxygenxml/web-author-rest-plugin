@@ -10,14 +10,20 @@
   </formats>
 
  <fileSets>
-    <fileSet>
-      <directory>web</directory>
-      <outputDirectory>web</outputDirectory>
-      <includes>
-        <include>**/*</include>
-      </includes>
-    </fileSet>
-    
+     <fileSet>
+         <directory>target/</directory>
+         <outputDirectory>/web</outputDirectory>
+         <includes>
+             <include>plugin.js</include>
+         </includes>
+     </fileSet>
+     <fileSet>
+         <directory>web/resources/</directory>
+         <outputDirectory>web/resources</outputDirectory>
+         <includes>
+             <include>**/*</include>
+         </includes>
+     </fileSet>
     <fileSet>
       <directory>target/lib</directory>
       <outputDirectory>lib</outputDirectory>
@@ -27,7 +33,7 @@
     </fileSet>
     
     <fileSet>
-      <directory>i18n</directory>
+      <directory>target/i18n</directory>
       <outputDirectory>i18n</outputDirectory>
       <includes>
         <include>**/*</include>
