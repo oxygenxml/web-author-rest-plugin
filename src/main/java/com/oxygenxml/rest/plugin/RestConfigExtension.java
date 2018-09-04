@@ -50,13 +50,13 @@ public class RestConfigExtension  extends PluginConfigExtension {
       // REST Server URL input
       .append("<label style='display: block; margin-top: 20px;' >")
       .append("REST " + rb.getMessage(TranslationTags.SERVER_URL) + ": <input  name = '").append(REST_SERVER_URL).append("' value='").append(serverURL).append("' ")
-      .append("style='width: 80%; line-height: 20px; border: 1px solid #777C7F; background-color: #f7f7f7; border-radius: 5px; padding-left: 7px; margin-top: 10px; display: block;' ")
+      .append("style='width: 100%; line-height: 20px; border: 1px solid #777C7F; background-color: #f7f7f7; border-radius: 5px; padding-left: 7px; margin-top: 10px; display: block;' ")
       .append("></input></label>")
       // The RegExp used to determine root url
       .append("<label style='display: block; margin-top: 20px;' title='" + rb.getMessage(TranslationTags.ROOT_REGEXP_DESCRIPTION) + "' >")
       .append(rb.getMessage(TranslationTags.ROOT_REGEXP) + ": <input  name = '")
       .append(REST_ROOT_REGEXP).append("' value='").append(getOption(REST_ROOT_REGEXP, "")).append("' ")
-      .append("style='width: 80%; line-height: 20px; border: 1px solid #777C7F; background-color: #f7f7f7; border-radius: 5px; padding-left: 7px; margin-top: 10px; display: block;' ")
+      .append("style='width: 100%; line-height: 20px; border: 1px solid #777C7F; background-color: #f7f7f7; border-radius: 5px; padding-left: 7px; margin-top: 10px; display: block;' ")
       .append("></input></label>")
       // Use invisible login form
       .append("<label style='display:block;margin-top:20px;overflow:hidden'>")
