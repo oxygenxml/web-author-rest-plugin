@@ -12,8 +12,8 @@
         <val lang="en_US">Use invisible login form.</val>
         <val lang="de_DE">Verwende unsichtbares Anmeldeformular.</val>
         <val lang="fr_FR">Utilisez le formulaire de connexion invisible.</val>
-        <val lang="ja_JP">Use invisible login form.</val>
-        <val lang="nl_NL">Use invisible login form.</val>
+        <val lang="ja_JP">見えないログインフォームを使用します。</val>
+        <val lang="nl_NL">Gebruik onzichtbaar inlogformulier.</val>
     </key>   
     <key value="Unconfigured_REST_server_url" distribution="webauthor">
         <comment>Error message informing the user that the REST Server url option is not set</comment>
