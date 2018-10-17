@@ -27,3 +27,9 @@ It has the following configuration options:
 | *REST Server URL*   | The base URL for the REST endpoints. E.g. `http://example.com/oxygen-cms/v1/` |
 | *Root RegExp*   | Sometimes you want to use file URLs like: `rest://cms/project1/file.dita`, but in the File Browser you do not want to let the user navigate between projects. In this case *Root RegExp* would be `rest://cms/[^/]+/`. |
 | *Use invisible login form*  | Whether the `$BASE_URL/rest-login` page should be in an invisible iframe rather than a dialog. |
+
+Copyright and License
+---------------------
+Copyright 2018 Syncro Soft SRL.
+
+This project is licensed under [Apache License 2.0](https://github.com/oxygenxml/web-author-rest-plugin/blob/master/LICENSE)
