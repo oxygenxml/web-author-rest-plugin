@@ -43,7 +43,7 @@ public class LoginCallbackServlet extends WebappServletPluginExtension {
       .append("<html><head><script>")
       .append("parent.postMessage("
           // the object passed to the parent window.
-          + "{\"action\" : \"login-finished\", \"message\": \"" + rb.getMessage(TranslationTags.LOGIN_SUCCESS) + "\"},"
+          + "{\"action\" : \"login-finished\", \"message\": \"" + rb.getMessage(TranslationTags.REST_LOGIN_SUCCESS) + "\"},"
           // the parent window URL regexp 
           + "'*');")
       .append("</script></head></html>");

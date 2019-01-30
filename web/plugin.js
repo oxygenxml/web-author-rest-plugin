@@ -117,7 +117,7 @@
       // if an url was provided we instantiate the file browsing dialog.
         this.requestUrlInfo_(url);
     } else {
-      this.showErrorMessage(tr(msgs.Invalid_repository_id));
+      this.showErrorMessage(tr(msgs.INVALID_URL_));
       // hide the error element on input refocus.
       goog.events.listenOnce(input, goog.events.EventType.FOCUS,
         goog.bind(function(e) {this.hideErrorElement();}, this));

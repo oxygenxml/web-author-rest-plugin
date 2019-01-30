@@ -28,7 +28,7 @@ public interface TranslationTags {
    * 
    * en: Rest server succeeded in logging in the user
    */
-  String LOGIN_SUCCESS = "REST_login_success";
+  String REST_LOGIN_SUCCESS = "REST_login_success";
 
   /**
    * Title of login dialog.
