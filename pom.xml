@@ -13,7 +13,13 @@
   <artifactId>web-author-rest-plugin</artifactId>
   <name>Web Author REST plugin</name>
   <description>oXygen XML Web Author connector for a generic REST API</description>
-  
+
+  <licenses>
+    <license>
+      <url>http://www.oxygenxml.com/sdk_agreement.html</url>
+    </license>
+  </licenses>
+
   <properties>
     <sonar.skip.check>true</sonar.skip.check>
     <sonar.sources>src/main/java,web</sonar.sources>
