@@ -6,15 +6,17 @@ var uglify = require('gulp-uglify');
 var webLocation = 'web';
 var targetLocation = "target";
 
-gulp.task('prepare-package', ['i18n'], function() {
+gulp.task('i18n', function (done) {
+  Synci18n().generateTranslations();
+  done();
+});
+
+gulp.task('prepare-package', function() {
   return gulp.src(webLocation + '/*.js')
     .pipe(concat('plugin.js'))
     .pipe(uglify())
     .pipe(gulp.dest(targetLocation));
 });
 
-gulp.task('i18n', function () {
-  Synci18n().generateTranslations();
-});
 
-gulp.task('default', ['prepare-package']);
+gulp.task('default', gulp.series('i18n', 'prepare-package'));
