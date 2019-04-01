@@ -74,17 +74,18 @@
       if(!this.replacedSave) {
         this.replacedSave = true;
         var saveAction = editor.getActionsManager().getActionById("Author/Save");
-        var oldActionPerformed = saveAction.actionPerformed.bind(saveAction);
-
-        saveAction.actionPerformed = function(callback) {
-          oldActionPerformed(function() {
-            var i;
-            for(i = 0; i < this.saveCallbacks.length; i++) {
-              this.saveCallbacks[i]();
-            }
-            callback();
-          }.bind(this));
-        }.bind(this);
+        if (saveAction) {
+          var oldActionPerformed = saveAction.actionPerformed.bind(saveAction);
+          saveAction.actionPerformed = function(callback) {
+            oldActionPerformed(function() {
+              var i;
+              for(i = 0; i < this.saveCallbacks.length; i++) {
+                this.saveCallbacks[i]();
+              }
+              callback();
+            }.bind(this));
+          }.bind(this);
+        }
       }
     }.bind(this), 0);
   };
