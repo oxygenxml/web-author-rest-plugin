@@ -312,5 +312,4 @@
   actionsManager.registerOpenAction(restOpenAction);
   actionsManager.registerCreateAction(webdavCreateAction);
 
-  sync.util.loadCSSFile("../plugin-resources/rest-resources/rest.css");
 })();
