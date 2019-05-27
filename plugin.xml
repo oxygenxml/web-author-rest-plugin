@@ -31,5 +31,5 @@
   <!-- You can access static files at XML_WEB_AUTHOR/plugin-resources/rest-resources/RESOURCE_FILE -->
   <extension type="WebappStaticResourcesFolder" path="web/resources/" href="rest-resources"/>
   
-  <extension type="AuthorStylesheet" href="web/resources/rest.css"/>
+  <extension type="WebappCSSResource" href="web/resources/rest.css"/>
 </plugin>
