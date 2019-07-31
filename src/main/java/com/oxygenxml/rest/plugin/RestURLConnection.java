@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -31,9 +30,10 @@ import com.google.common.base.Charsets;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.io.ByteStreams;
-import com.google.common.io.Closeables;
 import com.google.common.net.MediaType;
 
+import ro.sync.basic.io.QuietClosable;
+import ro.sync.basic.util.URLUtil;
 import ro.sync.ecss.extensions.api.webapp.WebappMessage;
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.FilterURLConnection;
@@ -43,7 +43,6 @@ import ro.sync.exml.workspace.api.PluginResourceBundle;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.net.protocol.FolderEntryDescriptor;
 import ro.sync.net.protocol.http.HttpExceptionWithDetails;
-import ro.sync.basic.util.URLUtil;
 
 /**
  * Wrapper over an URLConnection that reports 401 exceptions as 
@@ -163,60 +162,66 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    * @throws IOException
    *             the param exception if it does not contain a 401 status.
    */
-  private void handleException(IOException e) throws UserActionRequiredException, IOException {
+  void handleException(IOException e) throws IOException {
+    PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
     URL url = this.delegateConnection.getURL();
     String fileUrl = getFileUrl(url);
-    logger.debug("Exception thrown when accessing " + fileUrl);
     if(logger.isDebugEnabled()) {
-      e.printStackTrace();
+      logger.debug("Exception thrown when accessing " + fileUrl, new Exception());
+    }
+    if(e instanceof HttpExceptionWithDetails) {
+      HttpExceptionWithDetails detailed = (HttpExceptionWithDetails)e;
+      if(detailed.getReasonCode() == HttpStatus.SC_NOT_FOUND) {
+        URL baseURL = detailed.getBaseURL();
+        String fileURL = getFilePath(baseURL);
+        throw new FileNotFoundException(rb.getMessage(TranslationTags.FILE_NOT_FOUND) + " " + fileURL);
+      }
     }
     if (e.getMessage().indexOf("401") != -1) {
-      // log failed login attempts.
-      String userInfo = url.getUserInfo();
-      if (userInfo != null && !userInfo.isEmpty()) {
-        String user = URLUtil.extractUser(url.toExternalForm());
-        if (user != null && !user.trim().isEmpty()) {
-          logger.warn("Failed login attempt of user " + user + " for " + URLUtil.getDescription(fileUrl));
-        } else {
-          logger.warn("Failed login attempt for " + URLUtil.getDescription(fileUrl));
-        }
-      }
-      PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
+      logFailedLoginAttempt(url, fileUrl);
       throw new UserActionRequiredException(
           new WebappMessage(WebappMessage.MESSAGE_TYPE_CUSTOM, rb.getMessage(TranslationTags.AUTHENTICATION_REQUIRED),
               // send back the URL for which to authenticate.
               fileUrl, true));
-    } else {
-      if (delegateConnection instanceof HttpURLConnection) {
-        String serverMessage = null;
-        
-        if(e instanceof HttpExceptionWithDetails) {
-          HttpExceptionWithDetails detailed = (HttpExceptionWithDetails)e;
-          if(detailed.getReasonCode() == HttpStatus.SC_NOT_FOUND) {
-            PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
-            serverMessage = rb.getMessage(TranslationTags.FILE_NOT_FOUND);
-            URL baseURL = detailed.getBaseURL();
-            String fileURL = getFilePath(baseURL);
-            serverMessage += " " + fileURL;
-          }
-        }
-        if(serverMessage == null) {
-          InputStream errorStream = null;
-          try {
-            errorStream = ((HttpURLConnection) this.delegateConnection)
-                .getErrorStream();
-            serverMessage = IOUtils.toString(errorStream);
-          } catch(Exception ex) {
-            Closeables.closeQuietly(errorStream);
-          }
-        }
-        if (shouldDisplayServerMessage(serverMessage)) {
-          throw new IOException(serverMessage, e);
-        } else {
-          logger.debug("Server message too complex to display to the user: " + serverMessage);
-        }
+    }
+    if (delegateConnection instanceof HttpURLConnection) {
+      String serverMessage = getServerErrorMessage((HttpURLConnection) this.delegateConnection);
+      if (shouldDisplayServerMessage(serverMessage)) {
+        throw new IOException(serverMessage, e);
+      } else {
+        logger.debug("Server message too complex to display to the user: " + serverMessage);
       }
-      throw e;
+    }
+    throw e;
+  }
+
+  /**
+   * @param httpURLConnection The connection
+   * @return The error message sent by the server.
+   * @throws IOException If the error message could not be read.
+   */
+  private String getServerErrorMessage(HttpURLConnection httpURLConnection) throws IOException {
+    String serverMessage;
+    try (InputStream errorStream = QuietClosable.from(httpURLConnection.getErrorStream())){
+      serverMessage = IOUtils.toString(errorStream);
+    }
+    return serverMessage;
+  }
+
+  /**
+   * Log failed login attempt.
+   * @param url The REST URL.
+   * @param fileUrl The file URL.
+   */
+  private void logFailedLoginAttempt(URL url, String fileUrl) {
+    String userInfo = url.getUserInfo();
+    if (userInfo != null && !userInfo.isEmpty()) {
+      String user = URLUtil.extractUser(url.toExternalForm());
+      if (user != null && !user.trim().isEmpty()) {
+        logger.warn("Failed login attempt of user " + user + " for " + URLUtil.getDescription(fileUrl));
+      } else {
+        logger.warn("Failed login attempt for " + URLUtil.getDescription(fileUrl));
+      }
     }
   }
 
