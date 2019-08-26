@@ -76,9 +76,6 @@
               <goal>gulp</goal>
             </goals>
             <phase>prepare-package</phase>
-            <configuration>
-              <arguments>prepare-package</arguments>
-            </configuration>
           </execution>
         </executions>
       </plugin>
