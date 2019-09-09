@@ -26,15 +26,20 @@ public class LoginCallbackServlet extends WebappServletPluginExtension {
    */
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    StringBuilder storedCookies = new StringBuilder();
+    Map<String, String> headersMap;
     Cookie[] cookies = req.getCookies();
-    for (int i = 0; i < cookies.length; i++) {
-      Cookie cookie = cookies[i];
-      String cookieValue = cookie.getValue();
-      String cookieName = cookie.getName();
-      storedCookies.append(cookieName).append("=").append(cookieValue).append(";");
+    if (cookies != null) {
+      StringBuilder storedCookies = new StringBuilder();
+      for (int i = 0; i < cookies.length; i++) {
+        Cookie cookie = cookies[i];
+        String cookieValue = cookie.getValue();
+        String cookieName = cookie.getName();
+        storedCookies.append(cookieName).append("=").append(cookieValue).append(";");
+      }      
+      headersMap = Collections.singletonMap("Cookie", storedCookies.toString()); 
+    } else {
+      headersMap = Collections.emptyMap();
     }
-    Map<String, String> headersMap = Collections.singletonMap("Cookie", storedCookies.toString()); 
     RestURLConnection.credentialsMap.put(req.getSession().getId(), headersMap);
     
     StringBuilder callbackContent = new StringBuilder();
