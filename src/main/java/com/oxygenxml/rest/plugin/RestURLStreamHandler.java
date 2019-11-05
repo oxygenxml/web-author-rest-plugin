@@ -5,17 +5,18 @@ import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Collections;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import ro.sync.basic.util.URLUtil;
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.URLStreamHandlerWithContext;
 import ro.sync.ecss.extensions.api.webapp.plugin.UserContext;
 import ro.sync.exml.workspace.api.PluginResourceBundle;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.options.WSOptionsStorage;
+import ro.sync.basic.util.URLUtil;
 
 /**
  * URL stream handler for a rest server.
@@ -53,9 +54,13 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
   protected String getContextId(UserContext context) {
     String contextId = super.getContextId(context);
     
-    Map<String, String> headers = context.getHeaders();
-    RestURLConnection.credentialsMap.put(
-        contextId, headers);
+    StringBuilder cookies = new StringBuilder();
+    for (Map.Entry<String, String> cookie: context.getCookies().entrySet()) {
+      cookies.append(cookie.getKey()).append('=').append(cookie.getValue()).append("; ");
+    }
+    Map<String, String> headersMap = Collections.singletonMap("Cookie", cookies.toString()); 
+    
+    RestURLConnection.credentialsMap.put(contextId, headersMap);
     return contextId;
   }
 
