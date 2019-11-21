@@ -1,82 +1,91 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<translation>
-    <languageList>
-        <language description="English" lang="en_US"/>
-        <language description="German" lang="de_DE"/>
-        <language description="French" lang="fr_FR"/>
-        <language description="Japanese" lang="ja_JP"/>
-        <language description="Dutch" lang="nl_NL"/>
-    </languageList>
-    <key value="use_invisible_login" distribution="webauthor">
-        <comment>The label of the checkbox that configures whether the plugin users the invisible login mechanism.</comment>
-        <val lang="en_US">Use invisible login form.</val>
-        <val lang="de_DE">Verwende unsichtbares Anmeldeformular.</val>
-        <val lang="fr_FR">Utilisez le formulaire de connexion invisible.</val>
-        <val lang="ja_JP">見えないログインフォームを使用します。</val>
-        <val lang="nl_NL">Gebruik onzichtbaar inlogformulier.</val>
-    </key>   
-    <key value="Unconfigured_REST_server_url" distribution="webauthor">
-        <comment>Error message informing the user that the REST Server url option is not set</comment>
-        <val lang="en_US">The REST server URL option is not set.</val>
-        <val lang="de_DE">Die Option REST-Server-URL ist nicht gesetzt.</val>
-        <val lang="fr_FR">L'option URL du serveur REST n'est pas définie.</val>
-        <val lang="ja_JP">残りのサーバーのURLオプションが設定されていません。</val>
-        <val lang="nl_NL">De URL-optie voor de REST-server is niet ingesteld.</val>
-    </key>
-    <key value="REST_login_success" distribution="webauthor">
-        <comment>Informs the user that the login was successful.</comment>
-        <val lang="en_US">REST server succeeded in logging in the user</val>
-        <val lang="de_DE">Benutzer erfolgreich am REST-Server angemeldet</val>
-        <val lang="fr_FR">Le serveur REST a réussi à ouvrir une session utilisateur</val>
-        <val lang="ja_JP">ユーザーにおいて、RESTのサーバーのロギングに成功しました</val>
-        <val lang="nl_NL">REST-server heeft de gebruiker ingelogd</val>
-    </key>
-    <key value="Root_regexp_description" distribution="webauthor">
-        <comment>Tooltip explaining that the input value required is a regular expression which will determine the root directory</comment>
-        <val lang="en_US">Regular expression applied over the URL to determine the RootURL.</val>
-        <val lang="de_DE">Auf die URL anzuwendender regulärer Ausdruck zur Ermittlung der Root-URL.</val>
-        <val lang="fr_FR">Expression régulière appliquée sur l'URL pour déterminer RootURL.</val>
-        <val lang="ja_JP">RootURLを決定するために正規表現がURLに適用されました</val>
-        <val lang="nl_NL">Reguliere expressie toegepast op de URL om de basis-URL te bepalen.</val>
-    </key>
-    <key value="Root_regexp" distribution="webauthor">
-        <comment>Label for text input for setting the regular expression that determines the root directory</comment>
-        <val lang="en_US">Root RegExp</val>
-        <val lang="de_DE">Root RegExp</val>
-        <val lang="fr_FR">RegExp racine</val>
-        <val lang="ja_JP">ルートRegExp</val>
-        <val lang="nl_NL">Root-RegExp</val>
-    </key>
-    <key value="Authentication_required" distribution="webauthor">
-        <comment>Title of login dialog.</comment>
-        <val lang="en_US">Authentication required</val>
-        <val lang="de_DE">Authentifikation erforderlich</val>
-        <val lang="fr_FR">Authentification requise</val>
-        <val lang="ja_JP">認証が必要です</val>
-        <val lang="nl_NL">Verificatie vereist</val>
-    </key>
-    <key value="File_not_found">
-        <comment/>
-        <val lang="en_US">File not found</val>
-        <val lang="de_DE">Datei nicht gefunden</val>
-        <val lang="fr_FR">Fichier non trouvé</val>
-        <val lang="ja_JP">ファイルは見つかりません</val>
-        <val lang="nl_NL">Bestand niet gevonden</val>
-    </key>
-    <key value="INVALID_URL_">
-        <comment/>
-        <val lang="en_US">Invalid URL</val>
-        <val lang="de_DE">Ungültige URL</val>
-        <val lang="fr_FR">URL invalide</val>
-        <val lang="ja_JP">不正なURL</val>
-        <val lang="nl_NL">Ongeldige URL</val>
-    </key>
-    <key value="Server_URL">
-        <comment>Open URL dialog. Input for the server URL.</comment>
-        <val lang="en_US">Server URL</val>
-        <val lang="de_DE">Server-URL</val>
-        <val lang="fr_FR">URL du serveur</val>
-        <val lang="ja_JP">サーバー URL</val>
-        <val lang="nl_NL">Server URL</val>
-    </key>
+<?xml version="1.0" encoding="UTF-8"?><translation>
+  <languageList>
+    <language description="English" lang="en_US"/>
+    <language description="German" lang="de_DE"/>
+    <language description="French" lang="fr_FR"/>
+    <language description="Japanese" lang="ja_JP"/>
+    <language description="Dutch" lang="nl_NL"/>
+    <language description="Chinese" lang="zh_CN"/>
+  </languageList>
+  <key value="use_invisible_login" distribution="webauthor">
+    <comment>The label of the checkbox that configures whether the plugin users the invisible login mechanism.</comment>
+    <val lang="en_US">Use invisible login form.</val>
+    <val lang="de_DE">Verwende unsichtbares Anmeldeformular.</val>
+    <val lang="fr_FR">Utilisez le formulaire de connexion invisible.</val>
+    <val lang="ja_JP">見えないログインフォームを使用します。</val>
+    <val lang="nl_NL">Gebruik onzichtbaar inlogformulier.</val>
+    <val lang="zh_CN">Use invisible login form.</val>
+  </key>   
+  <key value="Unconfigured_REST_server_url" distribution="webauthor">
+    <comment>Error message informing the user that the REST Server url option is not set</comment>
+    <val lang="en_US">The REST server URL option is not set.</val>
+    <val lang="de_DE">Die Option REST-Server-URL ist nicht gesetzt.</val>
+    <val lang="fr_FR">L'option URL du serveur REST n'est pas définie.</val>
+    <val lang="ja_JP">残りのサーバーのURLオプションが設定されていません。</val>
+    <val lang="nl_NL">De URL-optie voor de REST-server is niet ingesteld.</val>
+    <val lang="zh_CN">The REST server URL option is not set.</val>
+  </key>
+  <key value="REST_login_success" distribution="webauthor">
+    <comment>Informs the user that the login was successful.</comment>
+    <val lang="en_US">REST server succeeded in logging in the user</val>
+    <val lang="de_DE">Benutzer erfolgreich am REST-Server angemeldet</val>
+    <val lang="fr_FR">Le serveur REST a réussi à ouvrir une session utilisateur</val>
+    <val lang="ja_JP">ユーザーにおいて、RESTのサーバーのロギングに成功しました</val>
+    <val lang="nl_NL">REST-server heeft de gebruiker ingelogd</val>
+    <val lang="zh_CN">REST server succeeded in logging in the user</val>
+  </key>
+  <key value="Root_regexp_description" distribution="webauthor">
+    <comment>Tooltip explaining that the input value required is a regular expression which will determine the root directory</comment>
+    <val lang="en_US">Regular expression applied over the URL to determine the RootURL.</val>
+    <val lang="de_DE">Auf die URL anzuwendender regulärer Ausdruck zur Ermittlung der Root-URL.</val>
+    <val lang="fr_FR">Expression régulière appliquée sur l'URL pour déterminer RootURL.</val>
+    <val lang="ja_JP">RootURLを決定するために正規表現がURLに適用されました</val>
+    <val lang="nl_NL">Reguliere expressie toegepast op de URL om de basis-URL te bepalen.</val>
+    <val lang="zh_CN">Regular expression applied over the URL to determine the RootURL.</val>
+  </key>
+  <key value="Root_regexp" distribution="webauthor">
+    <comment>Label for text input for setting the regular expression that determines the root directory</comment>
+    <val lang="en_US">Root RegExp</val>
+    <val lang="de_DE">Root RegExp</val>
+    <val lang="fr_FR">RegExp racine</val>
+    <val lang="ja_JP">ルートRegExp</val>
+    <val lang="nl_NL">Root-RegExp</val>
+    <val lang="zh_CN">Root RegExp</val>
+  </key>
+  <key value="Authentication_required" distribution="webauthor">
+    <comment>Title of login dialog.</comment>
+    <val lang="en_US">Authentication required</val>
+    <val lang="de_DE">Authentifikation erforderlich</val>
+    <val lang="fr_FR">Authentification requise</val>
+    <val lang="ja_JP">認証が必要です</val>
+    <val lang="nl_NL">Verificatie vereist</val>
+    <val lang="zh_CN">Authentication required</val>
+  </key>
+  <key value="File_not_found">
+    <comment/>
+    <val lang="en_US">File not found</val>
+    <val lang="de_DE">Datei nicht gefunden</val>
+    <val lang="fr_FR">Fichier non trouvé</val>
+    <val lang="ja_JP">ファイルは見つかりません</val>
+    <val lang="nl_NL">Bestand niet gevonden</val>
+    <val lang="zh_CN">File not found</val>
+  </key>
+  <key value="INVALID_URL_">
+    <comment/>
+    <val lang="en_US">Invalid URL</val>
+    <val lang="de_DE">Ungültige URL</val>
+    <val lang="fr_FR">URL invalide</val>
+    <val lang="ja_JP">不正なURL</val>
+    <val lang="nl_NL">Ongeldige URL</val>
+    <val lang="zh_CN">Invalid URL</val>
+  </key>
+  <key value="Server_URL">
+    <comment>Open URL dialog. Input for the server URL.</comment>
+    <val lang="en_US">Server URL</val>
+    <val lang="de_DE">Server-URL</val>
+    <val lang="fr_FR">URL du serveur</val>
+    <val lang="ja_JP">サーバー URL</val>
+    <val lang="nl_NL">Server URL</val>
+    <val lang="zh_CN">Server URL</val>
+  </key>
 </translation>
