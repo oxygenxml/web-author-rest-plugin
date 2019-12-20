@@ -14,7 +14,7 @@
     <val lang="fr_FR">Utilisez le formulaire de connexion invisible.</val>
     <val lang="ja_JP">見えないログインフォームを使用します。</val>
     <val lang="nl_NL">Gebruik onzichtbaar inlogformulier.</val>
-    <val lang="zh_CN">Use invisible login form.</val>
+    <val lang="zh_CN">使用不可见的登录表单。</val>
   </key>   
   <key value="Unconfigured_REST_server_url" distribution="webauthor">
     <comment>Error message informing the user that the REST Server url option is not set</comment>
@@ -23,7 +23,7 @@
     <val lang="fr_FR">L'option URL du serveur REST n'est pas définie.</val>
     <val lang="ja_JP">残りのサーバーのURLオプションが設定されていません。</val>
     <val lang="nl_NL">De URL-optie voor de REST-server is niet ingesteld.</val>
-    <val lang="zh_CN">The REST server URL option is not set.</val>
+    <val lang="zh_CN">未设置REST服务器URL选项。</val>
   </key>
   <key value="REST_login_success" distribution="webauthor">
     <comment>Informs the user that the login was successful.</comment>
@@ -32,7 +32,7 @@
     <val lang="fr_FR">Le serveur REST a réussi à ouvrir une session utilisateur</val>
     <val lang="ja_JP">ユーザーにおいて、RESTのサーバーのロギングに成功しました</val>
     <val lang="nl_NL">REST-server heeft de gebruiker ingelogd</val>
-    <val lang="zh_CN">REST server succeeded in logging in the user</val>
+    <val lang="zh_CN">REST服务器成功登录用户</val>
   </key>
   <key value="Root_regexp_description" distribution="webauthor">
     <comment>Tooltip explaining that the input value required is a regular expression which will determine the root directory</comment>
@@ -41,7 +41,7 @@
     <val lang="fr_FR">Expression régulière appliquée sur l'URL pour déterminer RootURL.</val>
     <val lang="ja_JP">RootURLを決定するために正規表現がURLに適用されました</val>
     <val lang="nl_NL">Reguliere expressie toegepast op de URL om de basis-URL te bepalen.</val>
-    <val lang="zh_CN">Regular expression applied over the URL to determine the RootURL.</val>
+    <val lang="zh_CN">应用于URL的正则表达式来确定RootURL。</val>
   </key>
   <key value="Root_regexp" distribution="webauthor">
     <comment>Label for text input for setting the regular expression that determines the root directory</comment>
@@ -50,7 +50,7 @@
     <val lang="fr_FR">RegExp racine</val>
     <val lang="ja_JP">ルートRegExp</val>
     <val lang="nl_NL">Root-RegExp</val>
-    <val lang="zh_CN">Root RegExp</val>
+    <val lang="zh_CN">根RegExp</val>
   </key>
   <key value="Authentication_required" distribution="webauthor">
     <comment>Title of login dialog.</comment>
@@ -59,7 +59,7 @@
     <val lang="fr_FR">Authentification requise</val>
     <val lang="ja_JP">認証が必要です</val>
     <val lang="nl_NL">Verificatie vereist</val>
-    <val lang="zh_CN">Authentication required</val>
+    <val lang="zh_CN">需要身份验证</val>
   </key>
   <key value="File_not_found">
     <comment/>
@@ -68,7 +68,7 @@
     <val lang="fr_FR">Fichier non trouvé</val>
     <val lang="ja_JP">ファイルは見つかりません</val>
     <val lang="nl_NL">Bestand niet gevonden</val>
-    <val lang="zh_CN">File not found</val>
+    <val lang="zh_CN">找不到文件</val>
   </key>
   <key value="INVALID_URL_">
     <comment/>
@@ -77,7 +77,7 @@
     <val lang="fr_FR">URL invalide</val>
     <val lang="ja_JP">不正なURL</val>
     <val lang="nl_NL">Ongeldige URL</val>
-    <val lang="zh_CN">Invalid URL</val>
+    <val lang="zh_CN">无效的URL</val>
   </key>
   <key value="Server_URL">
     <comment>Open URL dialog. Input for the server URL.</comment>
@@ -86,6 +86,6 @@
     <val lang="fr_FR">URL du serveur</val>
     <val lang="ja_JP">サーバー URL</val>
     <val lang="nl_NL">Server URL</val>
-    <val lang="zh_CN">Server URL</val>
+    <val lang="zh_CN">服务器URL</val>
   </key>
 </translation>
