@@ -186,10 +186,12 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     }
     if (delegateConnection instanceof HttpURLConnection) {
       String serverMessage = getServerErrorMessage((HttpURLConnection) this.delegateConnection);
-      if (shouldDisplayServerMessage(serverMessage)) {
-        throw new IOException(serverMessage, e);
-      } else {
-        logger.debug("Server message too complex to display to the user: " + serverMessage);
+      if (serverMessage != null) {
+        if (shouldDisplayServerMessage(serverMessage)) {
+          throw new IOException(serverMessage, e);
+        } else {
+          logger.debug("Server message too complex to display to the user: " + serverMessage);
+        }
       }
     }
     throw e;
@@ -201,9 +203,11 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    * @throws IOException If the error message could not be read.
    */
   private String getServerErrorMessage(HttpURLConnection httpURLConnection) throws IOException {
-    String serverMessage;
+    String serverMessage = null;
     try (InputStream errorStream = QuietClosable.from(httpURLConnection.getErrorStream())){
-      serverMessage = IOUtils.toString(errorStream);
+      if (errorStream != null) {
+        serverMessage = IOUtils.toString(errorStream);
+      }
     }
     return serverMessage;
   }
