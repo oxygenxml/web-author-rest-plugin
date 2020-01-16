@@ -1,5 +1,7 @@
 package com.oxygenxml.rest.plugin;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,8 +9,12 @@ import javax.servlet.ServletException;
 
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.PluginConfigExtension;
+import ro.sync.exml.plugin.workspace.security.Response;
+import ro.sync.exml.plugin.workspace.security.TrustedHostsProvider;
 import ro.sync.exml.workspace.api.PluginResourceBundle;
+import ro.sync.exml.workspace.api.PluginWorkspace;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
+import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 public class RestConfigExtension  extends PluginConfigExtension {
 
@@ -32,6 +38,34 @@ public class RestConfigExtension  extends PluginConfigExtension {
     defaultOptions.put(USE_INVISIBLE_LOGIN_FORM, "off");
     defaultOptions.put(REST_ROOT_REGEXP, "");
     defaultOptions.put(REST_SERVER_URL, "");
+
+    PluginWorkspace pluginWorkspace = PluginWorkspaceProvider.getPluginWorkspace();
+    if (pluginWorkspace instanceof StandalonePluginWorkspace) {
+      ((StandalonePluginWorkspace) pluginWorkspace).addTrustedHostsProvider(
+          new TrustedHostsProvider(null) {
+            @Override
+            public Response isTrusted(String hostName) {
+              String trustedHost = null;
+
+              String restServerUrl = getOption(REST_SERVER_URL, "");
+              if (restServerUrl != null && !restServerUrl.isEmpty()) {
+                try {
+                  URL url = new URL(restServerUrl);
+                  trustedHost = url.getHost() + ":" + (url.getPort() != -1 ? url.getPort() : url.getDefaultPort());
+                } catch (MalformedURLException e) {
+                  // Consider it as unknown.
+                }
+              }
+
+              if (hostName.equals(trustedHost)) {
+                return TrustedHostsProvider.TRUSTED;
+              } else {
+                return TrustedHostsProvider.UNKNOWN;
+              }
+            }
+          }
+        );
+    }
 
     this.setDefaultOptions(defaultOptions);
   }
