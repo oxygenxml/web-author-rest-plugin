@@ -1,7 +1,5 @@
 package com.oxygenxml.rest.plugin;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,12 +7,8 @@ import javax.servlet.ServletException;
 
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.PluginConfigExtension;
-import ro.sync.exml.plugin.workspace.security.Response;
-import ro.sync.exml.plugin.workspace.security.TrustedHostsProvider;
 import ro.sync.exml.workspace.api.PluginResourceBundle;
-import ro.sync.exml.workspace.api.PluginWorkspace;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
-import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 
 public class RestConfigExtension  extends PluginConfigExtension {
 
