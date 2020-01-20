@@ -32,4 +32,7 @@
   <extension type="WebappStaticResourcesFolder" path="web/resources/" href="rest-resources"/>
   
   <extension type="WebappCSSResource" href="web/resources/rest.css"/>
+
+  <extension type="TrustedHosts"
+    class="com.oxygenxml.rest.plugin.TrustedHostsProvider"/>
 </plugin>
