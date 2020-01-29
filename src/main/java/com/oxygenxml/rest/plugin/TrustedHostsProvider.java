@@ -33,12 +33,10 @@ public class TrustedHostsProvider implements TrustedHostsProviderExtension {
     WSOptionsStorage optionsStorage = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage();
     updateEnforcedHost(optionsStorage);
 
-    optionsStorage.addOptionListener(new WSOptionListener() {
+    optionsStorage.addOptionListener(new WSOptionListener(RestConfigExtension.REST_SERVER_URL) {
       @Override
       public void optionValueChanged(WSOptionChangedEvent event) {
-        if (RestConfigExtension.REST_SERVER_URL.equals(event.getOptionKey())) {
-          updateEnforcedHost(optionsStorage);
-        }
+        updateEnforcedHost(optionsStorage);
       }
     });
   }
