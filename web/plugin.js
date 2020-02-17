@@ -196,12 +196,14 @@
   /**
    * Getter of the last usedUrl.
    *
-   * @return {String} the last set url.
+   * @return {String|null} the last set url.
    */
   RestFileBrowser.prototype.getLatestUrl = function() {
     var urlParam = sync.util.getURLParameter('url');
     if(urlParam) {
       return decodeURIComponent(urlParam);
+    } else {
+      return null;
     }
   };
 
