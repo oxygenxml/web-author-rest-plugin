@@ -21,7 +21,7 @@
   </licenses>
 
   <properties>
-    <sonar.skip.check>true</sonar.skip.check>
+    <sonar.skip.check>false</sonar.skip.check>
     <sonar.sources>src/main/java,web</sonar.sources>
   </properties>
 
