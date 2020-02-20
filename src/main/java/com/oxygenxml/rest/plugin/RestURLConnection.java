@@ -167,7 +167,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     URL url = this.delegateConnection.getURL();
     String fileUrl = getFileUrl(url);
     if(logger.isDebugEnabled()) {
-      logger.debug("Exception thrown when accessing " + fileUrl, new Exception());
+      logger.debug("Exception thrown when accessing " + fileUrl, new Exception(e));
     }
     if(e instanceof HttpExceptionWithDetails) {
       HttpExceptionWithDetails detailed = (HttpExceptionWithDetails)e;
