@@ -1,5 +1,6 @@
 package com.oxygenxml.rest.plugin;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilterOutputStream;
 import java.io.IOException;
@@ -115,6 +116,10 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
 
   @Override
   public InputStream getInputStream() throws IOException {
+    if (this.getDoOutput()) {
+      // Nothing to read for "save" operations.
+      return new ByteArrayInputStream(new byte[0]);
+    }
     try {
       return super.getInputStream();
     } catch (IOException e) {
@@ -152,12 +157,8 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
           connection.urlOverride = new URL(actualLocation);
         }
         
-        // CF-902: Close the input stream to release the underlying connection.
-        try {
-          connection.getInputStream().close();
-        } catch (IOException e) {
-          logger.warn("Error when closing connection after write", e);
-        }
+        // CF-902: Release the underlying connection.
+        URLUtil.disconnect(connection);
       }
     };
 
