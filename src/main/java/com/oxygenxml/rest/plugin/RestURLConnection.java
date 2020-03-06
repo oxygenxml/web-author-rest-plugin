@@ -146,19 +146,21 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       public void close() throws IOException {
         RestURLConnection connection = RestURLConnection.this;
         try {
-          super.close();
-        } catch (IOException e) {
-          handleException(e);
+          try {
+            super.close();
+          } catch (IOException e) {
+            handleException(e);
+          }
+          
+          // WA-1358: The server overridden the location.
+          String actualLocation = connection.getHeaderField("Location");
+          if (actualLocation != null) {
+            connection.urlOverride = new URL(actualLocation);
+          }
+        } finally {
+          // CF-902: Release the underlying connection.
+          URLUtil.disconnect(connection);
         }
-        
-        // WA-1358: The server overridden the location.
-        String actualLocation = connection.getHeaderField("Location");
-        if (actualLocation != null) {
-          connection.urlOverride = new URL(actualLocation);
-        }
-        
-        // CF-902: Release the underlying connection.
-        URLUtil.disconnect(connection);
       }
     };
 
