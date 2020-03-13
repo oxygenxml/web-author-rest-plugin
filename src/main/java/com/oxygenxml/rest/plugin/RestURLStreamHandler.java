@@ -8,7 +8,8 @@ import java.net.URLConnection;
 import java.util.Collections;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.URLStreamHandlerWithContext;
@@ -27,7 +28,7 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
     /**
    * Logger.
    */
-  private static final Logger logger = Logger.getLogger(RestURLStreamHandler.class.getName());
+  private static final Logger logger = LogManager.getLogger(RestURLStreamHandler.class.getName());
 
   /**
    * The environment variable used by the REST plugin to determine the server URL.

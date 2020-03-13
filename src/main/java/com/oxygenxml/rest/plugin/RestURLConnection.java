@@ -22,7 +22,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -56,7 +57,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
   /**
    * Logger for logging.
    */
-  private static final Logger logger = Logger.getLogger(RestURLConnection.class.getName());
+  private static final Logger logger = LogManager.getLogger(RestURLConnection.class.getName());
    
   /**
    * Header set for all requests in order to allow CMS's to prevent CSRF requests.
