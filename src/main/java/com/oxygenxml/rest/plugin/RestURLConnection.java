@@ -159,7 +159,8 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
           }
         } finally {
           // CF-902: Release the underlying connection.
-          URLUtil.disconnect(connection);
+          HttpURLConnection httpConn = (HttpURLConnection) connection.delegateConnection;
+          httpConn.disconnect();
         }
       }
     };
