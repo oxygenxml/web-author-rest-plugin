@@ -23,6 +23,6 @@
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.0",
     "gulp-uglify": "^3.0.2",
-    "sync-i18n": "0.0.13"
+    "sync-i18n": "0.0.x"
   }
 }
