@@ -21,7 +21,6 @@
   </licenses>
 
   <properties>
-    <sonar.skip.check>false</sonar.skip.check>
     <sonar.sources>src/main/java,web</sonar.sources>
   </properties>
 
@@ -97,14 +96,6 @@
           </execution>
         </executions>
       </plugin>
-      
-      <plugin>
-        <groupId>org.sonarsource.scanner.maven</groupId>
-        <artifactId>sonar-maven-plugin</artifactId>
-        <configuration>
-          <skip>${sonar.skip.check}</skip>
-        </configuration>
-     </plugin>
     </plugins>
   </build>
 </project>
