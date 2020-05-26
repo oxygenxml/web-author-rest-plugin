@@ -4,3 +4,4 @@ target/
 .settings
 .idea
 node_modules/
+web/0translations.js
