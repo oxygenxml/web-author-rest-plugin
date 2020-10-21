@@ -20,6 +20,16 @@
     </license>
   </licenses>
 
+  <developers>
+    <developer>
+      <name>Mihai Coanda</name>
+      <email>mihai_coanda@sync.ro</email>
+      <roles>
+        <role>manager</role>
+      </roles>
+    </developer>
+  </developers>
+
   <properties>
     <sonar.sources>src/main/java,web</sonar.sources>
   </properties>
