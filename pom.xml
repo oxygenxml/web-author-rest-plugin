@@ -57,8 +57,8 @@
         <artifactId>frontend-maven-plugin</artifactId>
         <version>1.9.1</version>
         <configuration>
-          <nodeVersion>v8.17.0</nodeVersion>
-          <npmVersion>6.13.4</npmVersion>
+          <nodeVersion>v12.16.0</nodeVersion>
+          <npmVersion>v6.13.4</npmVersion>
           <nodeDownloadRoot>http://nas.sync.ro/MyWeb/test/jenkins-tools/nodejs/</nodeDownloadRoot>
           <npmDownloadRoot>http://nas.sync.ro/MyWeb/test/jenkins-tools/npm/</npmDownloadRoot>
           <installDirectory>target</installDirectory>
@@ -72,6 +72,16 @@
             <phase>generate-resources</phase>
           </execution>
           <execution>
+            <id>npm registry config</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <arguments>config set @oxygenxml:registry ${npm.registry.url}</arguments>
+            </configuration>
+          </execution>
+          <execution>
             <id>npm install</id>
             <goals>
               <goal>npm</goal>
@@ -79,11 +89,14 @@
             <phase>generate-resources</phase>
           </execution>
           <execution>
-            <id>gulp build</id>
+            <id>wa-build</id>
             <goals>
-              <goal>gulp</goal>
+              <goal>npm</goal>
             </goals>
             <phase>prepare-package</phase>
+            <configuration>
+              <arguments>run build</arguments>
+            </configuration>
           </execution>
         </executions>
       </plugin>
