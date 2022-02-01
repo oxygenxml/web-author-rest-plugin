@@ -9,7 +9,7 @@
     name="REST Connector"
     description="oXygen XML Web Author connector for a generic REST API"
     version="${project.nosnapshot.version}"
-    vendor="Syncro Soft SRL">
+    vendor="Syncro Soft">
 
   <runtime>
     <librariesFolder name="lib" />
