@@ -1,5 +1,6 @@
 package com.oxygenxml.rest.plugin;
 
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.Proxy;
@@ -8,27 +9,22 @@ import java.net.URLConnection;
 import java.util.Collections;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import lombok.extern.slf4j.Slf4j;
+import ro.sync.basic.util.URLUtil;
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.URLStreamHandlerWithContext;
 import ro.sync.ecss.extensions.api.webapp.plugin.UserContext;
 import ro.sync.exml.workspace.api.PluginResourceBundle;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.options.WSOptionsStorage;
-import ro.sync.basic.util.URLUtil;
 
 /**
  * URL stream handler for a rest server.
  * 
  * @author mihai_coanda
  */
+@Slf4j
 public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
-    /**
-   * Logger.
-   */
-  private static final Logger logger = LogManager.getLogger(RestURLStreamHandler.class.getName());
 
   /**
    * The environment variable used by the REST plugin to determine the server URL.
@@ -45,7 +41,7 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
       WSOptionsStorage optionsStorage = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage();
       String serverUrl = optionsStorage.getOption(RestConfigExtension.REST_SERVER_URL, null);
       if (serverUrl != null && !restServerUrlEnvVar.equals(serverUrl)) {
-        logger.warn("The \"REST Server URL\" option is overriden by the "
+        log.warn("The \"REST Server URL\" option is overriden by the "
             + "\"" + RestConfigExtension.REST_SERVER_URL + "\" environment variable.");
       }
     }

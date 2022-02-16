@@ -22,8 +22,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,6 +32,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.io.ByteStreams;
 import com.google.common.net.MediaType;
 
+import lombok.extern.slf4j.Slf4j;
 import ro.sync.basic.io.QuietClosable;
 import ro.sync.basic.util.URLUtil;
 import ro.sync.ecss.extensions.api.webapp.WebappMessage;
@@ -52,12 +51,8 @@ import ro.sync.net.protocol.http.HttpExceptionWithDetails;
  * 
  * @author mihai_coanda
  */
+@Slf4j
 public class RestURLConnection extends FilterURLConnection implements CacheableUrlConnection {
-
-  /**
-   * Logger for logging.
-   */
-  private static final Logger logger = LogManager.getLogger(RestURLConnection.class.getName());
    
   /**
    * Header set for all requests in order to allow CMS's to prevent CSRF requests.
@@ -183,8 +178,8 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
     URL url = this.delegateConnection.getURL();
     String fileUrl = getFileUrl(url);
-    if(logger.isDebugEnabled()) {
-      logger.debug("Exception thrown when accessing " + fileUrl, new Exception(e));
+    if(log.isDebugEnabled()) {
+      log.debug("Exception thrown when accessing " + fileUrl, new Exception(e));
     }
     if(e instanceof HttpExceptionWithDetails) {
       HttpExceptionWithDetails detailed = (HttpExceptionWithDetails)e;
@@ -207,7 +202,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
         if (shouldDisplayServerMessage(serverMessage)) {
           throw new IOException(serverMessage, e);
         } else {
-          logger.debug("Server message too complex to display to the user: " + serverMessage);
+          log.debug("Server message too complex to display to the user: " + serverMessage);
         }
       }
     }
@@ -239,9 +234,9 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     if (userInfo != null && !userInfo.isEmpty()) {
       String user = URLUtil.extractUser(url.toExternalForm());
       if (user != null && !user.trim().isEmpty()) {
-        logger.warn("Failed login attempt of user " + user + " for " + URLUtil.getDescription(fileUrl));
+        log.warn("Failed login attempt of user " + user + " for " + URLUtil.getDescription(fileUrl));
       } else {
-        logger.warn("Failed login attempt for " + URLUtil.getDescription(fileUrl));
+        log.warn("Failed login attempt for " + URLUtil.getDescription(fileUrl));
       }
     }
   }
@@ -311,7 +306,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     try {
       jsonBytes = readConnectionBytes(connection);
     } catch (HttpExceptionWithDetails e) {
-      logger.debug("Failed to read folder listing from REST server :" + e.getMessage());
+      log.debug("Failed to read folder listing from REST server :" + e.getMessage());
       if(HttpStatus.SC_UNAUTHORIZED == e.getReasonCode()) {
         PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
         throw new UserActionRequiredException(new WebappMessage(
@@ -323,9 +318,9 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       }
       throw e;
     }    
-    if (logger.isDebugEnabled()) {
+    if (log.isDebugEnabled()) {
       String jsonFilesString = new String(jsonBytes, Charsets.UTF_8);
-      logger.debug("Received folder listing from REST server :" + jsonFilesString);
+      log.debug("Received folder listing from REST server :" + jsonFilesString);
     }
     
     ObjectMapper mapper = new ObjectMapper();
@@ -344,7 +339,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       boolean isFolder = folderProp != null && folderProp.asBoolean();
       String encodedFileName = URLUtil.encodeURIComponent(file.get("name").asText());
       String filePath = getDocumenURL() + encodedFileName + (isFolder ? "/" : "");
-      logger.debug("Add parsed file path :" + filePath);
+      log.debug("Add parsed file path :" + filePath);
       files.add(new FolderEntryDescriptor(filePath));
     }
     return files;
