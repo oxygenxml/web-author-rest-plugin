@@ -189,7 +189,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
         throw new FileNotFoundException(rb.getMessage(TranslationTags.FILE_NOT_FOUND) + " " + fileURL);
       }
     }
-    if (e.getMessage().indexOf("401") != -1) {
+    if (e.getMessage() != null && e.getMessage().contains("401")) {
       logFailedLoginAttempt(url, fileUrl);
       throw new UserActionRequiredException(
           new WebappMessage(WebappMessage.MESSAGE_TYPE_CUSTOM, rb.getMessage(TranslationTags.AUTHENTICATION_REQUIRED),
