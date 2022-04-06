@@ -23,8 +23,10 @@ import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 import com.google.common.cache.Cache;
@@ -201,7 +203,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       String serverMessage = getServerErrorMessage((HttpURLConnection) this.delegateConnection);
       if (serverMessage != null) {
         if (shouldDisplayServerMessage(serverMessage)) {
-          throw new IOException(serverMessage, e);
+          throw new IOException(extractUserReadableMessage(serverMessage), e);
         } else {
           log.debug("Server message too complex to display to the user: " + serverMessage);
         }
@@ -211,6 +213,27 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
   }
 
   /**
+   * Extract user readable message from file-server's response.
+   * @param serverResponse The response.
+   * @return User readable message.
+   */
+  private String extractUserReadableMessage(String serverResponse) {
+    String userMessage = serverResponse;
+    try {
+      JsonNode tree = new ObjectMapper().reader().readTree(serverResponse);
+      JsonNode message = tree.get("message");
+      if (message.getNodeType().equals(JsonNodeType.STRING)) {
+        userMessage = message.asText();
+      }
+    } catch (JsonProcessingException e) {
+      log.debug(e);
+    }
+    return userMessage;
+  }
+
+  /**
+   * See https://github.com/oxygenxml/web-author-rest-plugin/blob/BRANCH_OXYGEN_RELEASE_24_1/docs/API-spec.md#error-responses
+   *
    * @param httpURLConnection The connection
    * @return The error message sent by the server.
    * @throws IOException If the error message could not be read.
