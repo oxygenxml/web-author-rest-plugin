@@ -175,7 +175,6 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    *             the param exception if it does not contain a 401 status.
    */
   void handleException(IOException e) throws IOException {
-    PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
     URL url = this.delegateConnection.getURL();
     String fileUrl = getFileUrl(url);
     if(log.isDebugEnabled()) {
@@ -186,11 +185,13 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       if(detailed.getReasonCode() == HttpStatus.SC_NOT_FOUND) {
         URL baseURL = detailed.getBaseURL();
         String fileURL = getFilePath(baseURL);
+        PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
         throw new FileNotFoundException(rb.getMessage(TranslationTags.FILE_NOT_FOUND) + " " + fileURL);
       }
     }
     if (e.getMessage() != null && e.getMessage().contains("401")) {
       logFailedLoginAttempt(url, fileUrl);
+      PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
       throw new UserActionRequiredException(
           new WebappMessage(WebappMessage.MESSAGE_TYPE_CUSTOM, rb.getMessage(TranslationTags.AUTHENTICATION_REQUIRED),
               // send back the URL for which to authenticate.
