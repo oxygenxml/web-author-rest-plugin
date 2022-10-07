@@ -12,7 +12,7 @@ It project contains the following parts:
 Plugin installation
 -------------------
 
-[Download the latest release ](https://github.com/oxygenxml/web-author-rest-connector/releases) of the plugin and 
+[Download the latest release ](https://www.oxygenxml.com/maven/com/oxygenxml/web-author-rest-plugin/) of the plugin and 
 [install it](https://www.oxygenxml.com/doc/versions/18.1.0/ug-webauthor/topics/webapp-configure-plugins.html) in the Web Author Admin Page.
 
 Plugin configuration
