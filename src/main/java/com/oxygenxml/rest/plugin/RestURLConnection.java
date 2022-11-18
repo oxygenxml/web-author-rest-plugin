@@ -196,10 +196,6 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
         throw createUserActionReqiredException(fileUrl);   
       }
     }
-//    if (e.getMessage() != null && e.getMessage().contains("401")) {
-//      logFailedLoginAttempt(url, fileUrl);
-//      throw createUserActionReqiredException(fileUrl);
-//    }
     if (delegateConnection instanceof HttpURLConnection) {
       String serverMessage = getServerErrorMessage((HttpURLConnection) this.delegateConnection);
       if (serverMessage != null) {
