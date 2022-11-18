@@ -190,14 +190,11 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
         PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
         throw new FileNotFoundException(rb.getMessage(TranslationTags.FILE_NOT_FOUND) + " " + fileURL);
       }
-    }
-    if (e.getMessage() != null && e.getMessage().contains("401")) {
-      logFailedLoginAttempt(url, fileUrl);
-      PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
-      throw new UserActionRequiredException(
-          new WebappMessage(WebappMessage.MESSAGE_TYPE_CUSTOM, rb.getMessage(TranslationTags.AUTHENTICATION_REQUIRED),
-              // send back the URL for which to authenticate.
-              fileUrl, true));
+      
+      if (detailed.getReasonCode() == HttpStatus.SC_UNAUTHORIZED) {
+        logFailedLoginAttempt(url, fileUrl);
+        throw createUserActionReqiredException(fileUrl);   
+      }
     }
     if (delegateConnection instanceof HttpURLConnection) {
       String serverMessage = getServerErrorMessage((HttpURLConnection) this.delegateConnection);
@@ -210,6 +207,15 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       }
     }
     throw e;
+  }
+
+  private UserActionRequiredException createUserActionReqiredException(String fileUrl) {
+    PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
+    UserActionRequiredException exception = new UserActionRequiredException(
+        new WebappMessage(WebappMessage.MESSAGE_TYPE_CUSTOM, rb.getMessage(TranslationTags.AUTHENTICATION_REQUIRED),
+            // send back the URL for which to authenticate.
+            fileUrl, true));
+    return exception;
   }
 
   /**
