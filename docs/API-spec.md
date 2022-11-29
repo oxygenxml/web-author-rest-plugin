@@ -17,6 +17,23 @@ The resulting architecture would look like in the image below:
 
 These are not hard requirements but meeting them greatly simplifies the integration.
 
+ation.
+
+Requests Journey
+-----------
+
+1. Web Author UI loads in the browser
+2. Web Author UI makes a request to the Web Author Server to retrieve the document. The HTTP request naturally contains the session cookie (e.g. sid=1f4e)
+3. Web Author Server receives the request from the Web Author UI and, thanks to web-author-rest-plugin, it starts a request to CMS REST API Server with the cookies received from the Web Author UI (the cookies are forwarded by web-author-rest-plugin)
+4. CMS REST API Server receives the request from the Web Author Server and:
+
+    *  usually checks if the user represented by the received session Cookie is authenticated and authorized. If the user is not authenticated (or it was in the past but now its session expired) it must return 401 HTTP status code.
+    * if everything is OK, it returns the document content
+5. then Web Author Server:
+
+    *  if receives 401 HTTP code will make Web Author UI show the CMS authentication page ($BASE_URL/rest-login)
+    * if receives success HTTP code will successfully load the document
+
 Error responses
 ---------------
 
