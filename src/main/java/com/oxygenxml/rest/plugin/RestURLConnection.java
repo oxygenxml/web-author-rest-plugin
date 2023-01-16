@@ -223,12 +223,13 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    * @param serverResponse The response.
    * @return User readable message.
    */
-  private String extractUserReadableMessage(String serverResponse) {
+  @VisibleForTesting
+  static String extractUserReadableMessage(String serverResponse) {
     String userMessage = serverResponse;
     try {
       JsonNode tree = new ObjectMapper().reader().readTree(serverResponse);
       JsonNode message = tree.get("message");
-      if (message.getNodeType().equals(JsonNodeType.STRING)) {
+      if (message != null && message.getNodeType().equals(JsonNodeType.STRING)) {
         userMessage = message.asText();
       }
     } catch (JsonProcessingException e) {

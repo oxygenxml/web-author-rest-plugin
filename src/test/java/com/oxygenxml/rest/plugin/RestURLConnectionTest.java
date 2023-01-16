@@ -167,6 +167,22 @@ public class RestURLConnectionTest {
     writeToConnection(conn);
   }
 
+  
+  /**
+   * <p><b>Description:</b> Test exception parsing.</p>
+   * <p><b>Bug ID:</b> WA-6173</p>
+   *
+   * @author cristi_talau
+   *
+   * @throws Exception
+   */
+  @Test
+  public void testMalformedErrorMessage() throws Exception {
+    String message = RestURLConnection.extractUserReadableMessage("{}");
+    assertEquals("{}", message);
+  }
+
+
   private RestURLConnection createRestConnection(HttpServer server, String filePath) throws IOException, MalformedURLException {
     URLConnection lowLevelHttpConnection = new URL("http://localhost:" + server.getLocalPort()+ "/" + filePath).openConnection();
     RestURLConnection conn = new RestURLConnection("abc", lowLevelHttpConnection);
