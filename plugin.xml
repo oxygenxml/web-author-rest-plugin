@@ -17,7 +17,7 @@
     <library name="target/classes" />
   </runtime>
 
-  <context class="com.oxygenxml.rest.plugin.AuthHeadersApi"/>
+  <context class="com.oxygenxml.rest.plugin.AuthHeadersMap"/>
   
   <!-- Login servlet -->
   <extension type="WebappServlet" class="com.oxygenxml.rest.plugin.LoginCallbackServlet"/>
