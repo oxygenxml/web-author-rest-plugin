@@ -28,6 +28,8 @@
     class="com.oxygenxml.rest.plugin.AuthHeadersApi"/>
   <extension type="WorkspaceAccess" 
     class="com.oxygenxml.rest.plugin.BearerTokenRetrieverFromLoadingOptions"/>
+  <extension type="WebappServlet"
+    class="com.oxygenxml.rest.plugin.BearerTokenReceiverServlet"/>
   
   <extension type="WebappServlet" role="config"
     class="com.oxygenxml.rest.plugin.RestConfigExtension"/>
