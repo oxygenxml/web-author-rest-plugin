@@ -60,11 +60,6 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
   private static final String CSRF_HEADER = "X-Requested-With";
   
   /**
-   * Credentials store.
-   */
-  public static final AuthHeadersMap credentialsMap = new AuthHeadersMap();
-  
-  /**
    * Prefix of the protocol.
    * 
    * We translate http to rest-http and https to rest-https.
@@ -82,6 +77,11 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
   private URL urlOverride;
 
   /**
+   * The headers used for authentication
+   */
+  private AuthHeadersMap authHeadersMap;
+
+  /**
    * Constructor method for the URLConnection wrapper.
    * 
    * @param contextId
@@ -91,8 +91,9 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    *            the wrapped URLConnection.
    * @throws UserActionRequiredException if something fails.
    */
-  protected RestURLConnection(String contextId, URLConnection delegate) {
+  protected RestURLConnection(AuthHeadersMap authHeadersMap, String contextId, URLConnection delegate) {
     super(delegate);
+    this.authHeadersMap = authHeadersMap;
     this.contextId = contextId;
     addHeaders(this, this.contextId);
   }
@@ -293,7 +294,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
   /**
    * Adds credentials associated with the given user context to this rest url connection. 
    */
-  public static void addHeaders(URLConnection urlConnection, String contextId) {
+  public void addHeaders(URLConnection urlConnection, String contextId) {
     // This header is set in order to allow CMS's to prevent CSRF attacks.
     // An attacker can create a form to send a post requests to a rest end-point but 
     // won't be able to set this header.
@@ -303,7 +304,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       // The current request did not match any session - no headers to add.
       return;
     }
-    Map<String, String> serverHeaders = credentialsMap.getHeaders(contextId);
+    Map<String, String> serverHeaders = authHeadersMap.getHeaders(contextId);
     if(serverHeaders != null) {
       // add all headers to the url connection
       Set<String> keySet = serverHeaders.keySet();

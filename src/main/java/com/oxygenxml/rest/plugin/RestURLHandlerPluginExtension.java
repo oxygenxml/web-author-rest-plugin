@@ -2,6 +2,7 @@ package com.oxygenxml.rest.plugin;
 
 import java.net.URLStreamHandler;
 
+import ro.sync.exml.plugin.PluginContext;
 import ro.sync.exml.plugin.urlstreamhandler.URLStreamHandlerPluginExtension;
 import ro.sync.exml.workspace.api.Platform;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
@@ -13,13 +14,16 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
  */
 public class RestURLHandlerPluginExtension implements URLStreamHandlerPluginExtension {
 
+  @PluginContext
+  private AuthHeadersMap authHeadersMap;
+  
   /**
    * @see ro.sync.exml.plugin.urlstreamhandler.URLStreamHandlerPluginExtension#getURLStreamHandler(java.lang.String)
    */
   public URLStreamHandler getURLStreamHandler(String protocol) {
     boolean isWebapp = Platform.WEBAPP.equals(PluginWorkspaceProvider.getPluginWorkspace().getPlatform());
     if (isWebapp && RestURLConnection.REST_PROTOCOL.equals(protocol)) {
-      return new RestURLStreamHandler();
+      return new RestURLStreamHandler(authHeadersMap);
     }
     return null;
   }

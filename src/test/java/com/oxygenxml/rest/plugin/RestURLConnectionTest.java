@@ -81,7 +81,8 @@ public class RestURLConnectionTest {
     
     URL requestURL = new URL("http://localhost:8090/files?url=rest%3A%2F%2Fplatform%2Ffolder%2FTopic.dita");
 
-    RestURLConnection restURLConnection = new RestURLConnection("sessionId", requestURL.openConnection());
+    RestURLConnection restURLConnection = new RestURLConnection(
+        new AuthHeadersMap(), "sessionId", requestURL.openConnection());
     try {
       restURLConnection.handleException(new HttpExceptionWithDetails("xxx", 404, "pas trouve", requestURL));
       fail("Should throw"); 
@@ -106,7 +107,7 @@ public class RestURLConnectionTest {
     HttpURLConnection urlConnection = mock(HttpURLConnection.class);
     when(urlConnection.getErrorStream()).thenReturn(new ByteArrayInputStream("{\"message\":\"user-readable-message\"}".getBytes(StandardCharsets.UTF_8)));
     when(urlConnection.getURL()).thenReturn(requestURL);
-    RestURLConnection restUrlConnection = new RestURLConnection("sessionId", urlConnection);
+    RestURLConnection restUrlConnection = new RestURLConnection(new AuthHeadersMap(), "sessionId", urlConnection);
     try {
       restUrlConnection.handleException(new HttpExceptionWithDetails(null, 500, null, requestURL));
       fail("must throw IOException"); 
@@ -185,7 +186,7 @@ public class RestURLConnectionTest {
 
   private RestURLConnection createRestConnection(HttpServer server, String filePath) throws IOException, MalformedURLException {
     URLConnection lowLevelHttpConnection = new URL("http://localhost:" + server.getLocalPort()+ "/" + filePath).openConnection();
-    RestURLConnection conn = new RestURLConnection("abc", lowLevelHttpConnection);
+    RestURLConnection conn = new RestURLConnection(new AuthHeadersMap(), "abc", lowLevelHttpConnection);
     return conn;
   }
 

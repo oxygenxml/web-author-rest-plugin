@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.WebappServletPluginExtension;
+import ro.sync.exml.plugin.PluginContext;
 import ro.sync.exml.workspace.api.PluginResourceBundle;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 
@@ -18,6 +19,12 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
  * @author mihai_coanda
  */
 public class LoginCallbackServlet extends WebappServletPluginExtension {
+  
+  /**
+   * The headers used for authentication
+   */
+  @PluginContext
+  private AuthHeadersMap authHeadersMap;
   
   /**
    * Returns a HTML page that posts a message to the WebAuthor frame to close the login dialog. 
@@ -35,9 +42,9 @@ public class LoginCallbackServlet extends WebappServletPluginExtension {
         String cookieName = cookie.getName();
         storedCookies.append(cookieName).append("=").append(cookieValue).append(";");
       }
-      RestURLConnection.credentialsMap.setCookiesHeader(sessionId, storedCookies.toString());
+      authHeadersMap.setCookiesHeader(sessionId, storedCookies.toString());
     } else {
-      RestURLConnection.credentialsMap.clearCookiesHeader(sessionId);
+      authHeadersMap.clearCookiesHeader(sessionId);
     }
     
     StringBuilder callbackContent = new StringBuilder();

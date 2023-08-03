@@ -8,6 +8,7 @@ import ro.sync.ecss.extensions.api.access.EditingSessionContext;
 import ro.sync.ecss.extensions.api.webapp.AuthorDocumentModel;
 import ro.sync.ecss.extensions.api.webapp.access.WebappEditingSessionLifecycleListener;
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
+import ro.sync.exml.plugin.PluginContext;
 import ro.sync.exml.plugin.workspace.WorkspaceAccessPluginExtension;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
 import ro.sync.basic.util.URLUtil;
@@ -19,6 +20,9 @@ import ro.sync.basic.util.URLUtil;
  */
 public class AuthHeadersApi implements WorkspaceAccessPluginExtension {
 
+  @PluginContext
+  private AuthHeadersMap authHeadersMap;
+  
   /**
    * The key used to retrieve REST headers to be sent to the server.
    */
@@ -60,7 +64,7 @@ public class AuthHeadersApi implements WorkspaceAccessPluginExtension {
     editingContext.setAttribute(REST_HEADERS_KEY, new Supplier<Map<String, String>>() {
       @Override
       public Map<String, String> get() {
-        return RestURLConnection.credentialsMap.getHeaders(contextId);
+        return authHeadersMap.getHeaders(contextId);
       }
     });
   };

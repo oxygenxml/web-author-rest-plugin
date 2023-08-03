@@ -29,12 +29,18 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
    * The environment variable used by the REST plugin to determine the server URL.
    */
   private static final String REST_SERVER_URL_ENV_VAR = "REST_SERVER_URL";
+  /**
+   * The headers used for authentication
+   */
+  private AuthHeadersMap authHeadersMap;
 
 
   /**
    * Constructor.
+   * @param authHeadersMap The headers used for authentication. 
    */
-  public RestURLStreamHandler() {
+  public RestURLStreamHandler(AuthHeadersMap authHeadersMap) {
+    this.authHeadersMap = authHeadersMap;
     String restServerUrlEnvVar = System.getenv(REST_SERVER_URL_ENV_VAR);
     if (restServerUrlEnvVar != null) {
       WSOptionsStorage optionsStorage = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage();
@@ -55,7 +61,7 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
       cookies.append(cookie.getKey()).append('=').append(cookie.getValue()).append("; ");
     }
     
-    RestURLConnection.credentialsMap.setCookiesHeader(contextId, cookies.toString());
+    authHeadersMap.setCookiesHeader(contextId, cookies.toString());
     return contextId;
   }
 
@@ -63,7 +69,7 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
   protected URLConnection openConnectionInContext(String contextId, URL url, Proxy proxy) throws IOException {
 
     URLConnection urlConnection = computeRestUrl(url).openConnection();
-    return new RestURLConnection(contextId, urlConnection);
+    return new RestURLConnection(authHeadersMap, contextId, urlConnection);
   }
   
   /**
