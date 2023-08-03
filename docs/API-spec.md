@@ -4,59 +4,11 @@ REST API for CMS-es
 Assumptions
 -----------
 
-This plugin has several assumptions about the implementation of the API:
+This plugin has several assumptions about the authentication of the API:
 
-1. The REST API is deployed on the same domain as Web Author (maybe on different ports). Below we will denote:
- - the base URL of the REST API as `$BASE_URL`. An example value would be: `http://example.com/oxygen-cms/v1/`
- - the base URL of Web Author as `$WEB_AUTHOR_URL`. An example value would be `http://example.com/oxygen-xml-web-author/app/oxygen.html`.
-2. The API requests are authenticated using cookies.
-
-The resulting architecture would look like in the image below:
-
-![Authentication architecture](cookie-auth-architecture.png)
-
-These are not hard requirements but meeting them greatly simplifies the integration.
-
-ation.
-
-Requests Journey
------------
-
-1. Web Author UI loads in the browser
-2. Web Author UI makes a request to the Web Author Server to retrieve the document. The HTTP request naturally contains the session cookie (e.g. sid=1f4e)
-3. Web Author Server receives the request from the Web Author UI and, thanks to web-author-rest-plugin, it starts a request to CMS REST API Server with the cookies received from the Web Author UI (the cookies are forwarded by web-author-rest-plugin)
-4. CMS REST API Server receives the request from the Web Author Server and:
-
-    *  usually checks if the user represented by the received session Cookie is authenticated and authorized. If the user is not authenticated (or it was in the past but now its session expired) it must return 401 HTTP status code.
-    * if everything is OK, it returns the document content
-5. then Web Author Server:
-
-    *  if receives 401 HTTP code will make Web Author UI show the CMS authentication page ($BASE_URL/rest-login)
-    * if receives success HTTP code will successfully load the document
-
-Error responses
----------------
-
-When the requests are made without the required cookies or with expired ones, the `401` (Not Authenticated) HTTP status code must be returned.
-
-If an error occured while processing the request, the API can return an error status code: `4XX` or `5XX`. The body of the response whould be a JSON message with the following format:
-
-```Javascript
-{
-  "message": "Cannot process request due to ... "
-}
-```
-
-Headers
--------
-
-Each request made by Web Author will include the following headers:
-
-| Header Name |  Value      | Comment                         |
-|-------------|-------------|---------------------------------|
-| *User-Agent*| Oxygen/VV.V | VV.V is the Web Author version  |
-| *X-Requested-With* | RC   | Can be used for CSRF protection |
-| *Cookie* | name1=value1;name2=value2 | The cookies used by the CMS |
+1. Either the API requests are authenticated using cookies
+  - In this case the REST API should be deployed on the same domain as Web Author.
+2. Or, the API requests are authenticated using bearer token
 
 Basic file operations
 ---------------------
@@ -73,30 +25,35 @@ Each file is identified by an URL with the `rest://` scheme. The file URL should
 The file content encoding should be `UTF-8` in both requests and responses of these endpoints.
 An example implementation for ASP.NET can be found ![here](examples/asp.net.md).
 
-User Authentication
--------------------
+There are two authentication approaches:
+1. ![Based on Cookies](cookie-based-auth.md)
+2. ![Based on bearer tokens](bearer-token-auth.md)
 
-One solution is to embed Web Author in a page of your application and make sure that the user is authenticated before opening the editor.
+Headers
+-------
 
-However, if you choose to allow users to open Web Author independently of your application, or if you use expiring login sessions, the user may need to re-login during an editing session.
+Each request made by Web Author will include the following headers:
 
-To implement this re-login flow you should do the following:
+| Header Name |  Value      | Comment                         |
+|-------------|-------------|---------------------------------|
+| *User-Agent*| Oxygen/VV.V | VV.V is the Web Author version  |
+| *X-Requested-With* | RC   | Can be used for CSRF protection |
+| *Cookie* | name1=value1;name2=value2 | The cookies used by the CMS, if bearer token is not provided|
+| *Authorization* | Bearer token | In case it is provided |
 
-1. When Web Author connects to the API using no cookies or expired cookies, return `401` status code. 
-2. Implement the following HTTP endpoint to show a login form to the user.
+Error responses
+---------------
 
-  ```
-  $BASE_URL/rest-login
-  ```
-If need only to run JS code in the loaded iframe, without displaying it to the user (your login mechanism does not require user interaction), you can toggle the _Use invisible login form_ plugin option. This will load the page in an invisible iframe.
- 
- **Hint**: you can redirect him to your existing login form.
-  
-3. After the user logs in, you should redirect to 
-  ```
-  $WEB_AUTHOR_URL/plugins-dispatcher/rest-login-callback
-  ```
-(this notifies the WebAuthor that the login process completed and it should retry the action that failed)
+When the requests are made without the required cookies or with expired ones, the `401` (Not Authenticated) HTTP status code must be returned.
+
+If an error occured while processing the request, the API can return an error status code: `4XX` or `5XX`. The body of the response whould be a JSON message with the following format:
+
+```Javascript
+{
+  "message": "Cannot process request due to ... "
+}
+```
+
 
 File browsing
 -------------
@@ -119,14 +76,4 @@ The response should be a JSON array of objects with the following format:
 
 ### Custom file browsing widget
 
-In some cases, the files do not have a hierarchical folder structure, and the user can rely on labels or full text search to find content. In this case, you can register a custom file browsing widget.
-
-When the user needs to choose an URL of a CMS resource, the folloing URL will be open for her:
-```
-$BASE_URL/browse
-```
-
-After the user chose the resource URL, your job is to redirect her to 
-```
-$WEB_AUTHOR_URL/plugins-dispatcher/rest-browse-callback?url=rest://chosen_url
-```
+In some cases, the files do not have a hierarchical folder structure, and the user can rely on labels or full text search to find content. In this case, you can register a custom file browsing widget by using the `workspace.setUrlChooser()` JavaScript API.
