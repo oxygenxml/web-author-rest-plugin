@@ -17,19 +17,28 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.http.Header;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.bootstrap.HttpServer;
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
+import com.google.common.collect.ImmutableMap;
+
+import ro.sync.basic.util.URLStreamHandlerFactorySetter;
+import ro.sync.ecss.extensions.api.webapp.AuthorDocumentModel;
+import ro.sync.ecss.extensions.api.webapp.WebappAuthorDocumentFactory;
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.UserActionRequiredException;
 import ro.sync.ecss.webapp.testing.MockAuthorDocumentFactory;
 import ro.sync.exml.workspace.api.PluginResourceBundle;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
+import ro.sync.exml.workspace.api.options.WSOptionsStorage;
 import ro.sync.net.protocol.http.HttpExceptionWithDetails;
 
 public class RestURLConnectionTest {
@@ -42,9 +51,18 @@ public class RestURLConnectionTest {
   @Rule
   public ExpectedException exceptionRule = ExpectedException.none();
   
+  
+  static URLStreamHandlerFactorySetter factorySetter;
+  
   @BeforeClass
-  public static void installProtocols() {
+  public static void installProtocols() throws Exception {
     MockAuthorDocumentFactory.initForTest();
+    factorySetter = new URLStreamHandlerFactorySetter();
+  }
+  
+  @After
+  public void tearDown() throws Exception {
+    factorySetter.tearDown();
   }
   
   /**
@@ -166,6 +184,53 @@ public class RestURLConnectionTest {
     
     exceptionRule.expect(UserActionRequiredException.class);
     writeToConnection(conn);
+  }
+
+  /**
+   * <p><b>Description:</b> Test that a bearer auth token is sent.</p>
+   * <p><b>Bug ID:</b> WA-6658</p>
+   *
+   * @author cristi_talau
+   *
+   * @throws Exception
+   */
+  @Test
+  public void testBearerAuth() throws Exception {
+    String bearerToken = "abc";
+    String sessionId = "session-id";
+    
+    AuthHeadersMap authHeadersMap = new AuthHeadersMap();
+    authHeadersMap.setBearerToken(sessionId, bearerToken);
+    
+    factorySetter.setHandler("rest", new RestURLStreamHandler(authHeadersMap));
+    
+    WSOptionsStorage optionsStorage = PluginWorkspaceProvider.getPluginWorkspace().getOptionsStorage();
+    String oldOption = optionsStorage.getOption(RestConfigExtension.REST_SERVER_URL, "");
+    try {
+      HttpServer server = createServerThatRequiresAuth(bearerToken, "<root/>");
+      optionsStorage.setOption(RestConfigExtension.REST_SERVER_URL, "http://localhost:" + server.getLocalPort() + "/");
+
+      AuthorDocumentModel documentInfo = WebappAuthorDocumentFactory.createAuthorDocumentInfo("rest://" + sessionId + "@server/file.xml", 
+          ImmutableMap.of("bearer.token", bearerToken));
+      
+      String content = IOUtils.toString(documentInfo.createReader());
+      assertEquals("<root/>", content);  
+    } finally {
+      optionsStorage.setOption(RestConfigExtension.REST_SERVER_URL, oldOption);        
+    }
+  }
+  
+  private HttpServer createServerThatRequiresAuth(String token, String content) throws IOException {
+    HttpServer server = serverManager.createServer((request, response, context) -> {
+      Header authHeader = request.getFirstHeader("Authorization");
+      if (authHeader != null && authHeader.getValue().equals("Bearer " + token)) {
+        response.setEntity(new StringEntity(content));
+      } else {
+        response.setStatusCode(401);
+        response.setEntity(new StringEntity("entity"));
+      }
+    });
+    return server;
   }
 
   
