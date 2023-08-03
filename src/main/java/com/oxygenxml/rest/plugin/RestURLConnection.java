@@ -29,8 +29,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.google.common.io.ByteStreams;
 import com.google.common.net.MediaType;
 
@@ -64,11 +62,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
   /**
    * Credentials store.
    */
-  public static final Cache<String, Map<String, String>> credentialsMap =
-      CacheBuilder.newBuilder()
-        .concurrencyLevel(10)
-        .maximumSize(10000)
-        .build();
+  public static final AuthHeadersMap credentialsMap = new AuthHeadersMap();
   
   /**
    * Prefix of the protocol.
@@ -309,7 +303,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       // The current request did not match any session - no headers to add.
       return;
     }
-    Map<String, String> serverHeaders = credentialsMap.getIfPresent(contextId);
+    Map<String, String> serverHeaders = credentialsMap.getHeaders(contextId);
     if(serverHeaders != null) {
       // add all headers to the url connection
       Set<String> keySet = serverHeaders.keySet();

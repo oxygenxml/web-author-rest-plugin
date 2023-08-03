@@ -1,8 +1,6 @@
 package com.oxygenxml.rest.plugin;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -26,7 +24,8 @@ public class LoginCallbackServlet extends WebappServletPluginExtension {
    */
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    Map<String, String> headersMap;
+    String sessionId = req.getSession().getId();
+    
     Cookie[] cookies = req.getCookies();
     if (cookies != null) {
       StringBuilder storedCookies = new StringBuilder();
@@ -35,12 +34,11 @@ public class LoginCallbackServlet extends WebappServletPluginExtension {
         String cookieValue = cookie.getValue();
         String cookieName = cookie.getName();
         storedCookies.append(cookieName).append("=").append(cookieValue).append(";");
-      }      
-      headersMap = Collections.singletonMap("Cookie", storedCookies.toString()); 
+      }
+      RestURLConnection.credentialsMap.setCookiesHeader(sessionId, storedCookies.toString());
     } else {
-      headersMap = Collections.emptyMap();
+      RestURLConnection.credentialsMap.clearCookiesHeader(sessionId);
     }
-    RestURLConnection.credentialsMap.put(req.getSession().getId(), headersMap);
     
     StringBuilder callbackContent = new StringBuilder();
     PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();

@@ -6,7 +6,6 @@ import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Collections;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
@@ -55,9 +54,8 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
     for (Map.Entry<String, String> cookie: context.getCookies().entrySet()) {
       cookies.append(cookie.getKey()).append('=').append(cookie.getValue()).append("; ");
     }
-    Map<String, String> headersMap = Collections.singletonMap("Cookie", cookies.toString()); 
     
-    RestURLConnection.credentialsMap.put(contextId, headersMap);
+    RestURLConnection.credentialsMap.setCookiesHeader(contextId, cookies.toString());
     return contextId;
   }
 
