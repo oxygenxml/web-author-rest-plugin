@@ -22,11 +22,11 @@ public class BearerTokenRetrieverFromLoadingOptions implements WorkspaceAccessPl
     WebappPluginWorkspace webappWorkspaceAccess = (WebappPluginWorkspace) workspaceAccess;
     webappWorkspaceAccess.addEditingSessionLifecycleListener(new WebappEditingSessionLifecycleListener() {
       @Override
-      public void editingSessionAboutToBeStarted(String sessionId, String licenseeId, 
-          URL systemId, Map<String, Object> options)
-          throws EditingSessionOpenVetoException {
+      public void editingSessionAboutToBeStarted(String docId, String licenseeId, 
+          URL systemId, Map<String, Object> options) throws EditingSessionOpenVetoException {
         String bearerToken = (String) options.get(BEARER_TOKEN_LOADING_OPTION);
         if (bearerToken != null) {
+          String sessionId = systemId.getUserInfo();
           authHeadersMap.setBearerToken(sessionId, bearerToken);
         }
       }
