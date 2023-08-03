@@ -64,7 +64,7 @@ public class AuthHeadersApi implements WorkspaceAccessPluginExtension {
     editingContext.setAttribute(REST_HEADERS_KEY, new Supplier<Map<String, String>>() {
       @Override
       public Map<String, String> get() {
-        return authHeadersMap.getHeaders(contextId);
+        return authHeadersMap.getAllHeaders(contextId);
       }
     });
   };

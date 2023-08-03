@@ -1,10 +1,13 @@
 package com.oxygenxml.rest.plugin;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
-import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 
 /**
  * Stores authentication headers for each user.
@@ -13,22 +16,51 @@ import com.google.common.cache.CacheBuilder;
  */
 public class AuthHeadersMap {
   
-  private final Cache<String, Map<String, String>> headersBySessionId =
+  private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
+  
+  private final LoadingCache<String, Map<String, String>> headersBySessionId =
       CacheBuilder.newBuilder()
         .concurrencyLevel(10)
         .maximumSize(10000)
-        .build();
+        .build(new CacheLoader<String, Map<String, String>>() {
+          @Override
+          public Map<String, String> load(String key) throws Exception {
+            return new HashMap<>();
+          }
+        });
   
   
   public void setCookiesHeader(String sessionId, String cookies) {
-    headersBySessionId.put(sessionId, Collections.singletonMap("Cookie", cookies));
+    Map<String, String> headers = getAllHeaders(sessionId);
+    headers.put("Cookie", cookies);
+  }
+
+  public Map<String, String> getAllHeaders(String sessionId) {
+    try {
+      return headersBySessionId.get(sessionId);
+    } catch (ExecutionException e) {
+      // Cannot happen
+      throw new RuntimeException(e);
+    }
   }
   
   public void clearCookiesHeader(String sessionId) {
-    headersBySessionId.put(sessionId, Collections.emptyMap());  
+    getAllHeaders(sessionId).remove("Cookie");
   }
 
+  public void setBearerToken(String sessionId, String bearerToken) {
+    getAllHeaders(sessionId).put(AUTHORIZATION_HEADER_NAME, "Bearer " + bearerToken);
+  }
+  
   public Map<String, String> getHeaders(String sessionId) {
-    return headersBySessionId.getIfPresent(sessionId);
+    Map<String, String> allHeaders = getAllHeaders(sessionId);
+    if (allHeaders.containsKey(AUTHORIZATION_HEADER_NAME)) {
+      // The authorization header takes precedence over cookies.
+      // This is because we always have some cookies recorded, but if we have an Authorization header,
+      // it means that we are calling a state-less REST API. We do not send Cookies in this case.
+      return Collections.singletonMap(AUTHORIZATION_HEADER_NAME, allHeaders.get(AUTHORIZATION_HEADER_NAME));
+    } else {
+      return allHeaders;
+    }
   }
 }
