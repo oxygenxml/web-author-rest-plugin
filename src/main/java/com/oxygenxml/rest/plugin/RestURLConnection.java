@@ -304,17 +304,8 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       // The current request did not match any session - no headers to add.
       return;
     }
-    Map<String, String> serverHeaders = authHeadersMap.getHeaders(contextId);
-    if(serverHeaders != null) {
-      // add all headers to the url connection
-      Set<String> keySet = serverHeaders.keySet();
-      Iterator<String> keysIterator = keySet.iterator();
-      while (keysIterator.hasNext()) {
-        String header = keysIterator.next();
-        String headerValue = serverHeaders.get(header);
-        urlConnection.addRequestProperty(header, headerValue);
-      }
-    }
+    
+    authHeadersMap.addHeaders(contextId, urlConnection);
   }
   
   @Override

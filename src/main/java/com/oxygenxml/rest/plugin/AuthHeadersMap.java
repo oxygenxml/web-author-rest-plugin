@@ -1,6 +1,6 @@
 package com.oxygenxml.rest.plugin;
 
-import java.util.Collections;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -16,6 +16,8 @@ import com.google.common.cache.LoadingCache;
  */
 public class AuthHeadersMap {
   
+  private static final String COOKIE_HEADER_NAME = "Cookie";
+
   private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
   
   private final LoadingCache<String, Map<String, String>> headersBySessionId =
@@ -32,7 +34,7 @@ public class AuthHeadersMap {
   
   public void setCookiesHeader(String sessionId, String cookies) {
     Map<String, String> headers = getAllHeaders(sessionId);
-    headers.put("Cookie", cookies);
+    headers.put(COOKIE_HEADER_NAME, cookies);
   }
 
   public Map<String, String> getAllHeaders(String sessionId) {
@@ -45,22 +47,23 @@ public class AuthHeadersMap {
   }
   
   public void clearCookiesHeader(String sessionId) {
-    getAllHeaders(sessionId).remove("Cookie");
+    getAllHeaders(sessionId).remove(COOKIE_HEADER_NAME);
   }
 
   public void setBearerToken(String sessionId, String bearerToken) {
     getAllHeaders(sessionId).put(AUTHORIZATION_HEADER_NAME, "Bearer " + bearerToken);
   }
   
-  public Map<String, String> getHeaders(String sessionId) {
+  public void addHeaders(String sessionId, URLConnection connection) {
     Map<String, String> allHeaders = getAllHeaders(sessionId);
+    
     if (allHeaders.containsKey(AUTHORIZATION_HEADER_NAME)) {
       // The authorization header takes precedence over cookies.
       // This is because we always have some cookies recorded, but if we have an Authorization header,
       // it means that we are calling a state-less REST API. We do not send Cookies in this case.
-      return Collections.singletonMap(AUTHORIZATION_HEADER_NAME, allHeaders.get(AUTHORIZATION_HEADER_NAME));
-    } else {
-      return allHeaders;
+      connection.setRequestProperty(AUTHORIZATION_HEADER_NAME, allHeaders.get(AUTHORIZATION_HEADER_NAME));
+    } else if (allHeaders.containsKey(COOKIE_HEADER_NAME)){
+      connection.setRequestProperty(COOKIE_HEADER_NAME, allHeaders.get(COOKIE_HEADER_NAME));
     }
   }
 }
