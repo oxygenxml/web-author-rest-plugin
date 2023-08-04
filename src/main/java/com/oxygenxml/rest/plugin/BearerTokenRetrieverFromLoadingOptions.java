@@ -25,7 +25,7 @@ public class BearerTokenRetrieverFromLoadingOptions implements WorkspaceAccessPl
       public void editingSessionAboutToBeStarted(String docId, String licenseeId, 
           URL systemId, Map<String, Object> options) throws EditingSessionOpenVetoException {
         String bearerToken = (String) options.get(BEARER_TOKEN_LOADING_OPTION);
-        if (bearerToken != null) {
+        if (bearerToken != null && systemId.getProtocol().equals("rest")) {
           String sessionId = systemId.getUserInfo();
           authHeadersMap.setBearerToken(sessionId, bearerToken);
         }
