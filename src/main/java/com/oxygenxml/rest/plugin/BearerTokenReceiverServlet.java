@@ -21,7 +21,7 @@ public class BearerTokenReceiverServlet extends WebappServletPluginExtension {
    * Saves the bearer token in the headers map.
    */
   @Override
-  public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     String sessionId = req.getSession().getId();
     String token = req.getParameter("token");
     
