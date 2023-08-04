@@ -9,7 +9,6 @@
     if (url.match('rest:\/\/')) {
       // set the workspace UrlChooser
       workspace.setUrlChooser(fileBrowser);
-      processBearerToken(options);
 
       // Listen for messages sent from the server-side code.
       goog.events.listen(e.editor, sync.api.Editor.EventTypes.CUSTOM_MESSAGE_RECEIVED, function(e) {
@@ -39,19 +38,6 @@
       });
     }
   });
-
-  function processBearerToken(options) {
-    // Do not accept a bearer token received as an URL parameter. 
-    // This is a security risk, as the token will be visible in the browser history.
-    // Also, it can be used to for the victim to impersonate the attacker.
-    delete options['bearer.token'];
-
-    // The token provider is a JS function that cannot be passed as an URL parameter.
-    let tokenProvider = options['bearer.token.provider'];
-    if (tokenProvider) {
-      options['bearer.token'] = tokenProvider();
-    }
-  }
 
   /**
    * Webdav url chooser.
