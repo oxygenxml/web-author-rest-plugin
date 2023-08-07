@@ -22,6 +22,7 @@ import org.apache.http.Header;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.bootstrap.HttpServer;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -37,8 +38,10 @@ import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.UserActionRequiredException;
 import ro.sync.ecss.webapp.testing.MockAuthorDocumentFactory;
 import ro.sync.exml.workspace.api.PluginResourceBundle;
+import ro.sync.exml.workspace.api.PluginWorkspace;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.options.WSOptionsStorage;
+import ro.sync.net.protocol.OxygenURLStreamHandlerFactory;
 import ro.sync.net.protocol.http.HttpExceptionWithDetails;
 
 public class RestURLConnectionTest {
@@ -50,6 +53,11 @@ public class RestURLConnectionTest {
   
   @Rule
   public ExpectedException exceptionRule = ExpectedException.none();
+
+  /**
+   * The plugin workspace to reset after test.
+   */
+  private PluginWorkspace oldPluginWorkspace;
   
   
   static URLStreamHandlerFactorySetter factorySetter;
@@ -63,6 +71,16 @@ public class RestURLConnectionTest {
   @After
   public void tearDown() throws Exception {
     factorySetter.tearDown();
+  }
+  
+  @Before
+  public void recordPluginWorkspace() {
+    this.oldPluginWorkspace = PluginWorkspaceProvider.getPluginWorkspace();
+  }
+  
+  @After
+  public void resetPluginWorkspace() {
+    PluginWorkspaceProvider.setPluginWorkspace(oldPluginWorkspace);
   }
   
   /**
@@ -146,6 +164,8 @@ public class RestURLConnectionTest {
    */
   @Test
   public void test401Detection() throws Exception {
+    factorySetter.setFactory(new OxygenURLStreamHandlerFactory());
+
     String filePath = "file401.xml";
     HttpServer server = createServerThatFailsOnSave(412, filePath + "is in conflict");
     
@@ -177,6 +197,7 @@ public class RestURLConnectionTest {
    */
   @Test
   public void test401Detection2() throws Exception {
+    factorySetter.setFactory(new OxygenURLStreamHandlerFactory());
     HttpServer server = createServerThatFailsOnSave(401, "Unauthorized");
 
     String filePath = "file401.xml";
