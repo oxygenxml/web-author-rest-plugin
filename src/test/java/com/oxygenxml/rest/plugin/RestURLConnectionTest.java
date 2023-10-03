@@ -23,7 +23,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.bootstrap.HttpServer;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -59,27 +58,18 @@ public class RestURLConnectionTest {
    */
   private PluginWorkspace oldPluginWorkspace;
   
-  
-  static URLStreamHandlerFactorySetter factorySetter;
-  
-  @BeforeClass
-  public static void installProtocols() throws Exception {
-    MockAuthorDocumentFactory.initForTest();
-    factorySetter = new URLStreamHandlerFactorySetter();
-  }
-  
-  @After
-  public void tearDown() throws Exception {
-    factorySetter.tearDown();
-  }
+  private URLStreamHandlerFactorySetter factorySetter;
   
   @Before
-  public void recordPluginWorkspace() {
-    this.oldPluginWorkspace = PluginWorkspaceProvider.getPluginWorkspace();
+  public void before() throws Exception {
+    MockAuthorDocumentFactory.initForTest();
+    factorySetter = new URLStreamHandlerFactorySetter();
+    oldPluginWorkspace = PluginWorkspaceProvider.getPluginWorkspace();
   }
   
   @After
-  public void resetPluginWorkspace() {
+  public void after() throws Exception {
+    factorySetter.tearDown();
     PluginWorkspaceProvider.setPluginWorkspace(oldPluginWorkspace);
   }
   
