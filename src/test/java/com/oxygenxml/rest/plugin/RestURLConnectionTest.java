@@ -35,7 +35,10 @@ import ro.sync.ecss.extensions.api.webapp.AuthorDocumentModel;
 import ro.sync.ecss.extensions.api.webapp.WebappAuthorDocumentFactory;
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.UserActionRequiredException;
+import ro.sync.ecss.webapp.plugin.WebappOptionTags;
 import ro.sync.ecss.webapp.testing.MockAuthorDocumentFactory;
+import ro.sync.exml.options.OptionTags;
+import ro.sync.exml.options.Options;
 import ro.sync.exml.workspace.api.PluginResourceBundle;
 import ro.sync.exml.workspace.api.PluginWorkspace;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
@@ -59,18 +62,22 @@ public class RestURLConnectionTest {
   private PluginWorkspace oldPluginWorkspace;
   
   private URLStreamHandlerFactorySetter factorySetter;
+
+  private String[] initialTrustedHosts;
   
   @Before
   public void before() throws Exception {
     MockAuthorDocumentFactory.initForTest();
     factorySetter = new URLStreamHandlerFactorySetter();
     oldPluginWorkspace = PluginWorkspaceProvider.getPluginWorkspace();
+    initialTrustedHosts = Options.getInstance().getStringArrayProperty(OptionTags.TRUSTED_HOSTS);
   }
   
   @After
   public void after() throws Exception {
     factorySetter.tearDown();
     PluginWorkspaceProvider.setPluginWorkspace(oldPluginWorkspace);
+    Options.getInstance().setStringArrayProperty(OptionTags.TRUSTED_HOSTS, initialTrustedHosts);
   }
   
   /**
@@ -174,6 +181,8 @@ public class RestURLConnectionTest {
         response.setEntity(new StringEntity(errorMessage));
       }
     });
+    Options.getInstance().setStringArrayProperty(OptionTags.TRUSTED_HOSTS,
+        new String[] {"localhost:" + server.getLocalPort()});
     return server;
   }
   
