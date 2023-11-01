@@ -100,24 +100,33 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
   
   @Override
   public void connect() throws IOException {
+	log.debug("Attempting to connect to URL: {}", getURL());
     try {
       super.connect();
+      log.debug("Successfully connected to URL: {}", getURL());
     } catch (IOException e) {
+      log.debug("Failed to connect to URL: {}", getURL());
       handleException(e);
     }
   }
 
   @Override
   public InputStream getInputStream() throws IOException {
+	log.debug("Attempting to get input stream for URL: {}", getURL());
     if (this.getDoOutput()) {
       // Nothing to read for "save" operations.
+      log.debug("Nothing to read for \"save\" operations. Returning empty string.");
       return new ByteArrayInputStream(new byte[0]);
     }
     try {
-      return super.getInputStream();
+      InputStream stream = super.getInputStream();
+      log.debug("Successfully retrieved input stream for URL: {}", getURL());
+      return stream;
     } catch (IOException e) {
+      log.debug("Failed to get input stream for URL: {}", getURL());
+      e.printStackTrace();
       handleException(e);
-
+      
       // Unreachable.
       return null;
     }
@@ -125,10 +134,13 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
 
   @Override
   public OutputStream getOutputStream() throws IOException {
+	log.debug("Attempting to get output stream for URL: {}", getURL());
     OutputStream outputStream;
     try {
       outputStream = super.getOutputStream();
+      log.debug("Successfully retrieved output stream for URL: {}", getURL());
     } catch (IOException e) {
+      log.debug("Failed to get output stream for URL: {}", getURL());
       handleException(e);
       // Unreachable.
       return null;
@@ -302,6 +314,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     
     if(contextId == null) {
       // The current request did not match any session - no headers to add.
+      log.debug("No session matched. No headers added.");
       return;
     }
     
@@ -311,6 +324,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
   @Override
   public List<FolderEntryDescriptor> listFolder() throws IOException {
     URL listFolderURL = new URL(url.toExternalForm().replaceFirst("/files", "/folders"));
+    log.debug("Listing folder contents for URL: {}", listFolderURL);
     URLConnection connection;
     connection = listFolderURL.openConnection();
     connection.addRequestProperty("Accept", MediaType.JSON_UTF_8.toString());
@@ -391,6 +405,8 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
   private String getDocumenURL() {
     String restEndpoint = "/files";
     StringBuilder fullURL = new StringBuilder(url.toExternalForm());
+    log.debug("Getting document URL from: {}", fullURL);
+
     int endpointIndex = fullURL.indexOf(restEndpoint);
     fullURL.delete(0, endpointIndex + restEndpoint.length());
     int slashIndex = fullURL.indexOf("/");
@@ -398,7 +414,10 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     if(slashIndex != -1) {
       fullURL.delete(slashIndex, fullURL.length());
     }
-    return URLUtil.decodeURIComponent(URLUtil.decodeURIComponent(fullURL.toString()));
+    
+    String documentURL = URLUtil.decodeURIComponent(URLUtil.decodeURIComponent(fullURL.toString()));
+    log.debug("Computed document URL: {}", documentURL);
+    return documentURL;
   }
   
   @Override

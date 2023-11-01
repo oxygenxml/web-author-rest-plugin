@@ -67,7 +67,7 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
 
   @Override
   protected URLConnection openConnectionInContext(String contextId, URL url, Proxy proxy) throws IOException {
-
+	log.debug("Opening connection in context {} for URL: {}", contextId, url);
     URLConnection urlConnection = computeRestUrl(url).openConnection();
     return new RestURLConnection(authHeadersMap, contextId, urlConnection);
   }
@@ -82,10 +82,12 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
    * @throws MalformedURLException whether something fails.
    */
   private static URL computeRestUrl(URL url) throws MalformedURLException {
+    log.debug("Computing REST URL for: {}", url);
     String encodedDocumentURL = URLUtil.encodeURIComponent(url.toExternalForm());
     String serverUrl = getServerUrl();
     if(serverUrl != null && !serverUrl.isEmpty()) {
       String restUrl = serverUrl + "files?url=" + encodedDocumentURL;
+      log.debug("Computed REST URL: {}", restUrl);
       return new URL(restUrl);
     }
     PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
@@ -112,6 +114,7 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
       serverUrl = serverUrl + "/";
     }
     
+    log.debug("Server URL: {}", serverUrl);
     return serverUrl;
   }
 }
