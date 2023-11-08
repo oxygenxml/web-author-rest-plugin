@@ -111,12 +111,11 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       handleException(e);
     }
   }
-
+  
   @Override
   public InputStream getInputStream() throws IOException {
-	log.debug("Attempting to get input stream for URL: {}", getURL());
-	log.debug("Current stack trace: {}", Arrays.toString(new Exception().getStackTrace()));
-
+	log.debug("Attempting to get input stream for URL: {}", getURL(), new Exception("Get input stream"));
+	
     if (this.getDoOutput()) {
       // Nothing to read for "save" operations.
       log.debug("Nothing to read for \"save\" operations. Returning empty string.");
@@ -137,6 +136,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
                   if (b != -1) {
                       count++;
                   } else {
+                	  // No more bytes
                 	  log.debug("Size of input stream for URL {}: {} bytes", getURL(), count);
                   }
                   return b;
@@ -148,6 +148,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
                   if (n != -1) {
                       count += n;
                   } else {
+                	  // No more bytes
                 	  log.debug("Size of input stream for URL {}: {} bytes", getURL(), count);
                   }
                   return n;
@@ -173,8 +174,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
 
   @Override
   public OutputStream getOutputStream() throws IOException {
-	log.debug("Attempting to get output stream for URL: {}", getURL());
-	log.debug("Current stack trace: {}", Arrays.toString(new Exception().getStackTrace()));
+	log.debug("Attempting to get output stream for URL: {}", getURL(), new Exception("Get output stream"));
 
     OutputStream outputStream;
     try {
@@ -188,8 +188,12 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     }
     
     return new FilterOutputStream(outputStream) {
+    	
       @Override
       public void close() throws IOException {
+    	  
+    	log.debug("Attempting to close output stream for URL: {}", getURL());
+    	      	  
         RestURLConnection connection = RestURLConnection.this;
         try {
           try {
@@ -430,6 +434,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     InputStream inputStream = connection.getInputStream();
     try {
       jsonBytes = ByteStreams.toByteArray(inputStream);
+      log.debug("Read input stream bytes for connection: {}; : {} bytes", connection.getURL(), jsonBytes.length);
     } finally {
       try {
         inputStream.close();
