@@ -2,6 +2,7 @@ package com.oxygenxml.rest.plugin;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
+import java.io.FilterInputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +14,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -113,6 +115,8 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
   @Override
   public InputStream getInputStream() throws IOException {
 	log.debug("Attempting to get input stream for URL: {}", getURL());
+	log.debug("Current stack trace: {}", Arrays.toString(new Exception().getStackTrace()));
+
     if (this.getDoOutput()) {
       // Nothing to read for "save" operations.
       log.debug("Nothing to read for \"save\" operations. Returning empty string.");
@@ -121,6 +125,41 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     try {
       InputStream stream = super.getInputStream();
       log.debug("Successfully retrieved input stream for URL: {}", getURL());
+      
+      if (log.isDebugEnabled()) {
+    	      	  
+          return new FilterInputStream(stream) {
+              private long count = 0L;
+
+              @Override
+              public int read() throws IOException {
+                  int b = super.read();
+                  if (b != -1) {
+                      count++;
+                  } else {
+                	  log.debug("Size of input stream for URL {}: {} bytes", getURL(), count);
+                  }
+                  return b;
+              }
+
+              @Override
+              public int read(byte[] b, int off, int len) throws IOException {
+                  int n = super.read(b, off, len);
+                  if (n != -1) {
+                      count += n;
+                  } else {
+                	  log.debug("Size of input stream for URL {}: {} bytes", getURL(), count);
+                  }
+                  return n;
+              }
+
+              @Override
+              public void close() throws IOException {
+            	  super.close();
+              }
+          };
+      }
+      
       return stream;
     } catch (IOException e) {
       log.debug("Failed to get input stream for URL: {}", getURL());
@@ -135,6 +174,8 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
   @Override
   public OutputStream getOutputStream() throws IOException {
 	log.debug("Attempting to get output stream for URL: {}", getURL());
+	log.debug("Current stack trace: {}", Arrays.toString(new Exception().getStackTrace()));
+
     OutputStream outputStream;
     try {
       outputStream = super.getOutputStream();
