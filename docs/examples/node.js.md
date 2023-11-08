@@ -5,7 +5,6 @@ Following a very basic example implementation of the API specification using nod
 
 ```js
 const express = require('express');
-const bodyParser = require('body-parser');
 const app = express();
 const PORT = 3000;
 const BASE_URL = '/api';
@@ -27,7 +26,13 @@ const db = {
   },
 };
 
-app.use(bodyParser.raw({ type: '*/*' }));
+app.use(
+  express.raw({
+    inflate: true,
+    limit: '50mb',
+    type: () => true
+  })
+);
 
 // Logging middleware
 app.use((req, res, next) => {
@@ -59,12 +64,7 @@ app.get(`${BASE_URL}/files`, (req, res) => {
 
 // Route for saving (uploading) a file
 app.put(`${BASE_URL}/files`, (req, res) => {
-  console.log('Headers:', req.headers);
-  console.log('Content-Type:', req.get('Content-Type'));
   const decodedFileUrl = decodeAndStripUrlPrefix(req.query.url);
-  
-  // Debug: Log the type of req.body to make sure it's a buffer
-  console.log('Type of req.body:', typeof req.body);
   
   if (Buffer.isBuffer(req.body)) {
     // Convert buffer to string
@@ -100,7 +100,6 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
 ```
 
 In the plugin's config page, use 
