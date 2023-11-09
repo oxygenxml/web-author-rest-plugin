@@ -1,7 +1,7 @@
 Node.js Example Implementation of the API specification
 ===================
 
-Following a very basic example implementation of the API specification using node.js.
+This is a very basic example implementation of the API specification using node.js and an "in-memory database".
 
 ```js
 const express = require('express');
