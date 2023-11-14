@@ -2,7 +2,6 @@ package com.oxygenxml.rest.plugin;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
-import java.io.FilterInputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,11 +13,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
@@ -124,43 +119,6 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
     try {
       InputStream stream = super.getInputStream();
       log.debug("Successfully retrieved input stream for URL: {}", getURL());
-      
-      if (log.isDebugEnabled()) {
-    	      	  
-          return new FilterInputStream(stream) {
-              private long count = 0L;
-
-              @Override
-              public int read() throws IOException {
-                  int b = super.read();
-                  if (b != -1) {
-                      count++;
-                  } else {
-                	  // No more bytes
-                	  log.debug("Size of input stream for URL {}: {} bytes", getURL(), count);
-                  }
-                  return b;
-              }
-
-              @Override
-              public int read(byte[] b, int off, int len) throws IOException {
-                  int n = super.read(b, off, len);
-                  if (n != -1) {
-                      count += n;
-                  } else {
-                	  // No more bytes
-                	  log.debug("Size of input stream for URL {}: {} bytes", getURL(), count);
-                  }
-                  return n;
-              }
-
-              @Override
-              public void close() throws IOException {
-            	  super.close();
-              }
-          };
-      }
-      
       return stream;
     } catch (IOException e) {
       log.debug("Failed to get input stream for URL: {}", getURL());
