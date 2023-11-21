@@ -36,7 +36,6 @@ public class AuthHeadersMap {
   
   
   public void setCookiesHeader(String sessionId, String cookies) {
-	log.debug("Setting cookies header for session: {}, cookies: {}", sessionId, cookies);
     Map<String, String> headers = getAllHeaders(sessionId);
     headers.put(COOKIE_HEADER_NAME, cookies);
   }
@@ -56,7 +55,7 @@ public class AuthHeadersMap {
   }
 
   public void setBearerToken(String sessionId, String bearerToken) {
-	log.debug("Setting bearer token for session: {}, token: {}", sessionId, bearerToken);
+	log.debug("Setting bearer token for session: {}, token: {}", sessionId, "Bearer ******");
     getAllHeaders(sessionId).put(AUTHORIZATION_HEADER_NAME, "Bearer " + bearerToken);
   }
   

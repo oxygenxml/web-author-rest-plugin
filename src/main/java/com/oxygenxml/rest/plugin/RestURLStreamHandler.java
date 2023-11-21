@@ -57,9 +57,14 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
     String contextId = super.getContextId(context);
     
     StringBuilder cookies = new StringBuilder();
+    StringBuilder obfuscatedCookies = new StringBuilder();
     for (Map.Entry<String, String> cookie: context.getCookies().entrySet()) {
       cookies.append(cookie.getKey()).append('=').append(cookie.getValue()).append("; ");
+      if (log.isDebugEnabled()) {
+    	  obfuscatedCookies.append(cookie.getKey()).append('=').append("******").append("; ");
+      }
     }
+    log.debug("Cookies for session: {}, cookies: {}", contextId, obfuscatedCookies);
     
     authHeadersMap.setCookiesHeader(contextId, cookies.toString());
     return contextId;
