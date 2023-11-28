@@ -57,9 +57,14 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
     String contextId = super.getContextId(context);
     
     StringBuilder cookies = new StringBuilder();
+    StringBuilder obfuscatedCookies = new StringBuilder();
     for (Map.Entry<String, String> cookie: context.getCookies().entrySet()) {
       cookies.append(cookie.getKey()).append('=').append(cookie.getValue()).append("; ");
+      if (log.isDebugEnabled()) {
+    	  obfuscatedCookies.append(cookie.getKey()).append('=').append("******").append("; ");
+      }
     }
+    log.debug("Cookies for session: {}, cookies: {}", contextId, obfuscatedCookies);
     
     authHeadersMap.setCookiesHeader(contextId, cookies.toString());
     return contextId;
@@ -67,7 +72,7 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
 
   @Override
   protected URLConnection openConnectionInContext(String contextId, URL url, Proxy proxy) throws IOException {
-
+	log.debug("Opening connection in session {} for URL: {}", contextId, url);
     URLConnection urlConnection = computeRestUrl(url).openConnection();
     return new RestURLConnection(authHeadersMap, contextId, urlConnection);
   }
@@ -86,6 +91,7 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
     String serverUrl = getServerUrl();
     if(serverUrl != null && !serverUrl.isEmpty()) {
       String restUrl = serverUrl + "files?url=" + encodedDocumentURL;
+      log.debug("Computed REST URL: {}", restUrl);
       return new URL(restUrl);
     }
     PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
@@ -112,6 +118,7 @@ public class RestURLStreamHandler  extends URLStreamHandlerWithContext {
       serverUrl = serverUrl + "/";
     }
     
+    log.debug("Server URL: {}", serverUrl);
     return serverUrl;
   }
 }

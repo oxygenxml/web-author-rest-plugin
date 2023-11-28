@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.google.common.base.Supplier;
 
+import lombok.extern.slf4j.Slf4j;
 import ro.sync.ecss.extensions.api.access.EditingSessionContext;
 import ro.sync.ecss.extensions.api.webapp.AuthorDocumentModel;
 import ro.sync.ecss.extensions.api.webapp.access.WebappEditingSessionLifecycleListener;
@@ -18,6 +19,7 @@ import ro.sync.basic.util.URLUtil;
  * 
  * @author cristi_talau
  */
+@Slf4j
 public class AuthHeadersApi implements WorkspaceAccessPluginExtension {
 
   @PluginContext
@@ -56,6 +58,7 @@ public class AuthHeadersApi implements WorkspaceAccessPluginExtension {
     String systemID = documentModel.getAuthorDocumentController().getAuthorDocumentNode().getSystemID();
     if (!systemID.startsWith(RestURLConnection.REST_PROTOCOL + "://")) {
       // Not a document opened over REST, do not register the header.
+      log.debug("Document not opened over REST. Skipping header registration.");
       return;
     }
     String contextId = URLUtil.getUserInfo(systemID);

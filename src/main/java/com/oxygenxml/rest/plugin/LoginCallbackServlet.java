@@ -7,6 +7,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.extern.slf4j.Slf4j;
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.WebappServletPluginExtension;
 import ro.sync.exml.plugin.PluginContext;
@@ -18,6 +19,7 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
  *  
  * @author mihai_coanda
  */
+@Slf4j
 public class LoginCallbackServlet extends WebappServletPluginExtension {
   
   /**
@@ -32,16 +34,20 @@ public class LoginCallbackServlet extends WebappServletPluginExtension {
   @Override
   public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     String sessionId = req.getSession().getId();
-    
     Cookie[] cookies = req.getCookies();
     if (cookies != null) {
       StringBuilder storedCookies = new StringBuilder();
+      StringBuilder obfuscatedCookies = new StringBuilder();
       for (int i = 0; i < cookies.length; i++) {
         Cookie cookie = cookies[i];
         String cookieValue = cookie.getValue();
         String cookieName = cookie.getName();
+        if (log.isDebugEnabled()) {
+        	obfuscatedCookies.append(cookieName).append("=").append("******").append(";");
+        }
         storedCookies.append(cookieName).append("=").append(cookieValue).append(";");
       }
+      log.debug("Cookies for session: {}, cookies: {}", sessionId, obfuscatedCookies);
       authHeadersMap.setCookiesHeader(sessionId, storedCookies.toString());
     } else {
       authHeadersMap.clearCookiesHeader(sessionId);
