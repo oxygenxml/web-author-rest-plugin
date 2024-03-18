@@ -9,7 +9,7 @@
     window.location.href = windowUrl.href;
   }
 
-  setTimeout(function() {
+  Promise.resolve().then(function() {
     // Try to be the last plugin that registers the listener. This way other plugins will be able to register
     // their bearer token provider before us.
     goog.events.listen(workspace, sync.api.Workspace.EventType.BEFORE_EDITOR_LOADED, function (e) {
