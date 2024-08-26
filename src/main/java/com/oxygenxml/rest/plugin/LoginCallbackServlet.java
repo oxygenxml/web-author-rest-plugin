@@ -2,6 +2,7 @@ package com.oxygenxml.rest.plugin;
 
 import java.io.IOException;
 
+import javax.mail.internet.ContentType;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -64,6 +65,7 @@ public class LoginCallbackServlet extends WebappServletPluginExtension {
           + "'*');")
       .append("</script></head></html>");
     // respond to a page that posts a message to the web author page to close.
+    resp.setContentType("text/html;charset=UTF-8");
     resp.getWriter().print(callbackContent);
   }
 
