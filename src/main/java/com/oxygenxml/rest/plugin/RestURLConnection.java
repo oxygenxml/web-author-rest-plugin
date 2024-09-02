@@ -467,15 +467,15 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
   @VisibleForTesting
   static String getFileUrl(URL requestURL) {
     List<NameValuePair> params = URLEncodedUtils.parse(requestURL.getQuery(), Charsets.UTF_8);
-    String encodedFileUrl = null;
+    String fileUrlParam = null;
     for (NameValuePair pair : params) {
       if (pair.getName().equals("url")) {
-        encodedFileUrl = pair.getValue();
+        fileUrlParam = pair.getValue();
       }
     }
     String fileUrl = requestURL.toExternalForm();
-    if (encodedFileUrl != null) {
-      fileUrl = URLUtil.decodeURIComponent(encodedFileUrl);
+    if (fileUrlParam != null) {
+      fileUrl = fileUrlParam;
     }
     return fileUrl;
   }

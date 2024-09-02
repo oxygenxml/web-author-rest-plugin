@@ -90,11 +90,11 @@ public class RestURLConnectionTest {
    */
   @Test
   public void testFileUrlDecoding() throws Exception {
-    URL requestURL = new URL("http://localhost:8090/files?url=rest%3A%2F%2Fplatform%2Ffolder%2FTopic.dita");
+    URL requestURL = new URL("http://localhost:8090/files?url=rest%3A%2F%2Fplatform%2Ffolder%2Fa%2520topic.dita");
     String fileUrl = RestURLConnection.getFileUrl(requestURL);
-    assertEquals("rest://platform/folder/Topic.dita", fileUrl);
+    assertEquals("rest://platform/folder/a%20topic.dita", fileUrl);
   }
-
+  
   
   /**
    * <p><b>Description:</b> Test that we properly handle FileNotFound exceptions.</p>
