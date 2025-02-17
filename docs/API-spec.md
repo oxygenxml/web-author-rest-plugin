@@ -25,6 +25,21 @@ Each file is identified by an URL with the `rest://` scheme. The file URL should
 The file content encoding should be `UTF-8` in both requests and responses of these endpoints.
 An example implementation for ASP.NET can be found [here](examples/asp.net.md).
 
+Authentication
+--------------
+
+In the Administration Page you should select the "CMS" Authentication Provider.
+
+Details about the currently authenticated user, should be provided at the following endpoint: `$BASE_URL/me` and should be returned as JSON in the following format:
+
+```
+{
+  id: "string",
+  name: "string",
+  email: "string"
+}
+```
+
 There are two authentication approaches:
 1. [Based on Cookies](cookie-based-auth.md)
 2. [Based on bearer tokens](bearer-token-auth.md)
