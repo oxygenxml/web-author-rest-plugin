@@ -30,13 +30,37 @@ public class HttpServerManager extends ExternalResource {
    * @throws IOException When the levee breaks.
    */
   public HttpServer createServer(HttpRequestHandler handler) throws IOException {
+    return this.createServerInternal(handler, getAvailablePort());
+  }
+  
+  /**
+   * Creates a server listening on port 7171.
+   * 
+   * @param handler The request handler.
+   * @return the server
+   * @throws IOException When the levee breaks.
+   */
+  public HttpServer createServerWithDefaulPort(HttpRequestHandler handler) throws IOException {
+    return this.createServerInternal(handler, 7171);
+  }
+  
+  /**
+   * Creates a server listening on a specific port.
+   * 
+   * @param handler The request handler.
+   * @param port The port.
+   * @return the server
+   * @throws IOException When the levee breaks.
+   */
+  private HttpServer createServerInternal(HttpRequestHandler handler, int port) throws IOException {
     ServerBootstrap serverBootstrap = ServerBootstrap.bootstrap()
-        .setListenerPort(getAvailablePort())
+        .setListenerPort(port)
         .setServerInfo("Test/1.1")
         .registerHandler("*", handler);
     startServer(serverBootstrap);
     return this.server;
   }
+  
 
   /**
    * @return An available port.
