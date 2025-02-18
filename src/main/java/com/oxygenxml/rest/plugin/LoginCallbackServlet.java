@@ -77,7 +77,6 @@ public class LoginCallbackServlet extends WebappServletPluginExtension {
     StringBuilder callbackContent = new StringBuilder();
     callbackContent
       .append("<html><head><script>")
-      .append("if (window.self !== window.top) {\n")
       .append("  parent.postMessage("
           // the object passed to the parent window.
           + "{\"action\" : \"login-finished\", \"message\": \"" + rb.getMessage(TranslationTags.REST_LOGIN_SUCCESS) + "\"},"
