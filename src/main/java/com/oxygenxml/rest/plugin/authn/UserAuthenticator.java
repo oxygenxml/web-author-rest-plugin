@@ -16,10 +16,15 @@ import lombok.extern.slf4j.Slf4j;
 import ro.sync.ecss.webapp.auth.ApplicationAuthenticationManager;
 import ro.sync.ecss.webapp.auth.ApplicationUser;
 import ro.sync.ecss.webapp.auth.ApplicationUserStore;
+import ro.sync.net.protocol.http.HttpExceptionWithDetails;
 
 @Slf4j
 @AllArgsConstructor
 public class UserAuthenticator {
+  /**
+   * The link to the specification.
+   */
+  private static final String SPECIFICATION_LINK = "https://github.com/oxygenxml/web-author-rest-plugin/blob/master/docs/API-spec.md#authentication";
   
   private AuthHeadersMap authHeadersMap;
   
@@ -76,9 +81,27 @@ public class UserAuthenticator {
       UserDetails userDetails = readUserDetailsFromServer(sessionId);
       markUserAsAuthenticated(sessionId, userDetails);
     } catch (IOException e) {
-      log.error("Failed to authenticate user.", e);
+      if (!this.isUnauthorizedException(e)) {
+        log.error("Failed to authenticate user. "
+            + "Make sure the \"/me\" endpoint is implemented according to the specification: " + SPECIFICATION_LINK,
+            e);
+      } else {
+        log.error("Failed to authenticate user.", e);
+      }
     }
+  }
 
+  /**
+   * Checks if the exception is an unauthorized exception
+   * @param e The exception.
+   * @param sessionId The session id. 
+   */
+  private boolean isUnauthorizedException(IOException e) {
+    if (e instanceof HttpExceptionWithDetails) {
+      HttpExceptionWithDetails httpException = (HttpExceptionWithDetails) e;
+      return httpException.getReasonCode() == 401;
+    }
+    return false;
   }
   
   @Data
