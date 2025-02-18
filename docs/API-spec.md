@@ -42,7 +42,7 @@ Details about the currently authenticated user, should be provided at the follow
 
 There are two authentication approaches:
 1. [Based on Cookies](cookie-based-auth.md)
-2. [Based on bearer tokens](bearer-token-auth.md)
+2. [Based on bearer tokens (deprecated)](bearer-token-auth.md)
 
 Headers
 -------

@@ -1,5 +1,7 @@
-Bearer Token Authentication
-===========================
+Bearer Token Authentication (Deprecated)
+========================================
+
+The [cookie-based authentication](./cookie-based-auth.md) is recommended because it provides an authentication provider that can be used to secure all accesses to Web Author.
 
 If the REST API requires authentication with bearer tokens you have to provide the value of this token to Web Author using one of the following approaches:
 1. Using the `bearer.token.provider` [Loading Option](https://www.oxygenxml.com/doc/help.php?product=waCustom&pageId=web_author_api_concepts#web_author_api_concepts__loading-option). The value should be a function that returns the token as a string.
