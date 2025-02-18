@@ -39,6 +39,21 @@
     }
   });
 
+  // Remove the logout action - it should log out from the CMS instead
+  goog.events.listen(workspace, sync.api.Workspace.EventType.EDITOR_LOADED, function(e) {
+    var editor = e.editor;
+    var url = editor.options.url;
+ 
+    if (url.match('rest:\/\/')) {
+      var actionsManager = editor.getActionsManager();
+      var logoutActionId = 'Author/Logout';
+      setTimeout(function() {
+        actionsManager.unregisterAction(logoutActionId);
+        actionsManager.refreshActionsStatus([logoutActionId]);
+      }, 0);
+    }
+  });
+
   /**
    * Webdav url chooser.
    *
