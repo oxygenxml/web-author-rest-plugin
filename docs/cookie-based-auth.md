@@ -94,7 +94,7 @@ sequenceDiagram
         Web_Author->>CMS: GET $BASE_URL/me (using session cookie)
         CMS-->>Web_Author: 401 Unauthorized
     end
-    Web_Author-->>Browser: Redirect to `authenticate.html`
+    Web_Author-->>User: Redirect to `authenticate.html`
     User->>User: User clicks "Authenticate with CMS"
     User-->>CMS: Open to $BASE_URL/rest-login
     CMS<<-->>User: User authenticates
