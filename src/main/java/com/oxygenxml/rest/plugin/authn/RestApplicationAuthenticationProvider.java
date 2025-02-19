@@ -87,7 +87,7 @@ public class RestApplicationAuthenticationProvider implements ApplicationAuthent
    * @param userContext The user context.
    * @return <code>true</code> if the user has credentials.
    */
-  private boolean registerUserCredentials(UserContext userContext) {
+  boolean registerUserCredentials(UserContext userContext) {
     boolean hasCredentials = false;
     
     Map<String, String> cookies = userContext.getCookies();
@@ -111,7 +111,7 @@ public class RestApplicationAuthenticationProvider implements ApplicationAuthent
    * @param cookies The cookies
    * @return The serialized cookies.
    */
-  private String serializeCookieHeader(Map<String, String> cookies) {
+  String serializeCookieHeader(Map<String, String> cookies) {
     StringBuilder cookiesHeader = new StringBuilder();
     for (Map.Entry<String, String> cookie : cookies.entrySet()) {
       cookiesHeader.append(cookie.getKey()).append('=').append(cookie.getValue()).append("; ");
