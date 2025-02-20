@@ -24,6 +24,7 @@ import org.apache.http.protocol.HttpRequestHandler;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.After;
 import org.mockito.ArgumentMatcher;
 
 import com.oxygenxml.rest.plugin.AuthHeadersMap;
@@ -32,9 +33,13 @@ import com.oxygenxml.rest.plugin.HttpServerManager;
 import ro.sync.ecss.webapp.auth.ApplicationAuthenticationManager;
 import ro.sync.ecss.webapp.auth.ApplicationUser;
 import ro.sync.ecss.webapp.auth.ApplicationUserStore;
+import ro.sync.exml.options.OptionTags;
+import ro.sync.exml.options.Options;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 import ro.sync.exml.workspace.api.options.WSOptionsStorage;
 import ro.sync.exml.workspace.api.standalone.StandalonePluginWorkspace;
+// import ro.sync.exml.workspace.api.options.Options;
+// import ro.sync.exml.workspace.api.options.OptionTags;
 
 public class UserAuthenticatorTest {
   private static final String SESSION_ID = "sessionId";
@@ -125,6 +130,10 @@ public class UserAuthenticatorTest {
     // Set the mock workspace in PluginWorkspaceProvider
     PluginWorkspaceProvider.setPluginWorkspace(pluginWorkspace);
 
+    // Add test server to trusted hosts
+    Options.getInstance().setStringArrayProperty(OptionTags.TRUSTED_HOSTS, 
+        new String[] {"localhost:7171"});
+
     // Create a real AuthHeadersMap
     authHeadersMap = new AuthHeadersMap();
 
@@ -132,8 +141,14 @@ public class UserAuthenticatorTest {
     authenticator = new UserAuthenticator(authHeadersMap, authManager);
   }
 
+  @After
+  public void tearDown() {
+    // Clear the trusted hosts after each test
+    Options.getInstance().setStringArrayProperty(OptionTags.TRUSTED_HOSTS, new String[] {});
+  }
+
   @Test
-  public void testSuccessfulAuthentication() throws IOException {
+  public void testSuccessfulAuthentication() {
     authHeadersMap.setCookiesHeader(SESSION_ID, "sessionCookie=" + SESSION_COOKIE);
 
     // Test authentication
@@ -155,7 +170,7 @@ public class UserAuthenticatorTest {
   }
 
   @Test
-  public void testFailedAuthentication() throws IOException {
+  public void testFailedAuthentication() {
 
     // Test authentication with invalid session
     authenticator.authenticateUser(SESSION_ID);
