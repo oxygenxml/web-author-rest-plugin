@@ -6,11 +6,12 @@
 
   <parent>
     <groupId>com.oxygenxml</groupId>
-    <artifactId>oxygen-plugins-superpom</artifactId>
-    <!-- IMPORTANT: On branch this should be the latest public version. -->
-    <version>27.1-SNAPSHOT</version>
+    <artifactId>oxygen-superpom-versions</artifactId>
+    <version>27.0.0.0</version>
   </parent>
+  
   <artifactId>web-author-rest-plugin</artifactId>
+  
   <name>Web Author REST plugin</name>
   <description>oXygen XML Web Author connector for a generic REST API</description>
 
@@ -32,6 +33,8 @@
 
   <properties>
     <sonar.sources>src/main/java,web</sonar.sources>
+    
+    <oxyProductName>webapp</oxyProductName> 
   </properties>
 
   <dependencies>
@@ -54,19 +57,142 @@
       <version>1.18.22</version>
       <scope>provided</scope>
     </dependency>
+    
+    <dependency>
+      <groupId>com.oxygenxml</groupId>
+      <artifactId>oxygen</artifactId>
+      <version>${oxygen.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>1.10.19</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <version>1.5.0-b01</version>
+    </dependency>
   </dependencies>
 
   <build>
+  
+    <finalName>${project.artifactId}-${project.nosnapshot.version}</finalName>
+    
     <plugins>
+    
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>set-version-no-snapshot</id>
+            <goals>
+              <goal>regex-property</goal>
+            </goals>
+            <configuration>
+              <name>project.nosnapshot.version</name>
+              <value>${project.version}</value>
+              <regex>-SNAPSHOT</regex>
+              <replacement></replacement>
+              <failIfNoMatch>false</failIfNoMatch>
+            </configuration>
+          </execution>
+          <execution>
+            <id>timestamp-property</id>
+            <goals>
+              <goal>timestamp-property</goal>
+            </goals>
+            <phase>validate</phase>
+            <configuration>
+              <name>current.year</name>
+              <pattern>yyyy</pattern>
+            </configuration>
+         </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <!-- We only want the final JAR package in the target folder so that it's easier for users to identify it.-->
+          <outputDirectory>${project.build.directory}/build</outputDirectory>
+        </configuration>
+      </plugin>
+
+      <!-- Download all the dependencies in the target/lib folder. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>download-deps</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <includeScope>runtime</includeScope>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <!-- Deploy third-party-components.xml artifact-->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>declare-third-party-components-artifact</id>
+            <goals>
+              <goal>attach-artifact</goal>
+            </goals>
+            <configuration>
+              <artifacts>
+                <artifact>
+                  <file>${thirdPartyComponents}</file>
+                  <classifier>third-party-components</classifier>
+                  <type>xml</type>
+                </artifact>
+              </artifacts>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
         <version>1.9.1</version>
         <configuration>
           <nodeVersion>v12.16.0</nodeVersion>
-          <npmVersion>v6.13.4</npmVersion>
-          <nodeDownloadRoot>http://nas.sync.ro/MyWeb/test/jenkins-tools/nodejs/</nodeDownloadRoot>
-          <npmDownloadRoot>http://nas.sync.ro/MyWeb/test/jenkins-tools/npm/</npmDownloadRoot>
+          <nodeDownloadRoot>https://nodejs.org/nodejs/dist/</nodeDownloadRoot>
           <installDirectory>target</installDirectory>
         </configuration>
         <executions>
@@ -78,21 +204,14 @@
             <phase>generate-resources</phase>
           </execution>
           <execution>
-            <id>npm registry config</id>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <phase>generate-resources</phase>
-            <configuration>
-              <arguments>config set @oxygenxml:registry ${npm.registry.url}</arguments>
-            </configuration>
-          </execution>
-          <execution>
             <id>npm install</id>
             <goals>
               <goal>npm</goal>
             </goals>
             <phase>generate-resources</phase>
+            <configuration>
+               <arguments>--userconfig ${basedir}/.npmrc install</arguments>
+            </configuration>
           </execution>
           <execution>
             <id>wa-build</id>
@@ -101,7 +220,7 @@
             </goals>
             <phase>prepare-package</phase>
             <configuration>
-              <arguments>run build</arguments>
+              <arguments>--userconfig ${basedir}/.npmrc run build</arguments>
             </configuration>
           </execution>
         </executions>
@@ -126,5 +245,34 @@
         </executions>
       </plugin>
     </plugins>
+    
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+                <artifactId>lifecycle-mapping</artifactId>
+                <version>1.0.0</version>
+                <configuration>
+                    <lifecycleMappingMetadata>
+                        <pluginExecutions>
+                            <pluginExecution>
+                                <pluginExecutionFilter>
+                                    <groupId>org.codehaus.mojo</groupId>
+                                    <artifactId>build-helper-maven-plugin</artifactId>
+                                    <versionRange>[1.8,)</versionRange>
+                                    <goals>
+                                        <goal>timestamp-property</goal>
+                                    </goals>
+                                </pluginExecutionFilter>
+                                <action>
+                                    <ignore />
+                                </action>
+                            </pluginExecution>
+                        </pluginExecutions>
+                    </lifecycleMappingMetadata>
+                </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 </project>
