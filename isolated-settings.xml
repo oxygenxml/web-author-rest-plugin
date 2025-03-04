@@ -1,0 +1,49 @@
+<settings xmlns="https://maven.apache.org/SETTINGS/1.0.0"
+  xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="https://maven.apache.org/SETTINGS/1.0.0
+					  https://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+  <localRepository>D:\github\web-author-rest-plugin\tmp-m2</localRepository>
+
+  <activeProfiles>
+    <activeProfile>oxygenxml</activeProfile>
+  </activeProfiles>
+
+  <profiles>
+    <profile>
+      <id>oxygenxml</id>
+
+      <repositories>
+        <repository>
+          <id>oxygenxml</id>
+          <name>Oxygen XML</name>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>always</updatePolicy>
+            <checksumPolicy>fail</checksumPolicy>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+            <checksumPolicy>fail</checksumPolicy>
+          </snapshots>
+          <url>https://www.oxygenxml.com/maven</url>
+          <layout>default</layout>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+
+  <proxies>
+    <proxy>
+      <id>proxy</id>
+      <active>true</active>
+      <protocol>http</protocol>
+      <host>proxy.sync.ro</host>
+      <port>3128</port>
+      <username/>
+      <password/>
+      <nonProxyHosts>localhost,127.0.0.1</nonProxyHosts>
+    </proxy>
+  </proxies>
+</settings>
