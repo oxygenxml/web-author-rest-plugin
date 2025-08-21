@@ -33,7 +33,6 @@ import com.google.common.net.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import ro.sync.basic.io.QuietClosable;
 import ro.sync.basic.util.URLUtil;
-import ro.sync.ecss.dom.ETagData;
 import ro.sync.ecss.extensions.api.webapp.WebappMessage;
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.FilterURLConnection;
@@ -79,7 +78,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    * Store ETag response header here because WebdavUrlConnection doesn't return it after disconnect
    * and we disconnect automatically the connection when closing the output stream.
    */
-  private Optional<ETagData> etagResponseHeaderOnWrite = Optional.empty();
+  private Optional<Optional<String>> etagResponseHeaderOnWrite = Optional.empty();
   
   /**
    * The headers used for authentication
@@ -175,7 +174,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
           }
           
           // WA-9191: Store ETag before disconnecting because WebdavUrlConnection does not return it after disconnect.
-          connection.etagResponseHeaderOnWrite = Optional.of(new ETagData(connection));
+          connection.etagResponseHeaderOnWrite = Optional.of(Optional.ofNullable(connection.getHeaderField("ETag")));
           
         } finally {
           // CF-902: Release the underlying connection.
@@ -495,7 +494,7 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
   @Override
   public String getHeaderField(String name) {
     if ("ETag".equals(name) && etagResponseHeaderOnWrite.isPresent()) {
-      return etagResponseHeaderOnWrite.get().getRawData().orElse(null);
+      return etagResponseHeaderOnWrite.get().orElse(null);
     }
     return super.getHeaderField(name);
   }
