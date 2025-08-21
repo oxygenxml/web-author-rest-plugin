@@ -14,6 +14,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpStatus;
@@ -73,6 +74,12 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    */
   private URL urlOverride;
 
+  /**
+   * Store ETag response header here because WebdavUrlConnection doesn't return it after disconnect
+   * and we disconnect automatically the connection when closing the output stream.
+   */
+  private Optional<String> etagResponseHeaderOnWrite = Optional.empty();
+  
   /**
    * The headers used for authentication
    */
@@ -165,6 +172,10 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
           if (actualLocation != null) {
             connection.urlOverride = new URL(actualLocation);
           }
+          
+          // WA-9191: Store ETag before disconnecting because WebdavUrlConnection does not return it after disconnect.
+          connection.etagResponseHeaderOnWrite = Optional.ofNullable(connection.getHeaderField("ETag"));
+          
         } finally {
           // CF-902: Release the underlying connection.
           HttpURLConnection delegateHttConn = (HttpURLConnection)connection.delegateConnection;
@@ -478,5 +489,13 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       fileUrl = fileUrlParam;
     }
     return fileUrl;
+  }
+  
+  @Override
+  public String getHeaderField(String name) {
+    if ("ETag".equals(name) && etagResponseHeaderOnWrite.isPresent()) {
+      return etagResponseHeaderOnWrite.get();
+    }
+    return super.getHeaderField(name);
   }
 }
