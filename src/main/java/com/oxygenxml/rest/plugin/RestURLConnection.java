@@ -216,6 +216,23 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
         logFailedLoginAttempt(url, fileUrl);
         throw createUserActionReqiredException(fileUrl);   
       }
+      
+
+      if (detailed.getReasonCode() == HttpStatus.SC_PRECONDITION_FAILED) {
+        String serverErrorMessage = getServerErrorMessage((HttpURLConnection) this.delegateConnection);
+        
+        if (shouldDisplayServerMessage(serverErrorMessage)) {
+          String userReadableMessage = extractUserReadableMessage(serverErrorMessage);
+          String exceptionMessage = detailed.getMessage();
+          HttpExceptionWithDetails exceptionWithErrorMessage = new HttpExceptionWithDetails(
+              userReadableMessage,
+              HttpStatus.SC_PRECONDITION_FAILED,
+              exceptionMessage,
+              url);
+          exceptionWithErrorMessage.initCause(e);
+          throw exceptionWithErrorMessage;
+        }
+      }
     }
     if (delegateConnection instanceof HttpURLConnection) {
       String serverMessage = getServerErrorMessage((HttpURLConnection) this.delegateConnection);
