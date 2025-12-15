@@ -82,6 +82,11 @@ public class RestApplicationAuthenticationProvider implements ApplicationAuthent
     }
   }
 
+  @Override
+  public boolean automaticallyFollowAuthRedirect() {
+    return true;
+  }
+
   /**
    * Registers the user credentials in the authHeadersMap.
    * @param userContext The user context.
