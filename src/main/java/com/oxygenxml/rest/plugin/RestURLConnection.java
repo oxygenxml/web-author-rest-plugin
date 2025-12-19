@@ -34,14 +34,20 @@ import lombok.extern.slf4j.Slf4j;
 import ro.sync.basic.io.QuietClosable;
 import ro.sync.basic.util.URLUtil;
 import ro.sync.ecss.extensions.api.webapp.WebappMessage;
+import ro.sync.ecss.extensions.api.webapp.access.InternalWebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.FilterURLConnection;
 import ro.sync.ecss.extensions.api.webapp.plugin.UserActionRequiredException;
-import ro.sync.exml.plugin.urlstreamhandler.CacheableUrlConnection;
-import ro.sync.exml.workspace.api.PluginResourceBundle;
-import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
+import ro.sync.ecss.webapp.auth.ApplicationAuthenticationManager;
+import ro.sync.ecss.webapp.auth.ApplicationUser;
+import ro.sync.ecss.webapp.auth.ApplicationUserStore;
+import ro.sync.ecss.webapp.auth.ApplicationUserWithToken;
 import ro.sync.net.protocol.FolderEntryDescriptor;
 import ro.sync.net.protocol.http.HttpExceptionWithDetails;
+import ro.sync.exml.plugin.urlstreamhandler.CacheableUrlConnection;
+import ro.sync.exml.workspace.api.PluginResourceBundle;
+import ro.sync.exml.workspace.api.PluginWorkspace;
+import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 
 /**
  * Wrapper over an URLConnection that reports 401 exceptions as 
@@ -56,6 +62,11 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    * Header set for all requests in order to allow CMS's to prevent CSRF requests.
    */
   private static final String CSRF_HEADER = "X-Requested-With";
+  
+  /**
+   * Authorization header name.
+   */
+  private static final String AUTHORIZATION_HEADER_NAME = "Authorization";
   
   /**
    * Prefix of the protocol.
@@ -332,7 +343,43 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
       return;
     }
     
-    authHeadersMap.addHeaders(contextId, urlConnection);
+    boolean headersAdded = authHeadersMap.addHeaders(contextId, urlConnection);
+    if (!headersAdded) {
+      addRequestScopedBearerToken(urlConnection);
+    }
+  }
+
+  /**
+   * Attempt to reuse the bearer token from the request-scoped authenticated user when
+   * we do not have headers stored in the {@link AuthHeadersMap}.
+   *
+   * @param urlConnection The connection where to set the header.
+   */
+  private void addRequestScopedBearerToken(URLConnection urlConnection) {
+    resolveRequestScopedBearerToken().ifPresent(bearerToken -> {
+      log.info("Setting Authorization header from request-scoped user.");
+      urlConnection.setRequestProperty(AUTHORIZATION_HEADER_NAME, "Bearer " + bearerToken);
+    });
+  }
+  
+  /**
+   * @return The bearer token associated with the request-scoped user, if any.
+   */
+  private Optional<String> resolveRequestScopedBearerToken() {
+    PluginWorkspace pluginWorkspace = PluginWorkspaceProvider.getPluginWorkspace();
+    if (pluginWorkspace instanceof InternalWebappPluginWorkspace) {
+      InternalWebappPluginWorkspace internalWorkspace = (InternalWebappPluginWorkspace) pluginWorkspace;
+      ApplicationAuthenticationManager authenticationManager = internalWorkspace.getApplicationAuthenticationManager();
+      if (authenticationManager != null) {
+        ApplicationUserStore userStore = authenticationManager.getApplicationUserStore();
+        Optional<ApplicationUser> requestUserOpt = userStore.getUserForCurrentRequest();
+        if (requestUserOpt.isPresent() && requestUserOpt.get() instanceof ApplicationUserWithToken) {
+          ApplicationUserWithToken requestUser = (ApplicationUserWithToken) requestUserOpt.get();
+          return Optional.ofNullable(requestUser.getBearerToken());
+        }
+      }
+    }
+    return Optional.empty();
   }
   
   @Override

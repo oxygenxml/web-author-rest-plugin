@@ -3,6 +3,7 @@ package com.oxygenxml.rest.plugin.authn;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
+import java.util.Optional;
 
 import com.oxygenxml.rest.plugin.AuthHeadersMap;
 import com.oxygenxml.rest.plugin.RestURLStreamHandler;
@@ -13,6 +14,9 @@ import ro.sync.ecss.extensions.api.webapp.SessionStore;
 import ro.sync.ecss.extensions.api.webapp.plugin.UserContext;
 import ro.sync.ecss.webapp.auth.ApplicationAuthenticationManager;
 import ro.sync.ecss.webapp.auth.ApplicationAuthenticationProvider;
+import ro.sync.ecss.webapp.auth.ApplicationUser;
+import ro.sync.ecss.webapp.auth.ApplicationUserStore;
+import ro.sync.ecss.webapp.auth.ApplicationUserWithToken;
 
 @Slf4j
 @AllArgsConstructor
@@ -122,5 +126,17 @@ public class RestApplicationAuthenticationProvider implements ApplicationAuthent
       cookiesHeader.append(cookie.getKey()).append('=').append(cookie.getValue()).append("; ");
     }
     return cookiesHeader.toString();
+  }
+
+  @Override
+  public Optional<ApplicationUser> authenticateForCurrentRequest(String bearerToken) {
+    UserAuthenticator userAuthenticator = new UserAuthenticator(
+        authHeadersMap, applicationAuthenticationManager);
+    Optional<ApplicationUserWithToken> userOpt = userAuthenticator.authenticateUserForCurrentRequest(bearerToken);
+    if (userOpt.isPresent()) {
+      ApplicationUserStore userStore = applicationAuthenticationManager.getApplicationUserStore();
+      userStore.authenticateApplicationUserForCurrentRequest(userOpt.get());
+    }
+    return userOpt.map(user -> (ApplicationUser) user);
   }
 }

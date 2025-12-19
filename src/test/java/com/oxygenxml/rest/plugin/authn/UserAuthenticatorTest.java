@@ -1,17 +1,11 @@
 package com.oxygenxml.rest.plugin.authn;
 
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.util.Optional;
 
 import org.apache.http.Header;
 import org.apache.http.HttpException;
@@ -21,10 +15,10 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.bootstrap.HttpServer;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.After;
 import org.mockito.ArgumentMatcher;
 
 import com.oxygenxml.rest.plugin.AuthHeadersMap;
@@ -33,6 +27,7 @@ import com.oxygenxml.rest.plugin.HttpServerManager;
 import ro.sync.ecss.webapp.auth.ApplicationAuthenticationManager;
 import ro.sync.ecss.webapp.auth.ApplicationUser;
 import ro.sync.ecss.webapp.auth.ApplicationUserStore;
+import ro.sync.ecss.webapp.auth.ApplicationUserWithToken;
 import ro.sync.exml.options.OptionTags;
 import ro.sync.exml.options.Options;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
@@ -45,6 +40,7 @@ public class UserAuthenticatorTest {
   private static final String SESSION_ID = "sessionId";
 
   private static final String SESSION_COOKIE = "123";
+  private static final String BEARER_TOKEN = "bearerToken";
 
   @Rule
   public HttpServerManager serverManager = new HttpServerManager();
@@ -82,17 +78,26 @@ public class UserAuthenticatorTest {
 
     private void handleMe(HttpRequest request, HttpResponse response)
         throws IOException {
-      // Check if session cookie is the one we set
-      Header cookieHeader = request.getFirstHeader("Cookie"); 
-      if (cookieHeader == null) {
-        System.out.println("Test - No cookie header");
-        response.setStatusCode(401);
-        return;
+      boolean authenticated = false;
+      Header authHeader = request.getFirstHeader("Authorization");
+      if (authHeader != null && authHeader.getValue().equals("Bearer " + BEARER_TOKEN)) {
+        authenticated = true;
+      } else {
+        // Check if session cookie is the one we set
+        Header cookieHeader = request.getFirstHeader("Cookie"); 
+        if (cookieHeader != null) {
+          String sessionId = cookieHeader.getValue();
+          if (sessionId != null && sessionId.equals("sessionCookie=" + SESSION_COOKIE)) {
+            authenticated = true;
+          } else {
+            System.out.println("Test - Invalid sessionId: " + sessionId);
+          }
+        } else {
+          System.out.println("Test - No cookie header");
+        }
       }
 
-      String sessionId = cookieHeader.getValue(); // fix npe
-      if (sessionId == null || !sessionId.equals("sessionCookie=" + SESSION_COOKIE)) {
-        System.out.println("Test - Invalid sessionId: " + sessionId);
+      if (!authenticated) {
         response.setStatusCode(401);
         return;
       }
@@ -177,5 +182,14 @@ public class UserAuthenticatorTest {
 
     // Verify no user was authenticated
     verify(userStore, never()).authenticateApplicationUser(any(), any());
+  }
+
+  @Test
+  public void testAuthenticateUserForCurrentRequest() {
+    Optional<ApplicationUserWithToken> userOpt = authenticator.authenticateUserForCurrentRequest(BEARER_TOKEN);
+    assertTrue(userOpt.isPresent());
+    ApplicationUserWithToken userWithToken = userOpt.get();
+    assertEquals("123", userWithToken.getId());
+    assertEquals(BEARER_TOKEN, userWithToken.getBearerToken());
   }
 }

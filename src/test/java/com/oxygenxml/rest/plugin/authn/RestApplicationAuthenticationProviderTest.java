@@ -2,18 +2,20 @@ package com.oxygenxml.rest.plugin.authn;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import com.google.common.collect.ImmutableMap;
 import com.oxygenxml.rest.plugin.AuthHeadersMap;
+
 import ro.sync.ecss.extensions.api.webapp.plugin.UserContext;
 
 public class RestApplicationAuthenticationProviderTest {

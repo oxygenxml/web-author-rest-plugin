@@ -5,6 +5,7 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
@@ -16,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
@@ -33,8 +35,12 @@ import com.google.common.collect.ImmutableMap;
 import ro.sync.basic.util.URLStreamHandlerFactorySetter;
 import ro.sync.ecss.extensions.api.webapp.AuthorDocumentModel;
 import ro.sync.ecss.extensions.api.webapp.WebappAuthorDocumentFactory;
+import ro.sync.ecss.extensions.api.webapp.access.InternalWebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.UserActionRequiredException;
+import ro.sync.ecss.webapp.auth.ApplicationAuthenticationManager;
+import ro.sync.ecss.webapp.auth.ApplicationUserStore;
+import ro.sync.ecss.webapp.auth.ApplicationUserWithToken;
 import ro.sync.ecss.webapp.plugin.WebappOptionTags;
 import ro.sync.ecss.webapp.testing.MockAuthorDocumentFactory;
 import ro.sync.exml.options.OptionTags;
@@ -266,6 +272,33 @@ public class RestURLConnectionTest {
   public void testMalformedErrorMessage() throws Exception {
     String message = RestURLConnection.extractUserReadableMessage("{}");
     assertEquals("{}", message);
+  }
+
+  /**
+   * <p><b>Description:</b> Test that a bearer token from the request-scoped user is reused when
+   * no session headers are registered.</p>
+   *
+   * @throws Exception If it fails.
+   */
+  @Test
+  public void testRequestScopedBearerTokenFallback() throws Exception {
+    InternalWebappPluginWorkspace workspace = mock(InternalWebappPluginWorkspace.class);
+    ApplicationAuthenticationManager authManager = mock(ApplicationAuthenticationManager.class);
+    ApplicationUserStore userStore = mock(ApplicationUserStore.class);
+    when(workspace.getApplicationAuthenticationManager()).thenReturn(authManager);
+    when(authManager.getApplicationUserStore()).thenReturn(userStore);
+    ApplicationUserWithToken requestUser = new ApplicationUserWithToken("uid", "name", "mail", "token-123");
+    when(userStore.getUserForCurrentRequest()).thenReturn(Optional.of(requestUser));
+
+    PluginWorkspaceProvider.setPluginWorkspace(workspace);
+
+    URLConnection delegate = mock(URLConnection.class);
+    when(delegate.getURL()).thenReturn(new URL("http://localhost:8080/files"));
+
+    new RestURLConnection(new AuthHeadersMap(), "sessionId", delegate);
+
+    verify(delegate).addRequestProperty("X-Requested-With", "RC");
+    verify(delegate).setRequestProperty("Authorization", "Bearer token-123");
   }
 
 

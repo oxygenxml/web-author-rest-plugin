@@ -59,19 +59,33 @@ public class AuthHeadersMap {
     getAllHeaders(sessionId).put(AUTHORIZATION_HEADER_NAME, "Bearer " + bearerToken);
   }
   
-  public void addHeaders(String sessionId, URLConnection connection) {
+  /**
+   * Adds authentication headers to the URL connection for the specified session.
+   * Cookie headers take precedence over authorization headers. If a cookie
+   * header is present, authorization headers will not be sent to maintain
+   * traditional session-based authentication.
+   *
+   * @param sessionId The session identifier to retrieve headers for
+   * @param connection The URL connection to add headers to
+   * @return {@code true} if headers were added to the connection,
+   *         {@code false} if no headers were available for this session
+   */
+  public boolean addHeaders(String sessionId, URLConnection connection) {
 	log.debug("Adding headers to URLConnection for session: {}", sessionId);
     Map<String, String> allHeaders = getAllHeaders(sessionId);
-    
-    if (allHeaders.containsKey(AUTHORIZATION_HEADER_NAME)) {
-      // The authorization header takes precedence over cookies.
-      // This is because we always have some cookies recorded, but if we have an Authorization header,
-      // it means that we are calling a state-less REST API. We do not send Cookies in this case.
-      log.debug("Setting Authorization header for URL connection", sessionId);
-      connection.setRequestProperty(AUTHORIZATION_HEADER_NAME, allHeaders.get(AUTHORIZATION_HEADER_NAME));
-    } else if (allHeaders.containsKey(COOKIE_HEADER_NAME)){
+
+    if (allHeaders.containsKey(COOKIE_HEADER_NAME)){
+      // Cookie header takes precedence over authorization header.
+      // This maintains traditional session-based authentication while
+      // still allowing for token-based auth as a fallback.
       log.debug("Setting Cookie header for URL connection", sessionId);
       connection.setRequestProperty(COOKIE_HEADER_NAME, allHeaders.get(COOKIE_HEADER_NAME));
+      return true;
+    } else if (allHeaders.containsKey(AUTHORIZATION_HEADER_NAME)) {
+      log.debug("Setting Authorization header for URL connection", sessionId);
+      connection.setRequestProperty(AUTHORIZATION_HEADER_NAME, allHeaders.get(AUTHORIZATION_HEADER_NAME));
+      return true;
     }
+    return false;
   }
 }
