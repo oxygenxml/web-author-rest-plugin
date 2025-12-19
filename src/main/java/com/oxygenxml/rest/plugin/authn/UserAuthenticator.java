@@ -57,7 +57,7 @@ public class UserAuthenticator {
   private URL getMeEndpoint() {
     URL meEndpoint;
     try {
-      meEndpoint = new URL(RestURLStreamHandler.getServerUrl() + "/me");
+      meEndpoint = new URL(RestURLStreamHandler.getServerUrl() + "me");
     } catch (MalformedURLException e) {
       throw new IllegalStateException(e);
     }
