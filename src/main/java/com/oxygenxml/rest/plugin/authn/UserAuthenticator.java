@@ -55,13 +55,15 @@ public class UserAuthenticator {
    * @return The URL of the /me endpoint.
    */
   private URL getMeEndpoint() {
-    URL meEndpoint;
     try {
-      meEndpoint = new URL(RestURLStreamHandler.getServerUrl() + "me");
+      String baseUrl = RestURLStreamHandler.getServerUrl();
+      if (!baseUrl.endsWith("/")) {
+        baseUrl += "/";
+      }
+      return new URL(baseUrl + "me");
     } catch (MalformedURLException e) {
       throw new IllegalStateException(e);
     }
-    return meEndpoint;
   }
 
   /**
