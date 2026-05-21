@@ -16,14 +16,19 @@ public class RestConfigExtension  extends PluginConfigExtension {
    * The rest server URL option.
    */
   final static String REST_SERVER_URL = "rest.server_url";
-  
+
+  /**
+   * The display name shown on the Dashboard tab for this REST connector.
+   */
+  final static String REST_SERVER_NAME = "rest.server_name";
+
   /**
    * The RexExp string that determines the root url.
    */
   final static String REST_ROOT_REGEXP = "rest.root_regexp";
 
   private static final String USE_INVISIBLE_LOGIN_FORM = "rest.use_invisible_login_form";
-  
+
   @Override
   public void init() throws ServletException {
     super.init();
@@ -32,6 +37,7 @@ public class RestConfigExtension  extends PluginConfigExtension {
     defaultOptions.put(USE_INVISIBLE_LOGIN_FORM, "off");
     defaultOptions.put(REST_ROOT_REGEXP, "");
     defaultOptions.put(REST_SERVER_URL, "");
+    defaultOptions.put(REST_SERVER_NAME, "REST");
 
     this.setDefaultOptions(defaultOptions);
   }
@@ -42,11 +48,17 @@ public class RestConfigExtension  extends PluginConfigExtension {
   @Override
   public String getOptionsForm() {
     String serverURL = getOption(REST_SERVER_URL, "");
+    String serverName = getOption(REST_SERVER_NAME, "REST");
     boolean useInvisibleLoginForm = "on".equals(getOption(USE_INVISIBLE_LOGIN_FORM, "off"));
     PluginResourceBundle rb = ((WebappPluginWorkspace)PluginWorkspaceProvider.getPluginWorkspace()).getResourceBundle();
-    
+
     StringBuilder restServerOptions = new StringBuilder()
       .append("<div style='font-family:robotolight, Arial, Helvetica, sans-serif;font-size:0.85em;font-weight: lighter'>")
+      // REST Server display name input
+      .append("<label style='display: block; margin-top: 20px;' >")
+      .append("REST Connector Name: <input name = '").append(REST_SERVER_NAME).append("' value='").append(serverName).append("' ")
+      .append("style='width: 100%; line-height: 20px; border: 1px solid #777C7F; background-color: #f7f7f7; border-radius: 5px; padding-left: 7px; margin-top: 10px; display: block;' ")
+      .append("></input></label>")
       // REST Server URL input
       .append("<label style='display: block; margin-top: 20px;' >")
       .append("REST " + rb.getMessage(TranslationTags.SERVER_URL) + ": <input  name = '").append(REST_SERVER_URL).append("' value='").append(serverURL).append("' ")
@@ -77,10 +89,12 @@ public class RestConfigExtension  extends PluginConfigExtension {
   @Override
   public String getOptionsJson() {
     String serverURL = getOption(REST_SERVER_URL, "");
+    String serverName = getOption(REST_SERVER_NAME, "REST");
     String rootRegExp = getOption(REST_ROOT_REGEXP, "");
     boolean useInvisibleLoginForm = "on".equals(getOption(USE_INVISIBLE_LOGIN_FORM, "off"));
-    
+
     return "{ restServerUrl: '" + serverURL + "'," +
+        "restServerName: '" + serverName + "'," +
         "restUseInvisibleLoginForm: '" + useInvisibleLoginForm + "'," +
         "restRootRegExp: '" + rootRegExp + "'}";
   }

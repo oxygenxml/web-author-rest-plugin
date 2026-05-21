@@ -329,4 +329,63 @@
   actionsManager.registerOpenAction(restOpenAction);
   actionsManager.registerCreateAction(webdavCreateAction);
 
+  // -------- Also register a file server connector so the Dashboard renders the file browser inline --------
+
+  var restFileServer = {
+    login: function(message, loginCallback) {
+      // Delegate to the existing iframe-based login flow on the file browser.
+      fileBrowser.loginUser(loginCallback);
+    },
+    getUserName: function() {
+      return null;
+    },
+    logout: function(logoutCallback) {
+      // Logout is delegated to the CMS; nothing to do client-side.
+      logoutCallback && logoutCallback();
+    },
+    getDefaultRootUrl: function() {
+      // Used on Dashboard when no other REST URL is in local storage.
+      return 'rest://cms/';
+    },
+    getUrlInfo: function(url, urlInfoCallback, showErrorMessageCallback) {
+      // REST URL parsing is purely client-side (no server round-trip, unlike WebDAV).
+      // The framework expects a non-null rootUrl in the callback, so we fall back to
+      // the bare 'rest://<repoId>/' prefix when ROOT_REGEXP is unset or doesn't match.
+      var isFile = !url.endsWith('/');
+      var currentUrl = url;
+      if (!isFile && currentUrl.lastIndexOf('/') !== currentUrl.length - 1) {
+        currentUrl += '/';
+      }
+      var matches = ROOT_REGEXP && ROOT_REGEXP.exec(currentUrl);
+      var rootUrl = matches ? matches[0] : null;
+      if (!rootUrl) {
+        var m = currentUrl.match(/^(rest:\/\/[^\/]+\/)/);
+        rootUrl = m ? m[1] : currentUrl;
+      }
+      urlInfoCallback(rootUrl, currentUrl);
+    },
+    createRootUrlComponent: function(rootUrl, rootURLChangedCallback) {
+      var serverDiv = goog.dom.createDom('div', 'rest-repo');
+      if (rootUrl) {
+        var bgImageUrl = sync.util.getImageUrl('/images/SharePointWeb16.png', sync.util.getHdpiFactor());
+        goog.dom.appendChild(serverDiv,
+          goog.dom.createDom('div', 'rest-repo-preview',
+            goog.dom.createDom('div', {
+              className: 'domain-icon',
+              style: 'background-image: url(' + bgImageUrl + '); vertical-align: middle;'
+            }),
+            new sync.util.Url(rootUrl).getDomain()));
+      }
+      return serverDiv;
+    }
+  };
+
+  workspace.getFileServersManager().registerFileServerConnector({
+    'id': 'rest',
+    'name': sync.options.PluginsOptions.getClientOption('restServerName') || 'REST',
+    'icon': sync.util.computeHdpiIcon('./images/no-sprite/DashboardFilesContainer.png'),
+    'matches': function(url) { return !!(url && url.match(/^rest:\/\//)); },
+    'fileServer': restFileServer
+  });
+
 })();
