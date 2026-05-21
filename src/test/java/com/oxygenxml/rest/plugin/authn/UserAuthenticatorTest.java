@@ -1,9 +1,9 @@
 package com.oxygenxml.rest.plugin.authn;
 
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -159,8 +159,7 @@ public class UserAuthenticatorTest {
         eq(SESSION_ID),
         argThat(new ArgumentMatcher<ApplicationUser>() {
           @Override
-          public boolean matches(Object userObj) {
-            ApplicationUser user = (ApplicationUser) userObj;
+          public boolean matches(ApplicationUser user) {
             return user != null &&
                 "123".equals(user.getId()) &&
                 "John Doe".equals(user.getName()) &&
