@@ -315,21 +315,7 @@
   // register all the listeners on the file browser.
   registerFileBrowserListeners(fileBrowser);
 
-  var restOpenAction = new sync.actions.OpenAction(fileBrowser);
-  restOpenAction.setDescription('Open document from REST server');
-  restOpenAction.setActionId('rest-open-action');
-  restOpenAction.setActionName('Rest');
-
-  var webdavCreateAction = new sync.api.CreateDocumentAction(fileBrowser);
-  webdavCreateAction.setDescription('Create a new document on a REST server');
-  webdavCreateAction.setActionId('rest-create-action');
-  webdavCreateAction.setActionName('Rest');
-
-  var actionsManager = workspace.getActionsManager();
-  actionsManager.registerOpenAction(restOpenAction);
-  actionsManager.registerCreateAction(webdavCreateAction);
-
-  // -------- Also register a file server connector so the Dashboard renders the file browser inline --------
+  // -------- Register a file server connector so the Dashboard renders the file browser inline --------
 
   var restFileServer = {
     login: function(message, loginCallback) {
