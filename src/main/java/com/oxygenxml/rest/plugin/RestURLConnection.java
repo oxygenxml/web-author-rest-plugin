@@ -418,19 +418,28 @@ public class RestURLConnection extends FilterURLConnection implements CacheableU
    * @return the document url string from the delegate connection.
    */
   private String getDocumenURL() {
-    String restEndpoint = "/files";
-    StringBuilder fullURL = new StringBuilder(url.toExternalForm());
+    String fullURL = url.toExternalForm();
     log.debug("Getting document URL from: {}", fullURL);
 
-    int endpointIndex = fullURL.indexOf(restEndpoint);
-    fullURL.delete(0, endpointIndex + restEndpoint.length());
-    int slashIndex = fullURL.indexOf("/");
-    // remove additional path sections
-    if(slashIndex != -1) {
-      fullURL.delete(slashIndex, fullURL.length());
+    // The connection URL is built by computeRestUrl as
+    //   <serverUrl>files?url=<URL-encoded document URL>
+    // Strip the "?url=" prefix (and any trailing query params) so the
+    // returned value is the document URL itself, suitable for use as a
+    // URL prefix when computing child paths.
+    String queryMarker = "?url=";
+    int queryIndex = fullURL.indexOf(queryMarker);
+    String encodedDocumentURL;
+    if (queryIndex != -1) {
+      encodedDocumentURL = fullURL.substring(queryIndex + queryMarker.length());
+      int ampIndex = encodedDocumentURL.indexOf('&');
+      if (ampIndex != -1) {
+        encodedDocumentURL = encodedDocumentURL.substring(0, ampIndex);
+      }
+    } else {
+      encodedDocumentURL = "";
     }
-    
-    String documentURL = URLUtil.decodeURIComponent(URLUtil.decodeURIComponent(fullURL.toString()));
+
+    String documentURL = URLUtil.decodeURIComponent(URLUtil.decodeURIComponent(encodedDocumentURL));
     log.debug("Computed document URL: {}", documentURL);
     return documentURL;
   }
