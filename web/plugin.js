@@ -202,7 +202,7 @@
     var newRoot = null;
     var urlParam = decodeURIComponent(sync.util.getURLParameter('url'));
     if(urlParam && urlParam.match('rest:\/\/')) {
-      var matches = ROOT_REGEXP && ROOT_REGEXP.exec(decodeURIComponent(urlParam));
+      var matches = ROOT_REGEXP && ROOT_REGEXP.exec(urlParam);
       newRoot = matches ? matches[0] : null;
     }
     return newRoot;
