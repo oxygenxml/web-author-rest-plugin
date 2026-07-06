@@ -33,9 +33,9 @@ import com.google.common.collect.ImmutableMap;
 import ro.sync.basic.util.URLStreamHandlerFactorySetter;
 import ro.sync.ecss.extensions.api.webapp.AuthorDocumentModel;
 import ro.sync.ecss.extensions.api.webapp.WebappAuthorDocumentFactory;
+import ro.sync.ecss.extensions.api.webapp.WebappAuthorDocumentFactoryConstants;
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
 import ro.sync.ecss.extensions.api.webapp.plugin.UserActionRequiredException;
-import ro.sync.ecss.webapp.plugin.WebappOptionTags;
 import ro.sync.ecss.webapp.testing.MockAuthorDocumentFactory;
 import ro.sync.exml.options.OptionTags;
 import ro.sync.exml.options.Options;
@@ -231,7 +231,9 @@ public class RestURLConnectionTest {
       optionsStorage.setOption(RestConfigExtension.REST_SERVER_URL, "http://localhost:" + server.getLocalPort() + "/");
 
       AuthorDocumentModel documentInfo = WebappAuthorDocumentFactory.createAuthorDocumentInfo("rest://" + sessionId + "@server/file.xml", 
-          ImmutableMap.of("bearer.token", bearerToken));
+          ImmutableMap.of(
+              "bearer.token", bearerToken,
+              WebappAuthorDocumentFactoryConstants.LOAD_AUTHOR_MODEL_MODEL_FOR_UNBOUND_DOCS, true));
       
       String content = IOUtils.toString(documentInfo.createReader());
       assertEquals("<root/>", content);  
