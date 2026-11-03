@@ -3,14 +3,13 @@ package com.oxygenxml.rest.plugin;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletException;
-
 import ro.sync.ecss.extensions.api.webapp.access.WebappPluginWorkspace;
-import ro.sync.ecss.extensions.api.webapp.plugin.PluginConfigExtension;
+import ro.sync.ecss.extensions.api.webapp.plugin.ServletPluginConfigExtension;
+import ro.sync.ecss.extensions.api.webapp.plugin.servlet.ServletException;
 import ro.sync.exml.workspace.api.PluginResourceBundle;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
 
-public class RestConfigExtension  extends PluginConfigExtension {
+public class RestConfigExtension  extends ServletPluginConfigExtension {
 
   /**
    * The rest server URL option.
