@@ -4,17 +4,16 @@ import static com.oxygenxml.rest.plugin.authn.RestApplicationAuthenticationProvi
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.oxygenxml.rest.plugin.authn.UserAuthenticator;
 
 import lombok.extern.slf4j.Slf4j;
 import ro.sync.ecss.extensions.api.webapp.SessionStore;
 import ro.sync.ecss.extensions.api.webapp.access.InternalWebappPluginWorkspace;
-import ro.sync.ecss.extensions.api.webapp.plugin.WebappServletPluginExtension;
+import ro.sync.ecss.extensions.api.webapp.plugin.ServletPluginExtension;
+import ro.sync.ecss.extensions.api.webapp.plugin.servlet.ServletException;
+import ro.sync.ecss.extensions.api.webapp.plugin.servlet.http.Cookie;
+import ro.sync.ecss.extensions.api.webapp.plugin.servlet.http.HttpServletRequest;
+import ro.sync.ecss.extensions.api.webapp.plugin.servlet.http.HttpServletResponse;
 import ro.sync.exml.plugin.PluginContext;
 import ro.sync.exml.workspace.api.PluginResourceBundle;
 import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
@@ -25,7 +24,7 @@ import ro.sync.exml.workspace.api.PluginWorkspaceProvider;
  * @author mihai_coanda
  */
 @Slf4j
-public class LoginCallbackServlet extends WebappServletPluginExtension {
+public class LoginCallbackServlet extends ServletPluginExtension {
   
   /**
    * The headers used for authentication
